@@ -43,7 +43,7 @@ function typeText(text, element) {
 // Autocompletion feature
 let autocompleteAction = true;
 const commandsList = [
- 'help', 'about', 'skills', 'projects', 'education', 'contact', 'clear', 'exit',
+ 'help', 'about', 'skills', 'projects','qualification', 'contact', 'clear', 'exit',
  'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobbies', 'quote',
  'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'download resume', 'pwd',
  'whoami', 'autocomplete-d'
@@ -123,8 +123,8 @@ function fetchDetails(command) {
            'cc-course       -> Go to CC practice quiz\n' +
            'clear           -> Clear terminal\n' +
            'contact         -> Show my contact info\n' +
-           'download resume -> Download my resume\n' +
-           'education       -> See my educational qualifications\n' +
+           'resume          -> Request 2 Download my resume\n' +
+           'qualification   -> See my educational qualifications\n' +
            'email           -> Send me an email\n' +
            'home            -> Leave terminal mode & redirect to home\n' +
            'game            -> Play a riddle game\n' +
@@ -134,7 +134,6 @@ function fetchDetails(command) {
            'hobby           -> Know my hobby\n' +
            'i love you      -> Special message\n' +
            'joke            -> Hear a joke\n' +
-           'keylogger.py    -> redirect to my Keylogger writeup\n'+
            'linkedin        -> Go to LinkedIn to connect\n' +
            'location        -> Get owner residing location\n' +
            'projects        -> List my creative projects\n' +
@@ -157,27 +156,27 @@ function fetchDetails(command) {
    case 'about':
      return 'Krishna is passionate aspiring cybersecurity expert with a focus on information security and ethical hacking.';
    case 'contact':
-     return 'Email: sud0hope.techie@gmail.com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/sudo-hope0529\nCredly: ';
+     return 'Email: sud0hope.techie@gmail.com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/sudo-hope0529\nCredly: https://www.credly.com/users/krishna-dwivedi.a2ae4587';
    case 'clear':
      terminalOutput.textContent = '';
      return '';
-   case 'education':
-     return 'Bachelor\'s Degree in Computer Science';
+   case 'qualification':
+     return 'ISC2 Certified in Cybersecurity Cert.\nIBM’s Cyber Security Fundamentals Cert.\nBachelor❜s in Technology with CSE(Computer Science Engineering)\nHarvard❜s Aspire graduate under ALP(Aspire Leadership Program) Cohort 3, 2024';
    case 'email':
      window.open('mailto:sud0hope.techie@gmail.com', '_blank');
      return 'Opened email client in a new tab...'+
              'or mail at: sud0hope.techie@gmail.com';
    case 'home':
-     window.location.replace('http://localhost:8000');
+     window.location.replace('/');
      return 'Terminal mode exiting. See you dear!';
    case 'projects':
-     return '1. Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type keylogger.py to read writeup).\n'+
-            '2. ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz using Html, Css and javascript(type `cc-course` to redirect there).\n'+
-            '3. Terminal based Portfolio - Crafted an terminal based portfolio using Html, Css and javascript (that u r exploring now).';
+     return '1. HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'+
+            '2. ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'+
+            '3. Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
    case 'skills':
-     return '- Network Security\n- Penetration Testing\n- Ethical Hacking\n- Vulnerability Assessment\n- Cryptography\n- SIEM Tools\n- Python Scripting\n- Linux Administration';
+     return '- Penetration Testing\n- Ethical Hacking\n- Vulnerability Assessment\n- Python Scripting\n- Cyber Awareness Advocacy';
    case 'whoishe':
-     return 'A Human being! 😊\nI\'m Krishna Dwivedi, an aspiring cybersecurity expert (InfoSec Analyst and Ethical Hacker) and yours friendly guide in this digital space.';
+     return 'A Human being! 😊\nI\'m Krishna Dwivedi, an aspiring cybersecurity expert (Ethical Hacker and InfoSec Analyst) and yours friendly guide in this digital space.';
    case 'linkedin':
      window.open('https://www.linkedin.com/in/dkrishna0124', '_blank', 'noopener,noreferrer');
      return 'Connect with me on LinkedIn opened on new tab';
@@ -187,9 +186,12 @@ function fetchDetails(command) {
    case 'cc-course':
      window.open('https://sudo-hope0529.github.io/cc-practice-quiz/', '_blank', 'noopener,noreferrer');
      return 'Explore my ISC2 certified in cybersecurity practice quiz opened in new tab.';
-   case 'keylogger.py':
-     window.open('https:keylogger-writeups-link')
-     return 'Redirected to Keylogger writeups. If not click here: https://link-to-keylogger-writeups'
+  case 'hashstorm':
+     wwindow.open('https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
+     return 'HashStorm Documentation opened in new tab. If not search: https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html';
+   case 'keylogger':
+     window.open('https:sudo-hope0529.github.io/pages/Comingsoon.html');
+     return 'Redirected to Keylogger writeups. If not search: https://sudo-hope0529.github.io/pages/project-docs/';
    case 'location':
      return 'I am in Your System, right now..\n Belongs to Uttar Pradesh (aka UP), INDIA.';
    case 'hobby':
@@ -258,7 +260,7 @@ function fetchDetails(command) {
      } else {
        return 'You are already in a game. Answer the current riddle or type "skip" to get a new one.';
      }
-   case 'download resume':
+   case 'resume':
        window.open('https://gdrive.com/resources/resume.pdf', '_blank', 'noopener,noreferrer');
        return 'Initiating download of my resume... \nIf not initiated, click the link to download: https://gdrive.com/resources/resume.pdf';
    case 'pwd':
