@@ -1,0 +1,67 @@
+ * {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+ }
+
+ :root {
+   --bg-color: #0a0f1a;
+   --text-color: #e6e8f0;
+   --accent-color: #7f5af0;
+   --accent-color-light: #a18aff;
+ }
+
+  body, html {
+   font-family: 'Inter', sans-serif;
+   background: var(--bg-color, #0a0f1a);
+   color: var(--text-color, #e6e8f0);
+   overflow-x: hidden;
+   transition: background 0.5s, color 0.5s;
+ }
+ 
+ /* Terminal overlay */
+ #terminal-overlay {
+   position: fixed;
+   top: 0; left: 0; right: 0; bottom: 0;
+   background: rgba(10, 15, 26, 0.95);
+   color: #7f5af0;
+   font-family: 'Courier New', Courier, monospace;
+   font-size: 1rem;
+   display: flex;
+   flex-direction: column;
+   padding: 1rem;
+   z-index: 12000;
+ }
+ #terminal-output {
+   flex-grow: 1;
+   overflow-y: auto;
+   white-space: pre-wrap;
+   margin-bottom: 0.5rem;
+ }
+ #terminal-input {
+   background: transparent;
+   border: none;
+   border-top: 1px solid var(--accent-color);
+   color: var(--accent-color);
+   font-family: 'Courier New', Courier, monospace;
+   font-size: 1rem;
+   padding: 0.5rem;
+   outline: none;
+   width: 100%;
+ }
+.a {
+   position: absolute;
+   top: 0.5rem;
+   right: 1rem;
+   cursor: pointer;
+   font-size: 1.5rem;
+   color: var(--accent-color);
+ }
+
+.responsive-art {
+    font-family: monospace;
+    white-space: pre; /* Preserve ASCII formatting */
+    overflow-wrap: normal; /* Prevent wrapping unless necessary */
+    font-size: clamp(8px, 1vw, 16px); /* Scales between 8px minimum and 16px maximum, based on 1% of viewport width */
+    line-height: 1; /* Tighten lines for single-line appearance on small screens */
+}

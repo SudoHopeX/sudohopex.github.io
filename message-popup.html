@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ignite the Conversation!</title>
+  <style>
+    /* Reset and base */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Blurred background overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.15);
+  z-index: 0;
+}
+
+/* Container for form to be above blur */
+.popup-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+h3 {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #5a2a83;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+form {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(90, 42, 131, 0.25);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2.5rem 2rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: box-shadow 0.3s ease;
+  position: relative;
+   z-index: 1;
+}
+
+form:hover {
+  box-shadow: 0 8px 24px rgba(193, 176, 244, 0.245);
+}
+
+input[type="text"], input[type="email"],
+textarea {
+  font-size: 1rem;
+  padding: 1rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 2px 6px rgba(66, 66, 66, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+  color: #3a3a3a;
+  font-family: inherit;
+  resize: vertical;
+}
+
+input[type="text"]:focus, input[type="email"]:focus,
+textarea:focus {
+  background-color: #fff;
+  box-shadow: 0 0 8px 2px #ae9ebda9;
+  outline: none;
+}
+
+button {
+  background: linear-gradient(135deg, #6a00d1, #8e2de2);
+  color: white;
+  font-weight: 700;
+  padding: 1rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.15rem;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  font-family: inherit;
+  user-select: none;
+  box-shadow: 0 4px 15px rgba(106, 0, 209, 0.4);
+}
+
+button:hover,
+button:focus {
+  background: linear-gradient(135deg, #8e2de2, #6a00d1);
+  box-shadow: 0 6px 20px rgba(138, 45, 226, 0.6);
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+  form {
+    padding: 2rem 1.5rem;
+  }
+}
+  </style>
+</head>
+<body>
+   <div class="popup-container">
+   <h3>Send a Message</h3>
+   <form id="contactForm" action="https://formspree.io/f/mzzrzvby" method="POST">
+    <input type="email" id="email" name="email" placeholder="Enter Email to get reply" required>
+    <input type="text" id="subject" name="subject" placeholder="Subject" required autocomplete="off" />
+    <textarea id="message" name="message" placeholder="Your message" rows="5"></textarea>
+    <input type="text" name="_gotcha" style="display:none" />
+    <button type="submit">Send Message</button>
+  </form>
+</div>
+
+  <script>
+  const form = document.getElementById('contactForm');
+
+  form.addEventListener('submit', (e) => {
+    const subject = form.subject.value.trim();
+    const message = form.message.value.trim();
+    const contact = form.email.value.trim();
+
+    if (!subject || !message || !contact ) {
+      e.preventDefault();
+      alert('Please fill all email, subject and message.');
+    }
+  });
+  </script>
+</body>
+</html>

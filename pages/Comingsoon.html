@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic reset and full-screen setup */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Animated background gradient */
+        body {
+            background: linear-gradient(270deg, #000, #643ae3, #000);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite; /* Smooth looping animation */
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Particle animation for background (simple stars or dots) */
+        .background-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none; /* Ensure it doesn't interfere with clicks */
+        }
+
+        .particle {
+            position: absolute;
+            background: #7f5af0;
+            border-radius: 50%;
+            animation: floatParticles 20s infinite ease-in-out;
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+
+        .container {
+            text-align: center;
+            color: #511eea;
+            animation: fadeIn 2s ease-in-out;
+            position: relative; /* Position relative for z-index */
+            z-index: 1; /* Ensure it's above particles */
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: slideIn 1.5s ease-in-out;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            animation: fadeIn 2s ease-in-out 0.5s backwards;
+        }
+
+        .icon-container {
+            margin-bottom: 30px;
+            animation: bounceIn 1s ease-in-out;
+        }
+
+        .icon-container i {
+            font-size: 2em;
+            margin: 0 15px;
+            color: #7f5af0;
+        }
+
+        /* Typing animation container */
+        .typing-container {
+            font-size: 1.5em;
+            color: #d4d4d4;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-top: 20px;
+            font-weight: bold;  /* Applies bold styling to the text for emphasis in animations */
+            font-family: 'Courier New', 'Roboto', cursive;  /* Example of unique fonts: 'Courier New' for a typewriter feel, 'Roboto' for modern sans-serif versatility; replace with web-safe or imported fonts */
+         }
+
+        
+         .typing-text {
+         animation: fadeOutSlideIn 1.5s ease-in-out; /* 1.5s duration per animation */
+         }
+
+         @keyframes fadeOutSlideIn {
+         0% {
+            opacity: 1; /* Start fully visible */
+            transform: translateY(0); /* Original position */
+         }
+         50% {
+            opacity: 0; /* Fade out midway */
+            transform: translateY(-20px); /* Slide up slightly for effect */
+         }
+         100% {
+            opacity: 0; /* Hold fade out briefly */
+            transform: translateY(20px); /* Prepare for slide in */
+         }
+
+         }
+
+
+        /* Keyframes for existing animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            p { font-size: 1em; }
+            .icon-container i { font-size: 1.5em; }
+            .typing-container { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-particles">
+        <!-- Generate particles dynamically with JavaScript -->
+        <script>
+            for (let i = 0; i < 50; i++) {  // Create 50 particles
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 10 + 'px';  // Random size
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animationDelay = Math.random() * 5 + 's';  // Random delay
+                document.querySelector('.background-particles').appendChild(particle);
+            }
+        </script>
+    </div>
+    <div class="container">
+        <div class="icon-container">
+            <i class="fas fa-rocket"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <h1>Coming Soon</h1>
+        <p>We're working hard to bring you something amazing. Stay tuned for updates!</p>
+        <div class="typing-container" id="typing-text"></div>  <!-- Container for typing animation -->
+    </div>
+    <script>
+        const texts = [
+    "Initializing project...",
+    "Designing project structure...",
+    "Programming the tool...",
+    "Testing functionalities...",
+    "Deploying updates...",
+    "Finalizing features..."
+];  // Array of steps to animate
+let index = 0;
+const typingElement = document.getElementById('typing-text');
+const animationDuration = 1500;  // Match this to your CSS animation duration in ms
+const interTextDelay = 1000;  // Additional delay between texts; adjust for pacing
+
+function typeText() {
+    if (index < texts.length) {
+        typingElement.classList.add('typing-text');  // Trigger animation
+        
+        typingElement.addEventListener('animationend', function handler() {
+            typingElement.textContent = texts[index];  // Update text after animation ends
+            index++;
+            typingElement.classList.remove('typing-text');  // Reset for next animation
+            
+            // Use setTimeout with debounced delay to schedule next call
+            setTimeout(() => {
+                if (index >= texts.length) {
+                    index = 0;  // Reset index to create a cyclic loop
+                }
+                if (index < texts.length) {
+                    typeText();  // Proceed to next text
+                }
+            }, interTextDelay);  // Wait before starting the next animation
+            
+            typingElement.removeEventListener('animationend', handler);  // Clean up
+        }, { once: true });
+    } else {
+        index = 0;  // Ensure it loops back immediately if needed
+        typeText();  // Restart the function
+    }
+}
+
+// Start the animation with an initial delay
+typeText()
+    </script>
+</body>
+</html>

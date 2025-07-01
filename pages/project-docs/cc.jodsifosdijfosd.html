@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+   <title>ISC2 CC Practice Quiz Doc - sudo-hope0529 🥷🚩</title>
+    <link rel="shortcut icon" href="../../img/K-ICON2.png" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="sudo-hope0529 - Krishna Dwivedi" />
+    <meta name="description" content="ISC2 CC Practice Quiz Doc" />
+    <link rel="stylesheet" href="../../css/main.css" />
+    <link rel="stylesheet" href="../../css/aticles.css">
+    <link rel="alternate" type="application/rss+xml" href="https://sudo-hope0529.github.io/pages/project-doc/cc.jodsifosdijfosd.html" title="sudo-hope0529 🥷🚩">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
+    <meta property="og:url" content="https://sudo-hope0529.github.io/">
+    <meta property="og:site_name" content="sudo-hope0529 🥷🚩">
+    <meta property="og:title" content="ISC2 CC Practice Quiz">
+    <meta property="og:description" content="An open-source cc practice quiz to strengthen knowledge to pass in cc exam">
+    <meta property="og:locale" content="en_in">
+    <meta property="og:type" content="website">
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://sudo-hope0529.github.io/" class="app-header-avatar" ><img src="../../img/hope.jpg" alt="sudo-hope0529 &#39;Krishna Dwivedi&#39;" /></a>
+      <span class="app-header-title">sudo-hope0529 🥷🚩<svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" style="margin-bottom: -7px" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512"><path fill="#999" fill-rule="nonzero" d="M256 0c70.68 0 134.69 28.66 181.01 74.99C483.34 121.31 512 185.32 512 256c0 70.68-28.66 134.69-74.99 181.01C390.69 483.34 326.68 512 256 512c-70.68 0-134.69-28.66-181.01-74.99C28.66 390.69 0 326.68 0 256c0-70.68 28.66-134.69 74.99-181.01C121.31 28.66 185.32 0 256 0z"/><path fill="#fff" fill-rule="nonzero" d="M255.99 19.48c65.31 0 124.46 26.48 167.25 69.27 42.79 42.79 69.28 101.93 69.28 167.24s-26.49 124.46-69.28 167.25c-42.79 42.79-101.94 69.28-167.25 69.28-65.23 0-124.38-26.51-167.18-69.33-42.84-42.74-69.33-101.89-69.33-167.2 0-65.31 26.48-124.45 69.27-167.24 42.79-42.79 101.93-69.27 167.24-69.27z"/><path fill="#F93" fill-rule="nonzero" d="M255.99 39.59c84.4 0 157.5 48.29 193.17 118.74H62.84C98.52 87.88 171.62 39.59 255.99 39.59z"/><path fill="#128807" fill-rule="nonzero" d="M60.38 348.64h391.24c-34.71 73.18-109.24 123.77-195.63 123.77-86.37 0-160.89-50.59-195.61-123.77z"/><path fill="#008" d="M255.99 179.9c42.05 0 76.13 34.08 76.13 76.11 0 42.04-34.08 76.12-76.13 76.12-42.03 0-76.11-34.08-76.11-76.12 0-42.03 34.08-76.11 76.11-76.11zm13.31 75.43c-.04-.71-.13-1.41-.27-2.09l13.3-1.92 38.01-12.54-39.2 8.14-12.46 4.99c-.22-.68-.49-1.33-.81-1.95l12.34-5.29 33.46-21.96c-.9-1.56-1.85-3.08-2.87-4.55l.07-.05c-1.46 1.13-3.55.84-4.68-.61a3.345 3.345 0 0 1 .56-4.61 62.382 62.382 0 0 0-3.66-3.96v-.02l-29.87 26.65-8.29 10.57c-.53-.48-1.1-.91-1.68-1.3l8.04-10.75 18.01-35.75-21.95 33.47-5.29 12.35c-.62-.32-1.28-.59-1.97-.81l5.01-12.46 8.14-39.2-12.56 38.01-1.9 13.3c-.68-.14-1.38-.23-2.09-.28l1.6-13.34-2.3-39.95c-1.8 0-3.59.09-5.37.22l-.01-.1c.24 1.83-1.05 3.5-2.87 3.74a3.325 3.325 0 0 1-3.72-2.79c-3.58.65-7.05 1.59-10.4 2.79.65 1.68-.16 3.6-1.84 4.28-1.66.68-3.58-.08-4.31-1.73-1.63.78-3.23 1.63-4.78 2.52l21.96 33.45 5.29 12.35c.62-.32 1.27-.59 1.95-.81l-4.99-12.46-8.14-39.2 12.55 38.01 1.91 13.3c.68-.14 1.38-.23 2.09-.28l-1.6-13.34 2.28-39.95c1.81 0 3.61.08 5.39.22l.01-.1a3.342 3.342 0 0 0 2.87 3.74c1.79.24 3.45-1.01 3.72-2.79 3.58.65 7.05 1.59 10.41 2.79-.65 1.68.16 3.6 1.82 4.28 1.68.68 3.59-.08 4.32-1.73 3.28 1.55 6.38 3.34 9.33 5.39l.05-.07c-1.13 1.46-.84 3.55.61 4.67a3.36 3.36 0 0 0 4.68-.61l-.07.08a64.22 64.22 0 0 1 3.94 3.62h.02l-26.64 29.89-10.56 8.29c.48.53.9 1.08 1.28 1.68l10.76-8.06 35.74-18c.89 1.56 1.74 3.15 2.52 4.78a3.298 3.298 0 0 0-1.73 4.31c.68 1.67 2.58 2.48 4.28 1.83 1.19 3.34 2.13 6.83 2.78 10.41a3.325 3.325 0 0 0-2.78 3.72c.23 1.82 1.91 3.1 3.73 2.86l-.09.02c.13 1.77.22 3.56.22 5.37l-39.95-2.28-13.35 1.6zm-46.61-56.98 18.01 35.73 8.06 10.75c-.6.39-1.16.82-1.68 1.3l-8.3-10.57-29.87-26.63c1.27-1.27 2.6-2.49 3.96-3.66 1.13 1.39 3.18 1.65 4.61.55a3.33 3.33 0 0 0 .62-4.67l.05.07c1.48-1.02 2.99-1.97 4.54-2.87zm-13.78 10.58 26.64 29.87 10.56 8.29c-.47.53-.9 1.08-1.3 1.68l-10.75-8.06-35.74-18c-.89 1.55-1.73 3.15-2.5 4.76a3.35 3.35 0 0 1 1.72 4.33c-.68 1.67-2.6 2.48-4.27 1.83-.61 1.7-1.13 3.41-1.6 5.15l38 12.54 13.31 1.92c-.15.68-.24 1.38-.29 2.09l-13.33-1.6-39.96 2.28c0 1.81.1 3.61.22 5.38l-.09.02c1.82-.25 3.5 1.03 3.74 2.87.23 1.79-1.02 3.45-2.79 3.72.65 3.58 1.58 7.03 2.79 10.39 1.67-.64 3.59.17 4.27 1.83.68 1.67-.08 3.6-1.72 4.33.77 1.63 1.61 3.21 2.5 4.76l35.74-18 10.75-8.05c.4.59.83 1.16 1.3 1.68l-10.56 8.3-26.65 29.87h.01c1.27 1.26 2.6 2.48 3.96 3.66 1.13-1.4 3.18-1.67 4.61-.56 1.46 1.12 1.74 3.22.62 4.67l.05-.06c1.47 1.03 2.99 1.98 4.54 2.88l21.96-33.48 5.29-12.35c.62.33 1.27.6 1.95.82l-4.99 12.47-8.14 39.19c1.73.46 3.49.86 5.26 1.19a3.325 3.325 0 0 1 3.72-2.8c1.79.25 3.06 1.87 2.87 3.65 1.77.15 3.56.23 5.38.23l2.3-39.97-1.6-13.34c.71-.03 1.41-.13 2.09-.27l1.9 13.3 12.56 38.01-8.14-39.19-5.01-12.47c.69-.22 1.35-.5 1.97-.82l5.29 12.35 21.95 33.48c1.55-.9 3.09-1.87 4.56-2.88l.05.06c-1.13-1.45-.84-3.55.61-4.67 1.43-1.11 3.49-.84 4.6.56 1.37-1.16 2.7-2.4 3.97-3.66l-26.64-29.87-10.56-8.3c.48-.52.9-1.09 1.28-1.68l10.76 8.05 35.76 18-33.48-21.96-12.36-5.28c.34-.63.61-1.28.83-1.96l12.46 5.01 39.18 8.13c.46-1.72.87-3.46 1.2-5.25a3.325 3.325 0 0 1-2.78-3.72 3.318 3.318 0 0 1 3.73-2.87l-.09-.02c.14-1.77.22-3.56.22-5.38l-39.95 2.28-13.35-1.6c-.04.73-.13 1.43-.27 2.11l13.3 1.9 37.99 12.55c-.47 1.75-.98 3.46-1.58 5.14-1.7-.64-3.6.17-4.28 1.83-.7 1.7.08 3.61 1.73 4.33a64.329 64.329 0 0 1-5.39 9.32l.07.05a3.335 3.335 0 0 0-4.68.62c-1.1 1.42-.83 3.48.56 4.59a72.466 72.466 0 0 1-3.66 3.98l-29.87-26.64-8.29-10.56c-.53.46-1.1.9-1.68 1.28l8.04 10.75 18.01 35.76c-1.55.89-3.14 1.73-4.77 2.5-.71-1.64-2.63-2.42-4.32-1.72-1.7.69-2.5 2.64-1.79 4.34l-.03-.07a64.87 64.87 0 0 1-10.41 2.79 3.325 3.325 0 0 0-3.72-2.8c-1.79.25-3.06 1.87-2.87 3.65-1.77.13-3.59.23-5.4.23l-2.28-39.97 1.6-13.34c-.71-.03-1.41-.13-2.09-.27l-1.91 13.3-12.55 38.01c-1.75-.46-3.48-1-5.14-1.6a3.3 3.3 0 0 0-1.84-4.27c-1.68-.7-3.6.08-4.32 1.72a65.32 65.32 0 0 1-4.77-2.5l18.01-35.76 8.06-10.75c-.6-.38-1.16-.82-1.68-1.28l-8.3 10.56-29.88 26.64v-.02c-1.27-1.27-2.49-2.6-3.65-3.96 1.4-1.11 1.65-3.17.56-4.59a3.324 3.324 0 0 0-4.67-.62l.06-.05c-1.01-1.47-1.98-3-2.88-4.56l33.46-21.96 12.35-5.28c-.31-.63-.58-1.28-.81-1.96l-12.46 5.01-39.19 8.13 38-12.55 13.31-1.9c-.15-.68-.24-1.38-.29-2.11l-13.33 1.6-39.96-2.28c0-1.82.08-3.6.22-5.37l-.09-.02c1.82.24 3.5-1.04 3.74-2.86.23-1.79-1.02-3.45-2.79-3.72.33-1.78.73-3.53 1.19-5.26l39.19 8.14 12.46 4.99c.23-.68.5-1.33.81-1.95l-12.35-5.29-33.46-21.96c.9-1.56 1.85-3.08 2.88-4.55l-.06-.05c1.45 1.13 3.54.84 4.67-.61 1.09-1.43.84-3.49-.56-4.61 1.18-1.36 2.4-2.69 3.66-3.96z"/></svg></span>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          <a class="app-header-menu-item" href="/pages/project-docs/">Project-doc-Home</a>
+             - 
+          <a class="app-header-menu-item" href="/cli-mode/">CLI Mode</a>
+      </nav>
+
+      <p>A Ray of Hope in the circuitry, Igniting curiosity.</p>
+      <p>(E-Hacker/Dev/Cyber Awareness Advocate)</p>
+
+      <div class="app-header-social">
+        
+          <a href="https://github.com/sudo-hope0529" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+            <i class="fa-brands fa-github"></i>
+          </a>
+
+          <a href="mailto:sud0hope.techie@gmail.com" aria-label="Email" title="Email">
+            <i class="fa-solid fa-envelope"></i>
+          </a>
+        
+          <a href="https://linkedin.com/in/dkrishna0124" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+
+          <a href="https://www.credly.com/users/krishna-dwivedi.a2ae4587" target="_blank" rel="noopener" aria-label="Credly" title="Credly" >
+            <i class="fa fa-certificate"></i>
+          </a>
+        
+          <a href="https://sudo-hope0529.github.io/Link-tree" target="_blank" rel="noreferrer noopener me" style="margin-top: 10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link" >
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+          </a>
+
+          <a id="openMessageBtn" aria-label="Send Message" title="Send Message Now" class="icon-button">
+            <i class="fa-solid fa-paper-plane" style="height: 2px;"></i>
+          </a>
+      </div>
+
+    </header>
+    <style>
+      ul {margin-top: 0;}
+    </style>
+    <main class="app-container">
+      <h1>ISC2 CC Practice Quiz</h1>
+      <span class="posts-list-item-description" style="margin-top: -14px;">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+            <title>calendar</title>
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+         </svg>
+         March 21, 2025
+         <span class="posts-list-item-separator">  </span>
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+            <title>clock</title>
+            <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+         </svg>
+         2-4 min read
+         <span class="posts-list-item-separator">  </span>
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link" >
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+         </svg><a href="https://sudo-hope0529.github.io/cc-practice-quiz" style="color:#afbac4">
+         Take ur Test</a>
+         <span class="posts-list-item-separator">  </span>
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+            <title>tag</title>
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+         </svg>
+         <a href="/pages/project-docs/" style="color:#afbac4">Project-docs</a>
+      </span>
+      <p class="custom-hr"></p>
+      <br>
+      <img src="../../pages/project-docs/asset/cc-practice-quiz-homepage.png" alt="CC Practice Quiz" class="zoomable-img" width="50%">
+      <p style="text-align: end; margin-top: -6px;">Designed by <a href="https://sudo-hope0529.github.io/Link-tree/">Krishna Dwivedi</a></p>
+
+      <p>A comprehensive practice platform for the ISC2 CC certification exam, designed to help aspiring cybersecurity professionals test and enhance their knowledge.</p>
+      <p>The Certified in Cybersecurity (CC) Practice Quiz helps you prepare for the ISC2 CC certification exam. Test your knowledge across security principles, incident response, access controls, network security, and security operations through Customizable quiz length and get instant feedback to track your progress.</p>
+      <p> Start your cybersecurity journey today!</p>
+      <section>
+        <h2>🚀 Quick Start</h2>
+        <video width="640" height="360" controls>
+            <source src="../../pages/project-docs/asset/cc-practive-quiz-usage.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+         </video>
+
+        <ol>
+            <li>Visit: <a href="https://sudo-hope0529.github.io/cc-practice-quiz/">CC Practice Quiz</a></li>
+            <li>Enter your name</li>
+            <li>Choose number of questions (1–164)</li>
+            <li>Start the quiz!</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>📚 Question Bank</h2>
+        <p><strong>Total Questions:</strong> 160+</p>
+        <p><strong>Covers all 5 CC domains:</strong></p>
+        <ul>
+            <li>Security Principles</li>
+            <li>Business Continuity, DR & Incident Response</li>
+            <li>Access Controls</li>
+            <li>Network Security</li>
+            <li>Security Operations</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>🎯 Features</h2>
+        <ul>
+            <li>Customizable quiz length</li>
+            <li>Randomized questions</li>
+            <li>Instant feedback</li>
+            <li>Score tracking</li>
+            <li>Friendly interface</li>
+        </ul>
+    </section>
+    <section>
+      <h2>Things to remember while giving Quiz:</h2>
+      <ul>
+         <li>First, read all options carefully then select answer</li>
+         <li>Options may be similar, select the best option</li>
+         <li>Create mind map for topics like TCP/IP protocol & OSI model</li>
+      </ul>
+    </section>
+    <section>
+        <h2>💬 User Feedback</h2>
+        <p>Share your experience or report issues:</p>
+        <ul>
+            <li>Click the "Share Feedback" button on the quiz page</li>
+            <li>Submit via GitHub: <a href="https://github.com/sudo-hope0529/cc-practice-quiz/issues/new?title=Feedback+@cc_practice_quiz&body=@sudo-hope0529%5BKrishna+Dwivedi%5D%0A">Give-Feedback</a></li>
+            <li>Email: <a href="mailto:sud0hope.techie+ccfeedback@gmail.com">sud0hope.techie+ccfeedback@gmail.com</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>📖 Sources</h2>
+        <p>Questions are curated from:</p>
+        <ul>
+            <li>Prabh Nair's YouTube <em>CC Coffee Shots</em></li>
+            <li>ISC2 CC Official Study Guide</li>
+            <li>ISC2 CC Exam Outline</li>
+            <li>Certified Cybersecurity Professional materials</li>
+            <li>Industry-standard cybersecurity practices</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>🔄 Updates</h2>
+        <ul>
+            <li>Questions are reviewed and updated</li>
+            <li>Content aligned with latest CC exam objectives</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>🤝 Contributing</h2>
+        <p>Want to contribute? Great! Here's how:</p>
+        <ol>
+            <li>Fork the repo and Create a Pull Request</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>📝 License</h2>
+        <p>This project is licensed under the MIT License, see the <code style="font-size: 17px;"><a href="https://github.com/sudo-hope0529/cc-practice-quiz/blob/main/LICENSE">LICENSE</a></code> file for details.</p>
+    </section>
+
+   </main>
+  <footer style="margin-left: 20%; margin-right: 34%;">
+    <p>&copy; 2025 Krishna Dwivedi. All rights reserved.</p>
+  </footer>
+  </body>
+      <script src="../../scripts/main.js"></script>
+      <script src="../../scripts/msg-popup.js"></script>
+</html>
