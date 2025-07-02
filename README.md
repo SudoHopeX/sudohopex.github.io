@@ -33,7 +33,6 @@ Here you’ll find:
 ## 🚩 Visit [Webpage](https://sudo-hope0529.github.io/) to have a look
 
 
-## Any suggestions or improvements are welcomed...
-
-Feel free to DM via [DM NOW](https://sudo-hope0529.github.io/message-popup.html
+## Any suggestions or improvements:
+## Feel free to DM via [DM NOW](https://sudo-hope0529.github.io/message-popup.html)
 
