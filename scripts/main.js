@@ -138,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const overlay = document.createElement("div");
   overlay.id = "imgOverlay";
   overlay.innerHTML = `<img src="" alt="Zoomed Image">`;
+  overlay.style.display = "none";
   document.body.appendChild(overlay);
 
   const overlayImg = overlay.querySelector("img");
