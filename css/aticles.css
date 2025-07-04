@@ -55,3 +55,53 @@ ul { margin-left: 16px;}
   transition: transform 0.3s ease;
   cursor: zoom-out;
 }
+
+/* suggestions*/
+.suggested-topics {
+margin: 0 auto;
+margin-top: 36px;
+overflow: hidden;
+}
+
+.suggested-topic-header {
+display: flex;
+align-items: center;
+padding: 16px;
+}
+
+.suggested-topic-header svg {
+width: 22px;
+height: 22px;
+margin-right: 10px;
+fill: #ccc;
+}
+
+.suggested-topic-header-title {
+font-size: 1.2rem;
+font-weight: bold;
+}
+
+.topic {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 16px;
+border-top: 1px solid #2c2c2c;
+cursor: pointer;
+transition: background-color 0.2s ease;
+text-decoration: none;
+}
+
+.topic:hover {
+background-color: #1e1e1e;
+}
+
+.topic span {
+color: #ccc;
+font-size: 15px;
+}
+
+.plus {
+font-size: 20px;
+color: #888;
+}
