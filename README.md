@@ -27,6 +27,7 @@ Here you’ll find:
 
 - **HTML5, CSS3, JavaScript** 
 - Deployed via [GitHub Pages](https://pages.github.com/)
+- Form/ Query submission via [Formspree.io](https://formspree.io/)
 
 ---
 
