@@ -156,3 +156,30 @@ document.addEventListener("DOMContentLoaded", function () {
     overlay.style.display = "none";
   });
 });
+
+
+// img switch & glitch anim
+const images = [
+    '/img/hope.jpg',
+    '/img/SudoHopeX.jpg'
+  ];
+
+  let currentIndex = 0;
+  const imgElement = document.getElementById('dynamic-img');
+  const intervalTime = 7000; // Change image every 3 seconds
+
+  setInterval(() => {
+    // Add glitch effect
+    imgElement.classList.add('glitch-effect');
+
+    // Switch image slightly after glitch starts
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % images.length;
+      imgElement.src = images[currentIndex];
+    }, 150);
+
+    // Remove glitch class after animation ends
+    setTimeout(() => {
+      imgElement.classList.remove('glitch-effect');
+    }, 500);
+  }, intervalTime);
