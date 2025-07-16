@@ -227,25 +227,35 @@
          // },
          {
             name: "Email Me",
-            url: "sendE()",
+            onClick: sendE,
             icon: "fas fa-envelope"
          }
       ];
 
       // Function to create link elements with icons
       function createLinks() {
-         const linkContainer = document.getElementById('linkContainer');
-         links.forEach(link => {
-            const a = document.createElement('a');
-            a.href = link.url;
-            a.target = "_blank";
-            const icon = document.createElement('i');
-            icon.className = link.icon;
-            a.appendChild(icon);
-            a.appendChild(document.createTextNode(` ${link.name}`));
-            linkContainer.appendChild(a);
-         });
-      }
+  const linkContainer = document.getElementById('linkContainer');
+  links.forEach(link => {
+    const a = document.createElement('a');
+    const icon = document.createElement('i');
+    icon.className = link.icon;
+
+    if (link.onClick) {
+      a.href = "#";
+      a.onclick = (e) => {
+        e.preventDefault();
+        link.onClick();
+      };
+    } else {
+      a.href = link.url;
+      a.target = "_blank";
+    }
+
+    a.appendChild(icon);
+    a.appendChild(document.createTextNode(` ${link.name}`));
+    linkContainer.appendChild(a);
+  });
+}
       createLinks();
 
       // Matrix background effect
@@ -263,9 +273,9 @@
       createMatrixEffect();
 
     // send email dynamically
-    sendE(){
-     u: "sudohope.techie";
-     d: "gamil.com";
+    function sendE(){
+     const u = "sud0hope.techie";
+     const d = "gamil.com";
      const e = `${u}@${d}`;
      window.location.href = `mailto:${e}`;
     }
