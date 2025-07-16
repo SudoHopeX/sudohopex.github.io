@@ -227,7 +227,7 @@
          // },
          {
             name: "Email Me",
-            url: "mailto:sud0hope.techie@gmail.com",
+            url: "sendE()",
             icon: "fas fa-envelope"
          }
       ];
@@ -261,6 +261,14 @@
          }
       }
       createMatrixEffect();
+
+    // send email dynamically
+    sendE(){
+     u: "sudohope.techie";
+     d: "gamil.com";
+     const e = `${u}@${d}`;
+     window.location.href = `mailto:${e}`;
+    }
    </script>
 </body>
 </html>
