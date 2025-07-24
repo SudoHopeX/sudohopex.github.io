@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 * {
     box-sizing: border-box
 }
@@ -8,9 +9,14 @@ html {
 
 body {
     margin: 0;
-    font-family: sans-serif;
-    background: #000;
-    color: #afbac4
+    font-family: 'Inter', sans-serif;
+    background-color: #000;
+    color: #afbac4;
+    min-height: 100vh;
+    background-image:
+        linear-gradient(transparent 24px, rgba(255, 255, 255, 0.03) 1px),
+        linear-gradient(90deg, transparent 24px, rgba(255, 255, 255, 0.03) 1px);
+    background-size: 25px 25px;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -18,7 +24,6 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 a {
-    /* color: #00ff6f; */
     color: #7f5af0;
     transition: color .35s;
     text-decoration: none
@@ -27,23 +32,6 @@ a {
 a:hover {
     color: #fff
 }
-
-/* code {
-    font-family: monospace,monospace;
-    font-size: 1em;
-    color: rgba(175,186,196,.8);
-    text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%
-}
-
-pre {
-    font-size: 1rem;
-    line-height: 1.2em;
-    margin: 0;
-    overflow: auto
-} */
 
 pre code {
     font-size: .8em
@@ -104,7 +92,12 @@ pre code {
 }
 
 .app-container {
-    padding: 2.5rem
+    padding: 2.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    line-height: 1.75;
+    max-width: 720px;
+    margin: 0 auto;
 }
 
 .app-header-social {
@@ -140,14 +133,6 @@ pre code {
         max-width: 65rem;
         margin-left: 24rem
     }
-}
-
-.error-404 {
-    text-align: center
-}
-
-.error-404-title {
-    text-transform: uppercase
 }
 
 .icon {
