@@ -28,6 +28,7 @@ Here you’ll find:
 - **HTML5, CSS3, JavaScript** 
 - Deployed via [GitHub Pages](https://pages.github.com/)
 - Form/ Query submission via [Formspree.io](https://formspree.io/)
+- Thanks to [incogbyte](https://github.com/incogbyte) for the idea and making their webpage source code open source
 
 ---
 
