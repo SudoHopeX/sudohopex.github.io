@@ -114,3 +114,52 @@ font-size: 15px;
 font-size: 20px;
 color: #888;
 }
+
+
+/* auto scroll to top */
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  background-color: #333;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  z-index: 1000;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+#scrollToTopBtn:hover {
+  opacity: 1;
+}
+
+/* SVG Icon Styling */
+#scrollToTopBtn svg {
+  display: block;
+}
+
+/* Tooltip Styling */
+#scrollToTopBtn .tooltip-text {
+  visibility: hidden;
+  width: 100px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  margin-left: -50px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+#scrollToTopBtn:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
