@@ -200,3 +200,11 @@ const images = [
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+
+function sendE(){
+    const u = "sud0hope";
+    const v = "techie";
+    const d = "gamil.com";
+    const e = `${u}.${v}@${d}`;
+    window.location.href = `mailto:${e}`;
+}
