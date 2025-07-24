@@ -183,3 +183,20 @@ const images = [
       imgElement.classList.remove('glitch-effect');
     }, 500);
   }, intervalTime);
+
+
+// auto scroll to top button
+  const scrollBtn = document.getElementById("scrollToTopBtn");
+
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+
+    scrollBtn.style.display = scrollPercent > 50 ? "flex" : "none";
+  });
+
+  scrollBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
