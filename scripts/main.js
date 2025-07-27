@@ -200,7 +200,6 @@ const images = [
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-
 function sendE(){
     const u = "sud0hope";
     const v = "techie";
@@ -208,3 +207,53 @@ function sendE(){
     const e = `${u}.${v}@${d}`;
     window.location.href = `mailto:${e}`;
 }
+
+// script for slogan part
+const slogans = [
+    "( Developer )",
+    "( Ethical Hacker )",
+"( Pentester )",
+    "( Cyber Awareness Advocate )",
+    "( Learner & Explorer )"
+    ];
+
+const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(){}[]<>.,;:";
+const sloganElement = document.querySelector(".slogan");
+let currentSloganIndex = 0;
+
+function addOrRemoveClass(element, className, add) {
+element.classList[add ? "add" : "remove"](className);
+}
+
+function getRandomCharacter() {
+return characters[Math.floor(Math.random() * characters.length)];
+}
+
+function changeSlogan() {
+addOrRemoveClass(sloganElement, "glitch", false);
+const currentSlogan = slogans[currentSloganIndex];
+const sloganLength = currentSlogan.length;
+let charIndex = 0;
+
+    const interval = setInterval(() => {
+        sloganElement.textContent = [...currentSlogan].map((char, index) => index < charIndex ? char : getRandomCharacter()).join("");
+        charIndex++;
+        if (charIndex > sloganLength) {
+        clearInterval(interval);
+        addOrRemoveClass(sloganElement, "glitch", true);
+        sloganElement.dataset.text = sloganElement.textContent;
+        currentSloganIndex = (currentSloganIndex + 1) % slogans.length;
+        }
+    }, 15);
+    }
+
+    function startSloganChange() {
+    changeSlogan();
+    setInterval(changeSlogan, 4000);
+    }
+
+    if (/complete|interactive/.test(document.readyState)) {
+    setTimeout(startSloganChange, 1);
+    } else {
+    document.addEventListener("DOMContentLoaded", startSloganChange);
+    }
