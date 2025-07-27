@@ -44,9 +44,10 @@ function typeText(text, element) {
 let autocompleteAction = true;
 const commandsList = [
  'help', 'about', 'skills', 'projects','qualification', 'contact', 'clear', 'exit',
- 'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobbies', 'quote',
- 'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'download resume', 'pwd',
- 'whoami', 'autocomplete-d'
+ 'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobby', 'quote',
+ 'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'resume', 'pwd',
+ 'whoami', 'autocomplete-d', 'autocomplete-e', 'home', 'experience', 'openpuffi', 
+ 'hashstorm', 'home' 
 ];
 
 function autocomplete(input) {
@@ -125,6 +126,7 @@ function fetchDetails(command) {
            'contact         -> Show my contact info\n' +
            'resume          -> Request 2 Download my resume\n' +
            'qualification   -> See my educational qualifications\n' +
+           'experience      -> Know Experience\n'+
            'email           -> Send me an email\n' +
            'home            -> Leave terminal mode & redirect to home\n' +
            'game            -> Play a riddle game\n' +
@@ -150,29 +152,32 @@ function fetchDetails(command) {
    case 'autocomplete-d':
        autocompleteAction = false;
      return 'autocomplete is diabled, to enable it again type `autocomplete-e`.';
-     case 'autocomplete-d':
+     case 'autocomplete-e':
        autocompleteAction = true;
      return 'autocomplete is enabled, to disable it again type `autocomplete-d`.';
    case 'about':
      return 'Krishna is passionate aspiring cybersecurity expert with a focus on information security and ethical hacking.';
    case 'contact':
-     return 'Email: sud0hope.techie@gmail.com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/sudo-hope0529\nCredly: https://www.credly.com/users/krishna-dwivedi.a2ae4587';
+     return 'Email: sud0hope[dot]techie@gmail[at]com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/sudo-hope0529\nCredly: https://www.credly.com/users/krishna-dwivedi.a2ae4587';
    case 'clear':
      terminalOutput.textContent = '';
      return '';
+   case 'experience':
+     return 'Ethical Hacker Internship at Inlighntech pvt. ltd.';
    case 'qualification':
      return 'ISC2 Certified in Cybersecurity Cert.\nIBM’s Cyber Security Fundamentals Cert.\nBachelor❜s in Technology with CSE(Computer Science Engineering)\nHarvard❜s Aspire graduate under ALP(Aspire Leadership Program) Cohort 3, 2024';
    case 'email':
      window.open('mailto:sud0hope.techie@gmail.com', '_blank');
      return 'Opened email client in a new tab...'+
-             'or mail at: sud0hope.techie@gmail.com';
+             'or mail at: sud0hope[dot]techie[at]gmail.com';
    case 'home':
      window.location.replace('/');
      return 'Terminal mode exiting. See you dear!';
    case 'projects':
-     return '1. HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'+
-            '2. ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'+
-            '3. Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
+     return '[^] HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'
+            +'[^] OpenPuffi - A bashScript to automate OpenPuff Steganography tool & Wine 32-bit installation to run window based tools on linux like openpuff (type `openpuffi` to redirect there).\n'
+            +'[^] ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'
+            +'[^] Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
    case 'skills':
      return '- Penetration Testing\n- Ethical Hacking\n- Vulnerability Assessment\n- Python Scripting\n- Cyber Awareness Advocacy';
    case 'whoishe':
@@ -188,16 +193,19 @@ function fetchDetails(command) {
      return 'Explore my ISC2 certified in cybersecurity practice quiz opened in new tab.';
   case 'hashstorm':
      wwindow.open('https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
-     return 'HashStorm Documentation opened in new tab. If not search: https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html';
+     return 'Redirected to HashStorm Documentation. If not search: https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html';
+  case 'openpuffi':
+     window.open('https://sudo-hope0529.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html', '_blank', 'noopener,noreferrer');
+     return 'Redirected to OpenPuffi Documentation. If not Visit: https://sudo-hope0529.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html';
    case 'keylogger':
      window.open('https:sudo-hope0529.github.io/pages/Comingsoon.html');
-     return 'Redirected to Keylogger writeups. If not search: https://sudo-hope0529.github.io/pages/project-docs/';
+     return 'Redirected to Keylogger. If not search: https://sudo-hope0529.github.io/pages/project-docs/';
    case 'location':
      return 'I am in Your System, right now..\n Belongs to Uttar Pradesh (aka UP), INDIA.';
    case 'hobby':
      return 'In my free time, I enjoy:\n- Coding personal projects\n- Reading cybersecurity blogs\n- Reading Books \n- Watching Hacking Documentaries\n- Exploring new tech gadgets';
    case 'quote':
-     return '"The purpose of life is a life of purpose." - The monk who sold his ferrari';
+     return '"विचारों का थहर जाना ही आनंद है | विचाराणां स्थैर्यं एव आनन्दः अस्ति | The stillness of thoughts is bliss.";
    case 'status':
      return 'Current Status: Actively seeking cybersecurity opportunities and exploring something new almost daily!';
    case 'theme':
@@ -217,7 +225,7 @@ function fetchDetails(command) {
          return 'Theme switched to Dark Mode!';
      }
    case 'i love you':
-     return '💻 ! L0V3 U 2 but HACKING too much 😁 💻\n' +
+     return '💻 BUT ! L0V3 HACKING too much 😁 💻\n' +
             'H - Hack the planet!\n' +
             'A - Always learning!\n' +
             'C - Code is power!\n' +
@@ -261,8 +269,7 @@ function fetchDetails(command) {
        return 'You are already in a game. Answer the current riddle or type "skip" to get a new one.';
      }
    case 'resume':
-       window.open('https://gdrive.com/resources/resume.pdf', '_blank', 'noopener,noreferrer');
-       return 'Initiating download of my resume... \nIf not initiated, click the link to download: https://gdrive.com/resources/resume.pdf';
+       return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudo-hope0529.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`;
    case 'pwd':
      return 'home/^_~';
    case 'whoami':
@@ -276,10 +283,10 @@ function fetchDetails(command) {
          riddleActive = false;
          return 'Hacked! You breached the Riddle! Type "game" to play again.';
        } else {
-         return 'Breach failure. Try again or type "skip" for a new riddle.';
+         return 'Breach failure! Try again or type "skip" for a new riddle.';
        }
      }
-     return 'Unknown command. Type "help" for a list of commands.';
+     return 'Breach failure! Type "help" for a list of available commands.';
  }
 }
 
