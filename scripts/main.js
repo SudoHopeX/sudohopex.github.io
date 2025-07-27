@@ -186,8 +186,9 @@ const images = [
 
 
 // auto scroll to top button
-  const scrollBtn = document.getElementById("scrollToTopBtn");
+const scrollBtn = document.getElementById("scrollToTopBtn");
 
+if (scrollBtn !== null) {
   window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -199,6 +200,7 @@ const images = [
   scrollBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+}
 
 function sendE(){
     const u = "sud0hope";
