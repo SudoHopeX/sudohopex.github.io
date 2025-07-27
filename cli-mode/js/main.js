@@ -205,7 +205,7 @@ function fetchDetails(command) {
    case 'hobby':
      return 'In my free time, I enjoy:\n- Coding personal projects\n- Reading cybersecurity blogs\n- Reading Books \n- Watching Hacking Documentaries\n- Exploring new tech gadgets';
    case 'quote':
-     return '"विचारों का थहर जाना ही आनंद है | विचाराणां स्थैर्यं एव आनन्दः अस्ति | The stillness of thoughts is bliss.";
+     return 'विचारों का थहर जाना ही आनंद है | विचाराणां स्थैर्यं एव आनन्दः अस्ति | The stillness of thoughts is bliss.';
    case 'status':
      return 'Current Status: Actively seeking cybersecurity opportunities and exploring something new almost daily!';
    case 'theme':
