@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sudo-hope0529/sudo-hope0529/main/animation.svg" width="100%" alt="Hacker & Bug Bounty Enthusiast Banner" />
+  <img src="https://raw.githubusercontent.com/sudohopex/sudohopex/main/animation.svg" width="100%" alt="Hacker & Bug Bounty Enthusiast Banner" />
 </p>
 
-<h1 align="center">sudo-hope0529.github.io</h1>
+<h1 align="center">sudohopex.github.io</h1>
 
 <p align="center">
-  <b>🚀 My personal portfolio & blog — built and maintained by <a href="https://github.com/sudo-hope0529">sudo-hope0529</a></b>
+  <b>🚀 My personal portfolio & blog — built and maintained by <a href="https://github.com/sudohopex">SudoHopeX</a></b>
 </p>
 
 ---
@@ -32,8 +32,8 @@ Here you’ll find:
 
 ---
 
-## 🚩 Visit [Webpage](https://sudo-hope0529.github.io/) to have a look
+## 🚩 Visit [Webpage](https://sudohopex.github.io/) to have a look
 
 
-## Any suggestions or improvements [DM NOW](https://sudo-hope0529.github.io/message-popup.html)
+## Any suggestions or improvements [DM NOW](https://sudohopex.github.io/message-popup.html)
 
