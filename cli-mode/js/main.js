@@ -158,7 +158,7 @@ function fetchDetails(command) {
    case 'about':
      return 'Krishna is passionate aspiring cybersecurity expert with a focus on information security and ethical hacking.';
    case 'contact':
-     return 'Email: sud0hope[dot]techie@gmail[at]com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/sudo-hope0529\nCredly: https://www.credly.com/users/krishna-dwivedi.a2ae4587';
+     return 'Email: sud0hope[dot]techie@gmail[at]com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/SudoHopeX\nCredly: https://www.credly.com/users/krishna-dwivedi.a2ae4587';
    case 'clear':
      terminalOutput.textContent = '';
      return '';
@@ -186,20 +186,20 @@ function fetchDetails(command) {
      window.open('https://www.linkedin.com/in/dkrishna0124', '_blank', 'noopener,noreferrer');
      return 'Connect with me on LinkedIn opened on new tab';
    case 'github':
-     window.open('https://github.com/sudo-hope0529', '_blank', 'noopener,noreferrer');
+     window.open('https://github.com/sudohopex', '_blank', 'noopener,noreferrer');
      return 'Opening GitHub in a new tab...';
    case 'cc-course':
-     window.open('https://sudo-hope0529.github.io/cc-practice-quiz/', '_blank', 'noopener,noreferrer');
+     window.open('https://sudohopex.github.io/cc-practice-quiz/', '_blank', 'noopener,noreferrer');
      return 'Explore my ISC2 certified in cybersecurity practice quiz opened in new tab.';
   case 'hashstorm':
-     wwindow.open('https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
-     return 'Redirected to HashStorm Documentation. If not search: https://sudo-hope0529.github.io/pages/project-docs/hs.nksdnifadnifad.html';
+     wwindow.open('https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
+     return 'Redirected to HashStorm Documentation. If not search: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html';
   case 'openpuffi':
-     window.open('https://sudo-hope0529.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html', '_blank', 'noopener,noreferrer');
-     return 'Redirected to OpenPuffi Documentation. If not Visit: https://sudo-hope0529.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html';
+     window.open('https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html', '_blank', 'noopener,noreferrer');
+     return 'Redirected to OpenPuffi Documentation. If not Visit: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html';
    case 'keylogger':
-     window.open('https:sudo-hope0529.github.io/pages/Comingsoon.html');
-     return 'Redirected to Keylogger. If not search: https://sudo-hope0529.github.io/pages/project-docs/';
+     window.open('https:sudohopex.github.io/pages/Comingsoon.html');
+     return 'Redirected to Keylogger. If not search: https://sudohopex.github.io/pages/project-docs/';
    case 'location':
      return 'I am in Your System, right now..\n Belongs to Uttar Pradesh (aka UP), INDIA.';
    case 'hobby':
@@ -269,7 +269,7 @@ function fetchDetails(command) {
        return 'You are already in a game. Answer the current riddle or type "skip" to get a new one.';
      }
    case 'resume':
-       return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudo-hope0529.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`;
+       return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudohopex.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`;
    case 'pwd':
      return 'home/^_~';
    case 'whoami':
