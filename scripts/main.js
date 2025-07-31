@@ -259,3 +259,32 @@ let charIndex = 0;
     } else {
     document.addEventListener("DOMContentLoaded", startSloganChange);
     }
+
+// copy code
+document.addEventListener('DOMContentLoaded', function () {
+    const copyButtons = document.querySelectorAll('.code-cp-btn');
+
+    copyButtons.forEach(button => {
+        button.addEventListener('click', async function () {
+            try {
+                // Traverse to the nearest <pre><code> after the button
+                const codeBlock = button.closest('.code-block-wrapper')?.querySelector('.code-txt');
+                if (!codeBlock) return;
+
+                await navigator.clipboard.writeText(codeBlock.textContent.trim());
+
+                const originalSVG = button.innerHTML;
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>`;
+
+                setTimeout(() => {
+                    button.innerHTML = originalSVG;
+                }, 2000);
+            } catch (err) {
+                console.error('Copy failed:', err);
+            }
+        });
+    });
+});
