@@ -103,7 +103,15 @@
 
       <p>In the same way, Python virtual environments make sure each project has exactly what it needs, without interfering with others.</p>
       <h2>Install Python venv3</h2>
-      <P>Install py venv using apt:</P>
+      <P style="margin-bottom: -40px;">Install py venv using apt:</P>
+      <div id="copy-button-container" class="flex justify-end px-4 py-2 bg-accent border-b border-border">
+            <button id="copy-button" class="p-1 rounded border border-border bg-background shadow-sm transition-colors text-muted-foreground hover:text-foreground" title="Copy code">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg>
+            </button>
+        </div>
       <pre><code class="code-txt">sudo apt update && sudo apt install python3-venv</code></pre>
       <P>or using pyenv:</P>
       <pre><code class="code-txt">curl https://pyenv.run | bash</code></pre>
@@ -133,7 +141,7 @@
       <ul>
         <li>Installation: <pre><code class="code-txt">sudo apt install python3-venv</code> (done)</pre></li>
         <li>Creating venv directory: <pre><code class="code-txt">python3 -m venv py_venv</code></pre></li>
-        <li>Activating: <pre><code class="code-txt">source py_venv/venv3/bin/activate</code> (successfully running)</pre></li>
+        <li>Activating: <pre><code class="code-txt">source py_venv/bin/activate</code> (successfully running)</pre></li>
         <li>Deactivating: <pre><code class="code-txt">deactivate</code> (successfully stopped)</pre></li>
       </ul>
 
