@@ -269,7 +269,7 @@ function fetchDetails(command) {
        return 'You are already in a game. Answer the current riddle or type "skip" to get a new one.';
      }
    case 'resume':
-       return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudohopex.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`;
+       return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudohopex.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`';
    case 'pwd':
      return 'home/^_~';
    case 'whoami':
