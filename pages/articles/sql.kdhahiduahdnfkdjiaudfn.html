@@ -201,7 +201,7 @@
                               <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
                           </svg> </button>
                       </div>
-                      <pre><code class="code-txt">xyz' AND (SELECT CASE WHEN (Username = 'Administrator' AND SUBSTRING(Password, 1, 1) &gt; 'm') THEN 1/0 ELSE 'a' END FROM Users)='a</code></pre>
+                      <pre><code class="code-txt">xyz' AND (SELECT CASE WHEN (Username = 'Administrator' AND SUBSTRING(Password, 1, 1) &gt; 'm') THEN 1/0 ELSE 'a' END FROM Users)='a    </code></pre>
                     </div>
                     Might return all users if not properly sanitized.
                 </li>
@@ -492,8 +492,17 @@
         <p>Effective prevention combines foundational and advanced methods:</p>
         <ul>
           <li><strong>Parameterized Queries:</strong> Use prepared statements to separate inputs, e.g., in Java:<br>
-            <pre><code class="code-txt">PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?");
+            <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+              <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                <button class="code-cp-btn"> 
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                  </svg> </button>
+              </div>
+              <pre><code class="code-txt">PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?");
 pstmt.setString(1, username);</code></pre>
+            </div>
           </li><br>
           <li><strong>Input Validation and Sanitization:</strong> Enforce allow-lists to sanitize inputs, blocking characters like <code>'</code> or <code>;</code> and combine with context-aware checks to block encoded payloads.</li><br>
           <li><strong>Least Privilege Access:</strong> Limit database permissions to essentials, reducing attack impacts.</li><br>
