@@ -132,7 +132,16 @@
         <pre>Username => admin and Password => adminpasswd</pre>
         <img src="../../pages/articles/assets/sqli_form_bypass.png" class="zoomable-img" >
         <p>The web application might run this SQL query:</p>
-        <pre><code class="code-txt">SELECT * FROM users WHERE username = 'admin' AND password = 'password123';</code></pre>
+        <div class="code-block-wrapper"  style="margin-top: -65px;" >  
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg> </button>
+          </div>
+          <pre><code class="code-txt">SELECT * FROM users WHERE username = 'admin' AND password = 'password123';</code></pre>
+        </div>
         <p>If the credentials are correct, the user is logged in (as demonstrated below 👇)</p>
         <img src="../../pages/articles/assets/sqli_form_bypass_result.png" class="zoomable-img" width="240px">
         <br>
@@ -141,7 +150,16 @@
         <pre>Username => admin' -- and Password => (left blank)</pre>
         <img src="../../pages/articles/assets/sqli_form_login_bypass.png" class="zoomable-img" width="340px">
         <p>This changes the SQL query to:</p>
-        <pre><code class="code-txt">SELECT * FROM users WHERE username = 'admin' -- ' AND password = '';</code></pre>
+        <div class="code-block-wrapper"  style="margin-top: -65px;" >  
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">SELECT * FROM users WHERE username = 'admin' -- ' AND password = '';</code></pre>
+        </div>
         <p>The <code>--</code> is a SQL comment, so everything after it is ignored. The query now only checks if the username is "admin", bypassing the password check.</p>
         <h4>3. Result</h4>
         <p>The attacker gains unauthorized access to the admin account without knowing the password. (as demonstrated below 👇)</p>
@@ -174,7 +192,17 @@
     <ul>
         <li><strong>Error-Based SQLi:</strong> Exploits database error messages to gather information.
             <ul><img src="../../pages/articles/assets/err_based_sqli.png" class="zoomable-img" width="35%">
-                <li><strong>Example:</strong><pre><code class="code-txt">xyz' AND (SELECT CASE WHEN (Username = 'Administrator' AND SUBSTRING(Password, 1, 1) &gt; 'm') THEN 1/0 ELSE 'a' END FROM Users)='a</code></pre>
+                <li><strong>Example:</strong>
+                    <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+                      <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                        <button class="code-cp-btn"> 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                          </svg> </button>
+                      </div>
+                      <pre><code class="code-txt">xyz' AND (SELECT CASE WHEN (Username = 'Administrator' AND SUBSTRING(Password, 1, 1) &gt; 'm') THEN 1/0 ELSE 'a' END FROM Users)='a</code></pre>
+                    </div>
                     Might return all users if not properly sanitized.
                 </li>
             </ul>
@@ -182,7 +210,17 @@
         <li style="margin-top: 14px;">
             <strong>Union-Based SQLi:</strong> Combines the results of the original query with injected SELECT statements.
             <ul><img src="../../pages/articles/assets/union_based_sqli.svg" class="zoomable-img" width="50%">
-                <li><strong>Example:</strong><pre><code class="code-txt">' UNION SELECT username, password FROM users--</code></pre>
+                <li><strong>Example:</strong>
+                  <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+                    <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                      <button class="code-cp-btn"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                        </svg> </button>
+                    </div>
+                    <pre><code class="code-txt">' UNION SELECT username, password FROM users--</code></pre>
+                  </div>
                 </li>
             </ul>
         </li>
@@ -193,7 +231,17 @@
     <ul>
         <li><strong>Boolean-Based Blind SQLi:</strong> The application responds differently depending on the truth of a condition.
             <ul><img src="../../pages/articles/assets/boolean_based_sqli.jpg" class="zoomable-img" width="50%">
-                <li><strong>Example:</strong><pre><code class="code-txt">' AND 1=1--</code> (true) Vs <code class="code-txt">' AND 1=2--</code> (false) </pre>
+                <li><strong>Example:</strong>
+                  <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+                    <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                      <button class="code-cp-btn"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                        </svg> </button>
+                    </div>
+                    <pre><code class="code-txt">' AND 1=1--</code> (true) Vs <code class="code-txt">' AND 1=2--</code> (false) </pre>
+                  </div>
                 </li>
             </ul>
         </li>
@@ -202,7 +250,16 @@
             <ul><img src="../../pages/articles/assets/time_based_sqli.png" class="zoomable-img" width="50%">
                 <li>
                     <strong>Example:</strong><br>
-                    <pre><code class="code-txt">' WAITFOR DELAY '00:00:05'--</code></pre> causes a delay if the injection is successful.
+                    <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+                      <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                        <button class="code-cp-btn"> 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                          </svg> </button>
+                      </div>
+                      <pre><code class="code-txt">' WAITFOR DELAY '00:00:05'--</code></pre>
+                    </div> causes a delay if the injection is successful.
                 </li>
             </ul>
         </li>
@@ -221,14 +278,33 @@
         <li>
             <strong>Second-Order SQLi:</strong> Malicious input is stored in the database and later used in a query without proper sanitization.
             <ul><img src="../../pages/articles/assets/second_order_sqli.png" class="zoomable-img" width="50%">
-                <li><strong>Example:</strong><pre><code class="code-txt">'; DROP TABLE users;--</code></pre> which is stored and executed when retrieved.</li>
+                <li><strong>Example:</strong>
+                  <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+                    <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                      <button class="code-cp-btn"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                        </svg> </button>
+                    </div>
+                    <pre><code class="code-txt">'; DROP TABLE users;--</code></pre>
+                  </div> which is stored and executed when retrieved.</li>
             </ul>
         </li>
         <li style="margin-top: 14px;">
             <strong>Stacked Queries:</strong> Multiple SQL statements are executed in a single call, provided the backend supports it.
             <ul>
                 <li><strong>Example:</strong>
+                  <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+                    <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+                      <button class="code-cp-btn"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                        </svg> </button>
+                    </div>
                     <pre><code class="code-txt">SELECT * FROM users; INSERT INTO admins VALUES ('attacker');--</code></pre>
+                  </div>
                 </li>
             </ul>
         </li>
@@ -261,7 +337,16 @@
         <ul>
           <li>An open-source tool for automating SQL injection detection and exploitation.</li>
           <li>It supports WAF bypassing through options like <code>--prefix</code> and <code>--suffix</code> for payload customization, such as:</li>
-          <pre><code class="code-txt">sqlmap -u "https://example.org" --prefix="'AND 1=2 UNION SELECT"</code></pre>
+          <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">sqlmap -u "https://example.org" --prefix="'AND 1=2 UNION SELECT"</code></pre>
+          </div>
           <li>In ethical pentesting, it scans for vulnerabilities in controlled environments, identifying database types and extracting data without causing harm.</li>
         </ul>
         <h3><a href="https://portswigger.net/burp">Burp Suite</a></h3>
