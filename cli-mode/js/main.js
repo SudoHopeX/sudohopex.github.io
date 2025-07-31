@@ -174,10 +174,10 @@ function fetchDetails(command) {
      window.location.replace('/');
      return 'Terminal mode exiting. See you dear!';
    case 'projects':
-     return '[^] HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'
-            +'[^] OpenPuffi - A bashScript to automate OpenPuff Steganography tool & Wine 32-bit installation to run window based tools on linux like openpuff (type `openpuffi` to redirect there).\n'
-            +'[^] ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'
-            +'[^] Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
+     return '[^] HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'+
+            '[^] OpenPuffi - A bashScript to automate OpenPuff Steganography tool & Wine 32-bit installation to run window based tools on linux like openpuff (type `openpuffi` to redirect there).\n'+
+            '[^] ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'+
+            '[^] Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
    case 'skills':
      return '- Penetration Testing\n- Ethical Hacking\n- Vulnerability Assessment\n- Python Scripting\n- Cyber Awareness Advocacy';
    case 'whoishe':
@@ -198,7 +198,7 @@ function fetchDetails(command) {
      window.open('https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html', '_blank', 'noopener,noreferrer');
      return 'Redirected to OpenPuffi Documentation. If not Visit: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html';
    case 'keylogger':
-     window.open('https:sudohopex.github.io/pages/Comingsoon.html');
+     window.open('https:sudohopex.github.io/pages/Comingsoon.html', '_blank');
      return 'Redirected to Keylogger. If not search: https://sudohopex.github.io/pages/project-docs/';
    case 'location':
      return 'I am in Your System, right now..\n Belongs to Uttar Pradesh (aka UP), INDIA.';
