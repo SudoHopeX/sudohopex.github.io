@@ -1,4 +1,3 @@
-
 // Terminal mode
 const terminalOverlay = document.getElementById('terminal-overlay');
 const terminalOutput = document.getElementById('terminal-output');
@@ -47,7 +46,7 @@ const commandsList = [
  'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobby', 'quote',
  'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'resume', 'pwd',
  'whoami', 'autocomplete-d', 'autocomplete-e', 'home', 'experience', 'openpuffi', 
- 'hashstorm', 'home' 
+ 'hashstorm'
 ];
 
 function autocomplete(input) {
@@ -174,10 +173,10 @@ function fetchDetails(command) {
      window.location.replace('/');
      return 'Terminal mode exiting. See you dear!';
    case 'projects':
-     return '[^] HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'+
-            '[^] OpenPuffi - A bashScript to automate OpenPuff Steganography tool & Wine 32-bit installation to run window based tools on linux like openpuff (type `openpuffi` to redirect there).\n'+
-            '[^] ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'+
-            '[^] Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
+     return '[^] HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'
+            +'[^] OpenPuffi - A bashScript to automate OpenPuff Steganography tool & Wine 32-bit installation to run window based tools on linux like openpuff (type `openpuffi` to redirect there).\n'
+            +'[^] ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'
+            +'[^] Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
    case 'skills':
      return '- Penetration Testing\n- Ethical Hacking\n- Vulnerability Assessment\n- Python Scripting\n- Cyber Awareness Advocacy';
    case 'whoishe':
@@ -192,14 +191,14 @@ function fetchDetails(command) {
      window.open('https://sudohopex.github.io/cc-practice-quiz/', '_blank', 'noopener,noreferrer');
      return 'Explore my ISC2 certified in cybersecurity practice quiz opened in new tab.';
   case 'hashstorm':
-     wwindow.open('https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
-     return 'Redirected to HashStorm Documentation. If not search: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html';
+      window.open('https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
+      return 'Redirected to HashStorm Documentation. If not search: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html';
   case 'openpuffi':
      window.open('https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html', '_blank', 'noopener,noreferrer');
      return 'Redirected to OpenPuffi Documentation. If not Visit: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html';
    case 'keylogger':
-     window.open('https:sudohopex.github.io/pages/Comingsoon.html', '_blank');
-     return 'Redirected to Keylogger. If not search: https://sudohopex.github.io/pages/project-docs/';
+     window.open('https://sudohopex.github.io/pages/comingsoon.html');
+     return 'Redirected to Keylogger. If not search: https://sudohopex.github.io/pages/comingsoon.html';
    case 'location':
      return 'I am in Your System, right now..\n Belongs to Uttar Pradesh (aka UP), INDIA.';
    case 'hobby':
@@ -268,7 +267,7 @@ function fetchDetails(command) {
      } else {
        return 'You are already in a game. Answer the current riddle or type "skip" to get a new one.';
      }
-   case 'resume':
+   case 'resume':  terminalOutput.textcontent = '';
        return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudohopex.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`';
    case 'pwd':
      return 'home/^_~';
