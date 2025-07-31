@@ -103,46 +103,156 @@
 
       <p>In the same way, Python virtual environments make sure each project has exactly what it needs, without interfering with others.</p>
       <h2>Install Python venv3</h2>
-      <P style="margin-bottom: -40px;">Install py venv using apt:</P>
-      <div id="copy-button-container" class="flex justify-end px-4 py-2 bg-accent border-b border-border">
-            <button id="copy-button" class="p-1 rounded border border-border bg-background shadow-sm transition-colors text-muted-foreground hover:text-foreground" title="Copy code">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg>
-            </button>
+      <P>Install py venv using apt:</P>
+      <div class="code-block-wrapper"  style="margin-top: -65px;">
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
         </div>
-      <pre><code class="code-txt">sudo apt update && sudo apt install python3-venv</code></pre>
+        <pre><code class="code-txt">sudo apt update && sudo apt install python3-venv</code></pre>
+      </div>
+      
       <P>or using pyenv:</P>
-      <pre><code class="code-txt">curl https://pyenv.run | bash</code></pre>
+      <div class="code-block-wrapper"  style="margin-top: -65px;">
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
+        <pre><code class="code-txt">curl https://pyenv.run | bash</code></pre>
+      </div>
 
       <h2>Create a Virtual Environment</h2>
-      <p>Navigate to your desired directory and run:</p>
-      <pre><code class="code-txt">python3 -m venv env_name</code>
+      <P>Navigate to your desired directory and run:</P>
+      <div class="code-block-wrapper" style="margin-top: -65px;">
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
+        <pre><code class="code-txt">python3 -m venv env_name</code>
 ( env_name is the name of your virtual environment directory )</pre>
+      </div>
 
       <h2>Activate the Virtual Environment</h2>
-      <pre><code class="code-txt">source env_name/bin/activate</code></pre>
+      <div class="code-block-wrapper" style="margin-top: -65px;">
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
+        <pre><code class="code-txt">source env_name/bin/activate</code> (Bash shell)</pre>
+      </div>
+
       <p>
         <b>For other shells:</b><br>
+        <div class="code-block-wrapper"  style="margin-top: -65px;">
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
         <pre><code class="code-txt">source env_name/bin/activate.fish</code> (fish shell)</pre>
+      </div>
+        <div class="code-block-wrapper"  style="margin-top: -65px;">
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
         <pre><code class="code-txt">source env_name/bin/activate.csh</code> (csh shell)</pre>
+      </div>
       </p>
 
       <h2>Deactivate the Virtual Environment</h2>
       <p>Just by running the folllowing command inside the venv:</p>
-      <pre><code class="code-txt">deactivate</code></pre>
+      <div class="code-block-wrapper"  style="margin-top: -65px;" >  
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
+        <pre><code class="code-txt">deactivate</code></pre>
+      </div>
 
       <h2>Delete the Virtual Environment</h2>
       <p>We can delete the Venv by command:</p>
-      <pre><code class="code-txt">rm -rf env_name</code></pre>
+      <div class="code-block-wrapper"  style="margin-top: -65px;" >  
+        <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+          <button class="code-cp-btn"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg> </button>
+        </div>
+        <pre><code class="code-txt">rm -rf env_name</code></pre>
+      </div>
 
       <h2>Usage Example</h2>
       <ul>
-        <li>Installation: <pre><code class="code-txt">sudo apt install python3-venv</code> (done)</pre></li>
-        <li>Creating venv directory: <pre><code class="code-txt">python3 -m venv py_venv</code></pre></li>
-        <li>Activating: <pre><code class="code-txt">source py_venv/bin/activate</code> (successfully running)</pre></li>
-        <li>Deactivating: <pre><code class="code-txt">deactivate</code> (successfully stopped)</pre></li>
+        <li>Installation: 
+          <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">sudo apt install python3-venv</code> (done)</pre>
+          </div>
+        </li>
+        <li>Creating venv directory: 
+          <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">python3 -m venv py_venv</code></pre>
+          </div>
+        </li>
+        <li>Activating: 
+          <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+          <pre><code class="code-txt">source py_venv/bin/activate</code> (successfully running)</pre>
+          </div>
+        </li>
+        <li>Deactivating: 
+          <div class="code-block-wrapper"  style="margin-top: -40px;" >  
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+          <pre><code class="code-txt">deactivate</code> (successfully stopped)</pre>
+          </div>
+        </li>
       </ul>
 
       <div class="suggested-topics">
