@@ -6,6 +6,10 @@ h1, h2, h3 {
       margin-top: 2rem;
 }
 
+h3 {
+  border-bottom: dotted 0.04px #a0abf150;
+}
+
 pre { 
    background-color: #515050;
    padding: 10px;
@@ -163,3 +167,4 @@ color: #888;
   visibility: visible;
   opacity: 1;
 }
+
