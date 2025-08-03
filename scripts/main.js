@@ -288,3 +288,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+/* 30 days of XSS script */
+document.querySelectorAll('.topic').forEach(link => {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        // Hide all day contents
+        document.querySelectorAll('[class$="-content"]').forEach(content => {
+            content.style.display = 'none';
+        });
+        // Show the corresponding day content
+        const dayId = this.getAttribute('href').replace('#', '');
+        const content = document.querySelector(`.${dayId}-content`);
+        if (content) content.style.display = 'block';
+    });
+});
