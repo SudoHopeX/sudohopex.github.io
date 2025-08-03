@@ -293,13 +293,21 @@ document.addEventListener('DOMContentLoaded', function () {
 document.querySelectorAll('.topic').forEach(link => {
     link.addEventListener('click', function (e) {
         e.preventDefault();
-        // Hide all day contents
-        document.querySelectorAll('[class$="-content"]').forEach(content => {
-            content.style.display = 'none';
-        });
-        // Show the corresponding day content
         const dayId = this.getAttribute('href').replace('#', '');
         const content = document.querySelector(`.${dayId}-content`);
-        if (content) content.style.display = 'block';
+        if (!content) return;
+
+        // If already visible, hide it
+        if (content.style.display === 'block') {
+            content.style.display = 'none';
+        } else {
+            // Hide all others
+            document.querySelectorAll('[class$="-content"]').forEach(c => {
+                c.style.display = 'none';
+            });
+            // Show this one
+            content.style.display = 'block';
+        }
     });
 });
+
