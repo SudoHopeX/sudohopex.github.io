@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Day2: XSS & JS Learning Lab (Working)</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f5f5f5;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    textarea, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 150px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚧 XSS & JavaScript Beginner Lab by <a href="https://sudohopex.github.io/">SudoHopeX</a></h1>
+  <p><strong>🚨 Warning: This site is for educational use only. Do not use XSS techniques on real websites without permission. Ethical hacking only.</strong></p>
+  <p>⚠️ You are now viewing a sandboxed, intentionally vulnerable XSS lab. Return to <a href="https://sudohopex.github.io/">SudoHopeX.github.io</a> if you arrived here by mistake.</p>
+
+  <div class="section">
+    <h2>🧪 Payload Test Area</h2>
+    <p>Type your HTML/JS payload below. It will be injected into a sandboxed iframe.</p>
+    <textarea id="payloadInput" rows="4">&lt;script&gt;alert('XSS')&lt;/script&gt;</textarea>
+    <button onclick="injectPayload()">Run Payload</button>
+    <h3>Iframe Output ( If any ):</h3>
+    <iframe id="sandboxFrame" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+  </div>
+
+  <div class="section">
+    <h2>🎓 Beginner Payload Examples</h2>
+    <ul>
+      <li><code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></li>
+      <li><code>&lt;img src=x onerror="alert('XSS')"&gt;</code></li>
+      <li><code>&lt;svg onload="alert('XSS')"&gt;</code></li>
+      <li><code>&lt;script&gt;prompt('What is your name?')&lt;/script&gt;</code></li>
+      <li><code>&lt;script&gt;console.log('XSS in console')&lt;/script&gt;</code></li>
+      <li><code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code></li>
+    </ul>
+  </div>
+
+  <script>
+    // Simulate a cookie for testing
+    document.cookie = "sessionID=test123; user=student";
+    document.cookie = "role=Learner; username=SudoHopeX";
+    document.cookie = "MadeBy=SudoHopeX";
+
+    function injectPayload() {
+      const payload = document.getElementById("payloadInput").value;
+      const iframe = document.getElementById("sandboxFrame");
+      
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write(payload);
+      doc.close();
+    }
+
+  </script>
+
+</body>
+</html>
