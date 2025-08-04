@@ -206,7 +206,7 @@
         <p>
           Just because you see your input reflected doesn’t always mean it's vulnerable — modern sites may reflect input safely (by escaping or sanitizing it). But if script runs, it's a clear sign of XSS.
         </p>
-
+         <p>Learn More about it at <a href="https://portswigger.net/web-security/cross-site-scripting">Portswigger.net</a></p>
         <p>That's it for Day 1.</p>
       </div> 
       <!-- Day 1 End -->
@@ -272,7 +272,7 @@
             <pre><code class="code-txt">&lt;script&gt;console.log('XSS')&lt;/script&gt;</code></pre>
           </div>
           </li>
-
+          
           <li>
             <strong>document.cookie</strong><br>
             <p>This is how attackers steal session data.</p>
@@ -287,21 +287,43 @@
             <pre><code class="code-txt">&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code></pre>
           </div>
           </li>
+
+          <li>
+            <strong>&lt;img&gt; tag</strong><br>
+            <p>useful when script tag is filtered.</p>
+            <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;img src=x onerror="alert('XSS')"&gt;</code></pre>
+          </div>
+          </li>
+
+          <strong>&lt;img&gt; tag</strong><br>
+            <p>another useful when script tag is filtered.</p>
+            <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;svg onload="alert('XSS')"&gt;</code></pre>
+          </div>
+          </li>
         </ol>
 
         <h3>Our Today's Task:</h3>
         <p> Try above functions at <a href="https://sudohopex.github.io/labs/xss/xss-day2.html">XSS Day-2 LAB</a> </p>
-        <p>
-          Try these basic payloads in test environments or labs like:
-        </p>
-        <ul>
-          <li><a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">PortSwigger Reflected XSS Lab</a></li>
-          <li><a href="https://tryhackme.com/room/owaspxss" target="_blank">TryHackMe’s “Intro to XSS” Room</a></li>
-        </ul>
-        <p>
-          See how different websites respond to the payloads.
-        </p>
-
+        <p> and See how different websites respond to the payloads.</p>
+        <p> <a href="https://tryhackme.com/room/javascriptbasics">TryHackME JavaScript Basics Room</a></p>
+        <p> <a href="https://tryhackme.com/room/howwebsiteswork">TryHackME How Website works Room</a></p>
+        <p> <a href="https://tryhackme.com/room/httpindetail">TryHackME HTTP Room</a></p>
         <h3>Tip:</h3>
         <p>
           Start building own XSS cheat sheet with working payloads.<br>
@@ -322,9 +344,89 @@
         </a>
       </div>
       <div class="day3-content" style="display: none;">
-      <h3>Coming on Aug 4</h3>
-      </div>
+     <p>Today we’ll explore the most beginner friendly type of XSS:<br>
+        Reflected Cross-Site Scripting.</p>
 
+      <p>This type happens when a website takes input (from the URL or form) and reflects it back into the page without filtering. If your script is shown directly in the HTML, it can run in the victim’s browser.</p>
+      <p>It is not stored anywhere it works instantly and only in that session.</p>
+
+      <h3>Example:</h3>
+      <p>Try this in a test URL like:</p>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">https://example.com/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;</code></pre>
+          </div>
+
+        <p>If the page reflects our input directly, we will see a popup. That means the site is vulnerable to reflected XSS.</p>
+
+        <h3>Topics to explore for today 👇</h3>
+        <h3>What is Reflected Input ?</h3>
+        <h3>How to find parameters in the URL that take our input (like ?q= or ?search=)</h3>
+        <p>and Try injecting:</p>
+         <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>
+          </div>
+         <p>If the page breaks or shows an error, that’s also useful it means your input is being processed somewhere.</p>
+
+        <h3>Our Today's Task:</h3>
+        <p> Try above functions at <a href="https://sudohopex.github.io/labs/xss/xss-day3.html">XSS Day-3 LAB</a> </p>
+        <p>
+          Try these basic payloads in test environments or labs like:
+        </p>
+        <ul>
+          <li><a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded" target="_blank">PortSwigger Reflected XSS Lab</a></li>
+          <li><a href="https://tryhackme.com/room/axss" target="_blank">TryHackMe’s XSS Room</a></li>
+          <li><a href="https://tryhackme.com/room/xss" target="_blank">TryHackMe’s “Intro to XSS” Room ( if Have Memebrship)</a></li>
+        </ul>
+        <p>
+          See how different websites respond to the payloads.
+        </p>
+
+      <h3>Tools We Can Try:</h3>
+      <p>Burp Suite (for capturing and repeating requests)</p>
+      <p>HackBar extension (to inject payloads quickly)</p>
+
+      <p>Try changing the payload if the basic one is blocked, <br>
+      like this one 👇 & other functions practiced yesterday </p> 
+      <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;img src=x onerror=alert(1)&gt;</code></pre>
+      </div>
+      This is a very common bypass when script tags are filtered.
+
+      <p>That’s it for Day 3.</p>
+      </div>
+      <!-- Day 3 End -->
+      <!-- Day 4 Start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#day4">
+          <span style="font-size: larger;">Day 4: --</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day4-content" style="display: none;">
+        <h3>Coming soon</h3>
+      </div>
+      <!-- Day 4 End -->
 
     <div class="suggested-topics">
     <div class="suggested-topic-header">
@@ -362,6 +464,7 @@
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
