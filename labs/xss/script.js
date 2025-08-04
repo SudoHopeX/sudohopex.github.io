@@ -20,3 +20,11 @@ function checkOrientation() {
         }
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+
+});
