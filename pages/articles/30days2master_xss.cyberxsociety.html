@@ -342,7 +342,7 @@
         <ul>
           <li>Search results</li>
           <li>Error messages</li>
-          <li>Forms that show what you typed</li>
+          <li>Forms that show what we typed</li>
         </ul>
         <p>If this reflection happens unsafely, it can lead to Reflected XSS (Cross-Site Scripting).</p>
         <h4>Example:</h4>
@@ -351,10 +351,10 @@
             <pre>https://example.com/search?query=Hello</pre>
           </li>
           <li>The page says:</li>
-            <pre>https://example.com/search?query=Hello</pre>
+            <pre>You Searched for: Hello</pre>
           </li>
           <li>
-            <p>That <pre>Hello</pre> is reflected input — it came from the URL and was shown back on the page.</p>
+            <p>That <code>Hello</code> is reflected input — it came from the URL and was shown back on the page.</p>
           </li>
         </ol>
         <h3>Reflected XSS Happens When:</h3>
@@ -388,16 +388,16 @@
         <p>We can test if a page is reflecting input back by entering a unique string in a URL parameter or search box or form and seeing if that exact string shows up on the page.</p>
         <h4>Important:</h4>
         <p>
-          Just because we see your input reflected doesn’t always mean it's vulnerable — modern sites may reflect input safely (by escaping or sanitizing it). But if script runs, it's a clear sign of XSS.
+          Just because we see our input reflected doesn’t always mean it's vulnerable — modern sites may reflect input safely (by escaping or sanitizing it). But if script runs, it's a clear sign of XSS.
         </p>
         
         <h3>How to find parameters in the URL that take our input (like ?q= or ?search=)</h3>
           <h4> 1. Look at the URL:</h4>
-          <p>Parameters are usually after a ? in the URL and look like this:</p>
+          <p>Parameters are usually after a <code>? (question mark)</code> in the URL and look like this:</p>
           <pre>https://example.com/search?query=hello</pre>
-          <p>Here, the parameter is <pre>query</pre>, and the value is <pre>hello</pre>.</p>
-          <h4> 2. Change the value to something we can easily recognize:</h4>
-          <p>Like: <pre>?query=HelloTest123</pre></p>
+          <p>Here, the parameter is <code>query</code>, and the value is <code>hello</code>.</p>
+          <h4> 2. Change the value to something we can easily recognize: (like 👇)</h4>
+          <pre>?query=HelloTest123</pre>
           <p>Then check the page content — if you see "HelloTest123" somewhere, that parameter is reflected.</p>
           <h4> 3. Try Multiple Common Parameters</h4>
           <p>Try changing the parameter name — use these common ones:</p>
@@ -407,7 +407,7 @@
 ?keyword=HelloTest123
 ?term=HelloTest123
 ?message=HelloTest123</pre>
-        <p>💡 Keep changing and refreshing to see if your input appears somewhere on the page.</p>
+        <p>💡 Keep changing and refreshing to see if our input appears somewhere on the page.</p>
         
         <h4>and Try injecting this one 👇 or other payloads:</h4>
          <div class="code-block-wrapper"  style="margin-top: -50px;">
@@ -420,7 +420,7 @@
             </div>
             <pre><code class="code-txt">&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>
           </div>
-         <p>If the page breaks or shows an error, that’s also useful it means our input is being processed somewhere = XSS </p>
+         <p>If the page breaks or shows an error, that’s also useful it means our input is being processed somewhere and == Reflected XSS </p>
 
         <h3>Our Today's Task:</h3>
         <p> Practice on <a href="https://sudohopex.github.io/labs/xss/xss-day3.html">XSS Day-3 LAB</a> </p>
@@ -505,6 +505,7 @@
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
