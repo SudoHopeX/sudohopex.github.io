@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Day 3: Reflected XSS Lab</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 h3{
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .output {
+      margin-top: 15px;
+    }
+    input {
+        display: block;     /* ya inline-block bhi chalega */
+        margin: 5px auto;  /* top-bottom 20px, left-right auto (center horizontally) */
+        width: 95%;
+        padding: 10px;
+        margin-top: 10px;
+        }
+    
+    button, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 150px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+    }
+    .note {
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Day 3: Reflected XSS Lab - SudoHopeX</h1>
+    <h3><strong>⚠️ Warning:</strong> This is an intentionally vulnerable sandboxed lab for ethical learning purposes only.</h3>
+
+    <div class="section">
+      <label for="levelSelect"><strong>Select Lab Level:</strong></label>
+      <select id="levelSelect" onchange="changeLevel()">
+        <option value="1">Level 1 - Fully Vulnerable</option>
+        <option value="2">Level 2 - Blocks &lt;script&gt; tag</option>
+        <option value="3">Level 3 - Blocks common XSS patterns</option>
+        <option value="4">Level 4 - Safe (Sanitized output)</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h2 id="levelTitle">Level 1: Fully Vulnerable</h2>
+      <label for="xssInput">Enter Input to Reflect:</label>
+      <input type="text" id="xssInput" value="<script>alert('Welcome to XSS Lab by SudoHopeX')</script>">
+      <button onclick="runXSS()">Run Payload</button>
+
+      <div class="output">
+        <h3>🔁 Reflected Output (Sandboxed Iframe)</h3>
+        <iframe id="sandboxFrame" sandbox="allow-scripts allow-same-origin allow-modals"></iframe>
+      </div>
+
+      <p class="note" id="levelNote">
+        This level reflects input directly using <code>innerHTML</code> with no filters. Try a simple payload like <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    let currentLevel = 1;
+
+    const levelTitle = document.getElementById('levelTitle');
+    const levelNote = document.getElementById('levelNote');
+    const xssInput = document.getElementById('xssInput');
+    const levelDescriptions = {
+      1: {
+        title: "Level 1: Fully Vulnerable",
+        note: "This level reflects input directly using <code>innerHTML</code> with no filters. Try a simple payload like <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>"
+      },
+      2: {
+        title: "Level 2: Blocks <code>&lt;script&gt;</code> tag",
+        note: "Simple keyword block on &lt;script&gt;, but other tags like <code>&lt;img onerror&gt;</code> or <code>&lt;svg&gt;</code> may still work."
+      },
+      3: {
+        title: "Level 3: Blocks common tags and event handlers",
+        note: "More advanced blocking of known tags and patterns like <code>script</code>, <code>img</code>, <code>onerror</code>, <code>alert</code>, etc."
+      },
+      4: {
+        title: "Level 4: Safe Output",
+        note: "Input is safely reflected using <code>textContent</code>. XSS should not be possible here."
+      }
+    };
+
+    function changeLevel() {
+      const select = document.getElementById('levelSelect');
+      currentLevel = parseInt(select.value);
+      levelTitle.innerHTML = levelDescriptions[currentLevel].title;
+      levelNote.innerHTML = levelDescriptions[currentLevel].note;
+      runXSS(); // auto-refresh iframe
+    }
+
+    function sanitizeForLevel3(str) {
+    return str
+        // Neutralize <script> tags
+        .replace(/<\s*script/gi, '&lt;script')
+        .replace(/<\s*\/\s*script\s*>/gi, '&lt;/script&gt;')
+
+        // Neutralize <svg> and <iframe> tags (only the tag names, rest remains)
+        .replace(/<\s*svg/gi, '&lt;svg')
+        .replace(/<\s*\/\s*svg\s*>/gi, '&lt;/svg&gt;')
+        .replace(/<\s*iframe/gi, '&lt;iframe')
+        .replace(/<\s*\/\s*iframe\s*>/gi, '&lt;/iframe&gt;')
+
+        // Neutralize <img> by encoding the tag name
+        .replace(/<\s*img/gi, '&lt;img')
+
+        // Neutralize common event handlers
+        .replace(/\sonerror\s*=/gi, ' data-onerror=')
+        .replace(/\sonload\s*=/gi, ' data-onload=')
+        .replace(/\sonmouseover\s*=/gi, ' data-onmouseover=')
+        .replace(/\sonmouseenter\s*=/gi, ' data-onmouseenter=')
+
+        // Encode alert() and prompt() calls to prevent script execution
+        .replace(/alert\s*\((.*?)\)/gi, 'alert&#40;$1&#41;')
+        .replace(/prompt\s*\((.*?)\)/gi, 'prompt&#40;$1&#41;');
+    }
+
+
+
+    function runXSS() {
+      const payload = xssInput.value;
+      const iframe = document.getElementById('sandboxFrame');
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+
+      let reflectedHTML = "";
+
+      if (currentLevel === 1) {
+        // Fully vulnerable
+        reflectedHTML = `You searched for: ${payload}`;
+
+      } else if (currentLevel === 2) {
+        // Replace only opening and closing script tags with encoded versions
+        const cleaned = payload 
+            .replace(/<\s*script/gi, '&lt;script')
+            .replace(/<\s*\/\s*script\s*>/gi, '&lt;/script&gt;');
+
+        reflectedHTML = `You searched for: ${cleaned}`;
+
+      } else if (currentLevel === 3) {
+        const cleaned = sanitizeForLevel3(payload);
+        reflectedHTML = `You searched for: ${cleaned}`;
+
+      } else if (currentLevel === 4) {
+        // Escape user input for safe rendering
+        const escaped = document.createElement('div');
+        escaped.textContent = `You searched for: ${payload}`;
+        reflectedHTML = escaped.innerHTML;
+      }
+
+      // Inject into sandboxed iframe
+      doc.write(`<body>${reflectedHTML}</body>`);
+      doc.close();
+    }
+
+    // Initial load
+    runXSS();
+  </script>
+</body>
+</html>
