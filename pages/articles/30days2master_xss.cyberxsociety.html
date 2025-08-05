@@ -553,11 +553,13 @@
             </div>
             <pre><code class="code-txt">&lt;script&gt;
    var userInput = '&lt;/script&gt;&lt;script&gt;alert("XSS")&lt;/script&gt;';
-&lt;/script&gt;</pre>
-          which results in <pre>&lt;script&gt;
+&lt;/script&gt;</pre> 
+        </div>
+          <p>which results in </p>
+        <pre>&lt;script&gt;
   var userInput = '&lt;/script&gt;</pre>
-          and <pre>&lt;script&gt;alert('XSS')&lt;/script&gt;   // this runs our payload & XSS </pre>
-      </div>
+         <p> and </p>
+          <pre>&lt;script&gt;alert('XSS')&lt;/script&gt;   // this runs our payload & XSS </pre>
         
         <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
@@ -629,3 +631,4 @@ var name = '');alert(1);//';     // this executes <code>alert(1)</code> & XSS </
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
