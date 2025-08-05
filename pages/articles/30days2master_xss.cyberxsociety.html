@@ -188,24 +188,6 @@
         <a href="https://xss-game.appspot.com/level1">XSS Game by Google</a><br>
         <a href="https://alf.nu/alert1?world=alert&level=alert0">XSS Game by <alf class="nu">Alf.nu</alf></a>
 
-      <h3>How to Recognize Reflected Input</h3>
-        <p>
-          You can test if a page is reflecting input back by entering a unique string in a URL parameter and seeing if that exact string shows up on the page.
-        </p>
-        <p><strong>Try this in a search bar:</strong></p>
-        <pre>?search=HelloTest123</pre>
-        <p>
-          If you see "HelloTest123" in the page content, that means input is being reflected. Now try entering:
-        </p>
-        <pre>?search=&lt;script&gt;alert(1)&lt;/script&gt;</pre>
-        <p>
-          If a popup appears, or something weird happens, the site is <strong>vulnerable to reflected XSS</strong>.
-        </p>
-
-        <h4>Important:</h4>
-        <p>
-          Just because you see your input reflected doesn’t always mean it's vulnerable — modern sites may reflect input safely (by escaping or sanitizing it). But if script runs, it's a clear sign of XSS.
-        </p>
          <p>Learn More about it at <a href="https://portswigger.net/web-security/cross-site-scripting">Portswigger.net</a></p>
         <p>That's it for Day 1.</p>
       </div> 
@@ -302,8 +284,8 @@
             <pre><code class="code-txt">&lt;img src=x onerror="alert('XSS')"&gt;</code></pre>
           </div>
           </li>
-
-          <strong>&lt;img&gt; tag</strong><br>
+          <li>
+          <strong>&lt;svg&gt; tag</strong><br>
             <p>another useful when script tag is filtered.</p>
             <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
@@ -349,9 +331,34 @@
 
       <p>This type happens when a website takes input (from the URL or form) and reflects it back into the page without filtering. If your script is shown directly in the HTML, it can run in the victim’s browser.</p>
       <p>It is not stored anywhere it works instantly and only in that session.</p>
-
-      <h3>Example:</h3>
-      <p>Try this in a test URL like:</p>
+        
+        <h3>Topics to explore for today 👇</h3>
+        <h3>What is Reflected Input ?</h3>
+        <p>Reflected input means:</p>
+        <blockquote>
+          <p>The value you type into the browser (like in the URL or a search box) is immediately shown back (reflected) on the page.</p>
+        </blockquote>
+        <p>This is common in:</p>
+        <ul>
+          <li>Search results</li>
+          <li>Error messages</li>
+          <li>Forms that show what you typed</li>
+        </ul>
+        <p>If this reflection happens unsafely, it can lead to Reflected XSS (Cross-Site Scripting).</p>
+        <h4>Example:</h4>
+        <ol>
+          <li>We visit a URL like:</li>
+            <pre>https://example.com/search?query=Hello</pre>
+          </li>
+          <li>The page says:</li>
+            <pre>https://example.com/search?query=Hello</pre>
+          </li>
+          <li>
+            <p>That <pre>Hello</pre> is reflected input — it came from the URL and was shown back on the page.</p>
+          </li>
+        </ol>
+        <h3>Reflected XSS Happens When:</h3>
+      <p>We enter <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> in a search or query parameter. like this 👇</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
               <button class="code-cp-btn"> 
@@ -362,13 +369,47 @@
             </div>
             <pre><code class="code-txt">https://example.com/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;</code></pre>
           </div>
-
-        <p>If the page reflects our input directly, we will see a popup. That means the site is vulnerable to reflected XSS.</p>
-
-        <h3>Topics to explore for today 👇</h3>
-        <h3>What is Reflected Input ?</h3>
+        <p>And the page reflects it like this 👇 (unsafely):</p>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">You Searched for: &lt;script&gt;alert('XSS')&lt;/script&gt;</code></pre>
+          </div>
+        
+        <p>If The JavaScript runs and If we see a popup (like 👇) or something weird happens. That means the site is vulnerable to <strong>Reflected XSS</strong>.</p>
+        <img src="assets/xss-alert-popup.png" alt="XSS Alert Pop-up"/>
+        
+        <h3>How to Recognize Reflected Input</h3>
+        <p>We can test if a page is reflecting input back by entering a unique string in a URL parameter or search box or form and seeing if that exact string shows up on the page.</p>
+        <h4>Important:</h4>
+        <p>
+          Just because we see your input reflected doesn’t always mean it's vulnerable — modern sites may reflect input safely (by escaping or sanitizing it). But if script runs, it's a clear sign of XSS.
+        </p>
+        
         <h3>How to find parameters in the URL that take our input (like ?q= or ?search=)</h3>
-        <p>and Try injecting:</p>
+          <h4> 1. Look at the URL:</h4>
+          <p>Parameters are usually after a ? in the URL and look like this:</p>
+          <pre>https://example.com/search?query=hello</pre>
+          <p>Here, the parameter is <pre>query</pre>, and the value is <pre>hello</pre>.</p>
+          <h4> 2. Change the value to something we can easily recognize:</h4>
+          <p>Like: <pre>?query=HelloTest123</pre></p>
+          <p>Then check the page content — if you see "HelloTest123" somewhere, that parameter is reflected.</p>
+          <h4> 3. Try Multiple Common Parameters</h4>
+          <p>Try changing the parameter name — use these common ones:</p>
+          <pre>?q=HelloTest123
+?search=HelloTest123
+?input=HelloTest123
+?keyword=HelloTest123
+?term=HelloTest123
+?message=HelloTest123</pre>
+        <p>💡 Keep changing and refreshing to see if your input appears somewhere on the page.</p>
+        
+        <h4>and Try injecting this one 👇 or other payloads:</h4>
          <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
               <button class="code-cp-btn"> 
@@ -379,10 +420,10 @@
             </div>
             <pre><code class="code-txt">&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>
           </div>
-         <p>If the page breaks or shows an error, that’s also useful it means your input is being processed somewhere.</p>
+         <p>If the page breaks or shows an error, that’s also useful it means our input is being processed somewhere = XSS </p>
 
         <h3>Our Today's Task:</h3>
-        <p> Try above functions at <a href="https://sudohopex.github.io/labs/xss/xss-day3.html">XSS Day-3 LAB</a> </p>
+        <p> Practice on <a href="https://sudohopex.github.io/labs/xss/xss-day3.html">XSS Day-3 LAB</a> </p>
         <p>
           Try these basic payloads in test environments or labs like:
         </p>
@@ -419,7 +460,7 @@
       <!-- Day 4 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day4">
-          <span style="font-size: larger;">Day 4: --</span>
+          <span style="font-size: larger;">Day 4: </span>
           <span class="plus">+</span>
         </a>
       </div>
@@ -464,6 +505,7 @@
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
