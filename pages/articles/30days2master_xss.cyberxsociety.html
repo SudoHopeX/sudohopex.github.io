@@ -460,14 +460,138 @@
       <!-- Day 4 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day4">
-          <span style="font-size: larger;">Day 4: </span>
+          <span style="font-size: larger;">Day 4: HTML Injection vs XSS: What’s the Difference?</span>
           <span class="plus">+</span>
         </a>
       </div>
       <div class="day4-content" style="display: none;">
-        <h3>Coming soon</h3>
+        <p>If a site reflects our input without escaping it, and we can inject HTML like &lt;b&gt;, &lt;h1&gt;, or &lt;img&gt;, that’s HTML Injection.</p>
+        <p>If our input can actually run JavaScript, like &lt;script&gt;alert(1)&lt;/script&gt; or other js payloads, that’s XSS.</p>
+        <h3>Why This Matters ??</h3>
+        <p>Not every HTML Injection is exploitable as XSS.</p>
+        <p>Some bug bounty reports are rejected because they only show HTML Injection not a real JavaScript execution.</p>
+        <p>Always check: Can I run JavaScript?</p>
+        <h3>Try These:</h3>
+        <pre>&lt;b&gt;BoldText&lt;/b&gt;
+&lt;h1&gt;Header&lt;/h1&gt;
+&lt;img src=x onerror=alert(1)&gt;
+&lt;script&gt;alert('XSS')&lt;/script&gt;
+// or more 
+</pre>
+
+        <h3>What to Focus On Today:</h3>
+        <p>Test both harmless (htmli) and script based payloads at <a href="/labs/xss/xxs-day3.html">XSS Lab 2</a></p>
+
+        <p>Understand that many filters block &lt;script&gt;, but we can still try with html tags like img, svg or other's</p>
+
+      <h3>NOTE:</h3>
+        <p>Sometimes HTML Injection can still be dangerous like injecting fake login forms, phishing content, or redirecting users. But for bug bounty reports, always try to prove JavaScript execution.</p>
+
+        <p>That’s it for Day 4.</p>
       </div>
       <!-- Day 4 End -->
+      <!-- Day 5 Start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#day5">
+          <span style="font-size: larger;">Day 5: Input Contexts</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day5-content" style="display: none;">
+        <h3>Coming soon</h3>
+      </div>
+      <!-- Day 5 End -->
+
+      <!-- Context & Evasion Start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#context-evasion">
+          <span style="font-size: larger;">Additional Info: Context & Evasion</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="context-evasion-content" style="display: none;">
+        <h3>Context:</h3>
+        <p>XSS payloads can behave differently depending on where they are injected:</p>
+        <h4> 1. Between HTML Tags (HTML body)</h4>
+        <p>Easy to inject since it’s already in a script-friendly context.</p>
+        <p>so, the attacker can run <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>.</p>
+        <h4> 2. Within HTML Tags (attributes like href, src, etc.)</h4>
+        <p>We need to break out ( end the html tag ) of the attribute or use escape chars like <code></code> before injecting our code.</p>
+        <p>and use payloads like: </p>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;img src="x" onerror="alert(1)"&gt;</code> // here this will brake and </pre>
+      </div>
+      <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;input value="test"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> 
+  // here <code>"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> is payload </pre>
+      </div>
+       <p>or this <code>&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> or or something similar payload that would fit in the context.</p> 
+
+        <h4> 3. Inside JavaScript</h3>
+        <p>We need to close the string ( by <code> single quotation {'}</code>, complete the command with a semicolon {;}, execute our command, and comment out the rest of the line with <code>//</code> like <code>';alert(1)//</code> or <code>');alert(1);//</code>) or script block ( by <code>&lt;/script&gt;</code> to end the script and continue from there), then inject.</p>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;script&gt;
+   var userInput = '&lt;/script&gt;&lt;script&gt;alert("XSS")&lt;/script&gt;';
+&lt;/script&gt;</pre>
+          which results in <pre>&lt;script&gt;
+  var userInput = '&lt;/script&gt;</pre>
+          and <pre>&lt;script&gt;alert('XSS')&lt;/script&gt;   // this runs our payload & XSS </pre>
+      </div>
+        
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">var name = 'John'; // if input => ');alert(1);//  
+// Final JS becomes:
+var name = '');alert(1);//';     // this executes <code>alert(1)</code> & XSS </pre>
+      </div>
+        
+        <p>Therefore, understanding the context of injection is crucial for crafting a working payload.</p>
+
+        <h3>Evasion: </h3>
+        <P>Usefull <a href="https://github.com/payloadbox/xss-payload-list">XSS Payload List</a></P>
+        <p>Usefull to bypass length restrictions: <a href="https://github.com/terjanq/Tiny-XSS-Payloads">Tiny XSS Payloads</a></p>
+        <p>If XSS payloads are blocked based on specific blocklists (filters), then a horizontal tab, a new line, or a carriage return can break up the payload and evade the detection engines.</p>
+        <uL>
+          <li>Horizontal tab (TAB) is '9' in hexadecimal representation</li>
+          <li>New line (LF) is 'A' in hexadecimal representation</li>
+          <li>Carriage return (CR) is 'D' in hexadecimal representation</li>
+        </uL>
+        <p>Examples <code>&lt;IMG SRC="javascript:alert('XSS');"&gt;</code> can be used as: </p>
+        <pre>
+&lt;img src="jav&#x09;ascript:alert('XSS');"&gt;  // Tab (9)
+&lt;img src="jav&#x0A;ascript:alert('XSS');"&gt;  // Line Feed (A)
+&lt;img src="jav&#x0D;ascript:alert('XSS');"&gt;  // Carriage Return (D)
+  </pre>
+        <p>Cheat Sheet for <a href="https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html" target="_blank">XSS Filter Evasion by OWASP.ORG</a></p>
+      </div>
+      <!-- Context & Evasion End -->
 
     <div class="suggested-topics">
     <div class="suggested-topic-header">
@@ -505,11 +629,3 @@
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
-
-
-
-
-
-
-
-
