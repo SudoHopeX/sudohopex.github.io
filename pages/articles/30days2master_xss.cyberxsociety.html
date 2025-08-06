@@ -301,7 +301,7 @@
         </ol>
 
         <h3>Our Today's Task:</h3>
-        <p> Try above functions at <a href="https://sudohopex.github.io/labs/xss/xss-day2.html">XSS Day-2 LAB</a> </p>
+        <p> Try above functions at <a href="https://sudohopex.github.io/labs/xss/xss-lab1.html">XSS LAB 01</a> </p>
         <p> and See how different websites respond to the payloads.</p>
         <p> <a href="https://tryhackme.com/room/javascriptbasics">TryHackME JavaScript Basics Room</a></p>
         <p> <a href="https://tryhackme.com/room/howwebsiteswork">TryHackME How Website works Room</a></p>
@@ -423,7 +423,7 @@
          <p>If the page breaks or shows an error, that’s also useful it means our input is being processed somewhere and == Reflected XSS </p>
 
         <h3>Our Today's Task:</h3>
-        <p> Practice on <a href="https://sudohopex.github.io/labs/xss/xss-day3.html">XSS Day-3 LAB</a> </p>
+        <p> Practice on <a href="https://sudohopex.github.io/labs/xss/xss-lab2.html">XSS LAB 02</a> </p>
         <p>
           Try these basic payloads in test environments or labs like:
         </p>
@@ -480,7 +480,7 @@
 </pre>
 
         <h3>What to Focus On Today:</h3>
-        <p>Test both harmless (htmli) and script based payloads at <a href="/labs/xss/xxs-day3.html">XSS Lab 2</a></p>
+        <p>Test both harmless (htmli) and script based payloads at <a href="/labs/xss/xxs-lab2.html">XSS LAB 02</a></p>
 
         <p>Understand that many filters block &lt;script&gt;, but we can still try with html tags like img, svg or other's</p>
 
@@ -542,7 +542,7 @@
        <p>or this <code>&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> or or something similar payload that would fit in the context.</p> 
 
         <h4> 3. Inside JavaScript</h3>
-        <p>We need to close the string ( by <code> single quotation {'}</code>, complete the command with a semicolon {;}, execute our command, and comment out the rest of the line with <code>//</code> like <code>';alert(1)//</code> or <code>');alert(1);//</code>) or script block ( by <code>&lt;/script&gt;</code> to end the script and continue from there), then inject.</p>
+        <p>We need to close the string <b>(</b> by <code> single quotation (')</code>, complete the command with a semicolon (;), execute our command, and comment out the rest of the line with <code>//</code> like <code>';alert(1)//</code> or <code>');alert(1);//</code> <b>)</b> or script block <b>(</b> by <code>&lt;/script&gt;</code> to end the script and continue from there<b>)</b>, then inject.</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
               <button class="code-cp-btn"> 
@@ -553,7 +553,7 @@
             </div>
             <pre><code class="code-txt">&lt;script&gt;
    var userInput = '&lt;/script&gt;&lt;script&gt;alert("XSS")&lt;/script&gt;';
-&lt;/script&gt;</pre> 
+&lt;/script&gt;</code></pre>
         </div>
           <p>which results in </p>
         <pre>&lt;script&gt;
@@ -571,7 +571,7 @@
             </div>
             <pre><code class="code-txt">var name = 'John'; // if input => ');alert(1);//  
 // Final JS becomes:
-var name = '');alert(1);//';     // this executes <code>alert(1)</code> & XSS </pre>
+var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       </div>
         
         <p>Therefore, understanding the context of injection is crucial for crafting a working payload.</p>
@@ -585,11 +585,11 @@ var name = '');alert(1);//';     // this executes <code>alert(1)</code> & XSS </
           <li>New line (LF) is 'A' in hexadecimal representation</li>
           <li>Carriage return (CR) is 'D' in hexadecimal representation</li>
         </uL>
-        <p>Examples <code>&lt;IMG SRC="javascript:alert('XSS');"&gt;</code> can be used as: </p>
-        <pre>
-&lt;img src="jav&#x09;ascript:alert('XSS');"&gt;  // Tab (9)
-&lt;img src="jav&#x0A;ascript:alert('XSS');"&gt;  // Line Feed (A)
-&lt;img src="jav&#x0D;ascript:alert('XSS');"&gt;  // Carriage Return (D)
+        <p>Examples <code>&lt;img src="javascript:alert('XSS');"&gt;</code> can be used as: </p>
+<pre>
+&lt;img src="jav&amp;#x09;ascript:alert('XSS');"&gt;  // Tab (9)
+&lt;img src="jav&amp;#x0A;ascript:alert('XSS');"&gt;  // Line Feed (A)
+&lt;img src="jav&amp;#x0D;ascript:alert('XSS');"&gt;  // Carriage Return (D)
   </pre>
         <p>Cheat Sheet for <a href="https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html" target="_blank">XSS Filter Evasion by OWASP.ORG</a></p>
       </div>
@@ -631,4 +631,5 @@ var name = '');alert(1);//';     // this executes <code>alert(1)</code> & XSS </
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
