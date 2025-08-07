@@ -37,28 +37,28 @@
   <script>
     function displaySoln(x) {
       const a = 'SuXope', b = 'dHdo', c = 'pXeXo';
-
-      let qwr = '';
-      let zx = a.substring(0,1);
-      let plm = b.slice(1,2);
-      let vbn = zx + plm;
       
-      let poi = b.charAt(2);
-      let mko = b.substring(0,1);
-      let lkj = poi + mko;
+      let zx = a.substring(0,1);    
+      let plm = b.slice(1,2);         
+      let vbn = zx + plm;             
       
-      let nbh = b.charAt(3);
-      let uyt = a.charAt(3);
-      let fgh = nbh + uyt;
+      let poi = b.charAt(0);         
+      let mko = b.charAt(2);       
+      let lkj = poi + mko;         
       
-      let rty = a.charAt(4);
-      let edc = c.charAt(2);
-      let zxc = rty + edc;
+      let nbh = b.charAt(3);       
+      let uyt = a.charAt(3);       
+      let fgh = uyt + nbh;        
       
-      let asd = c.split('')[4];
+      let rty = a.charAt(4);     
+      let edc = c.charAt(2);    
+      let zxc = rty + edc;        
+      
+      let asd = c.split('')[4];   
       
       let check = [vbn, lkj, fgh, zxc, asd].join('');
 
+      console.log('CHECk:',check);
       console.log('Param x:', x);
       
       if (x === check) {
