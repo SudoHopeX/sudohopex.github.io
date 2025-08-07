@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>XSS Lab Challenge</title>
+  <style>
+    .xxs-lab-soln-content {
+      display: none;
+      border: 2px dashed #4caf50;
+      padding: 15px;
+      margin-top: 20px;
+      background: #f1fff0;
+      font-family: monospace;
+    }
+    .b {
+      background: #fff8e1;
+      padding: 10px;
+      border: 1px dashed #fbc02d;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="b">
+    <h2>XSS Lab – Easy</h2>
+    <p>
+      There's a hidden reflected XSS vulnerability on this page.<br>
+      Your goal is to execute function displaySoln(secret-value)using that vulnerability and get the flag<br>
+      No output will be shown unless it's perfect.
+      <br>
+      Hint: Secret value is the most used value <a href="https://sudohopex.github.io/">Here</a>
+    </p>
+  </div>
+
+  <div id="o"></div>
+
+  <div class="xxs-lab-soln-content" id="s"></div>
+
+  <script>
+    function displaySoln(x) {
+      const a = 'SuXope', b = 'dHdo', c = 'pXeXo';
+
+      let qwr = '';
+      let zx = a.substring(0,1);
+      let plm = b.slice(1,2);
+      let vbn = zx + plm;
+      
+      let poi = b.charAt(2);
+      let mko = b.substring(0,1);
+      let lkj = poi + mko;
+      
+      let nbh = b.charAt(3);
+      let uyt = a.charAt(3);
+      let fgh = nbh + uyt;
+      
+      let rty = a.charAt(4);
+      let edc = c.charAt(2);
+      let zxc = rty + edc;
+      
+      let asd = c.split('')[4];
+      
+      let check = [vbn, lkj, fgh, zxc, asd].join('');
+
+      if (x === check) {
+        const f = b.charAt(2) + a.charAt(1) + 'X-' + x.slice(0, 2).toLowerCase() + x.length + '-' + x.charCodeAt(2);
+        document.getElementById('s').style.display = 'block';
+        document.getElementById('s').innerHTML = `<h3>✅ Challenge Solved</h3>
+          <p>You executed <code>displaySoln()</code> with the correct secret.</p>
+          <p>Flag: <code>${f}</code></p>`;
+      }
+    }
+  </script>
+
+  <script>
+    (function(){
+      let u = location + '';
+      let x = '', m;
+      try {
+        x = decodeURIComponent((u.split('?')[1] || '').replace(/^v=/, ''));
+      } catch(e) {}
+
+      const fn = 'displaySoln';
+      const re = new RegExp('^' + fn + '\\(([^\\)]+)\\)$');
+      m = x.match(re);
+
+      if (m && typeof window[fn] === 'function') {
+        window[fn](m[1]);
+      } else if (x) {
+        document.getElementById('o').innerHTML = '<p style="color:red;font-weight:bold;">N</p>';
+      }
+    })();
+  </script>
+</body>
+</html>
