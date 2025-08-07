@@ -493,30 +493,18 @@
       <!-- Day 5 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day5">
-          <span style="font-size: larger;">Day 5: Input Contexts</span>
+          <span style="font-size: larger;">Day 5: Understanding Input Contexts - Most Imp</span>
           <span class="plus">+</span>
         </a>
       </div>
       <div class="day5-content" style="display: none;">
-        <h3>Coming soon</h3>
-      </div>
-      <!-- Day 5 End -->
-
-      <!-- Context & Evasion Start -->
-      <div class="suggested-topics">
-        <a class="topic" href="#context-evasion">
-          <span style="font-size: larger;">Additional Info: Context & Evasion</span>
-          <span class="plus">+</span>
-        </a>
-      </div>
-      <div class="context-evasion-content" style="display: none;">
-        <h3>Context:</h3>
-        <p>XSS payloads can behave differently depending on where they are injected:</p>
+        <p>Context simply means <b>XSS payloads can behave differently depending on where they are injected, like within javascript or within html codes.</b></p>
+        <h3>Mainly there are 3 types of contexts for XSS:</h3>
         <h4> 1. Between HTML Tags (HTML body)</h4>
         <p>Easy to inject since it’s already in a script-friendly context.</p>
         <p>so, the attacker can run <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>.</p>
         <h4> 2. Within HTML Tags (attributes like href, src, etc.)</h4>
-        <p>We need to break out ( end the html tag ) of the attribute or use escape chars like <code></code> before injecting our code.</p>
+        <p>We need to break out ( end the html tag ) of the attribute or use escape chars like <code>"</code>,<code>&gt;</code>,<code>"&gt;</code> before injecting our code.</p>
         <p>and use payloads like: </p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
@@ -526,7 +514,8 @@
                     <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
                 </svg> </button>
             </div>
-            <pre><code class="code-txt">&lt;img src="x" onerror="alert(1)"&gt;</code> // here this will brake and </pre>
+            <pre><code class="code-txt">&lt;img src="x" onerror="alert(1)"&gt;</code>
+// here this will brake and " onerror="alert(1)" is payload </pre>
       </div>
       <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
@@ -536,7 +525,7 @@
                     <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
                 </svg> </button>
             </div>
-            <pre><code class="code-txt">&lt;input value="test"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> 
+            <pre><code class="code-txt">&lt;input value="test"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code>
   // here <code>"&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> is payload </pre>
       </div>
        <p>or this <code>&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code> or or something similar payload that would fit in the context.</p> 
@@ -574,9 +563,78 @@
 var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       </div>
         
-        <p>Therefore, understanding the context of injection is crucial for crafting a working payload.</p>
+        <p>Therefore, understanding the context of injection is crucial for crafting a working payload, suitable for the code to work accordingly.</p>
 
-        <h3>Evasion: </h3>
+        <p>That's it for day 5</p>
+      </div>
+      <!-- Day 5 End -->
+      <!-- Day 6 start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#day6">
+          <span style="font-size: larger;">Day 6: Evasion- How Browsers & Filters Block XSS & How to Bypass Them</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day6-content" style="display: none;">
+      <!-- COntent Here -->
+        <p>So far, we’ve been working with simple payloads like &lt;script&gt;alert(1)&lt;/script&gt;.</p>
+        <p>But in the real world, most sites have basic protections in place.</p>
+        <h4>These protections include:</h4>
+        <ul>
+          <li>Sanitization:
+          <ul>
+            <li>HTML encoding - prevent XSS by converting special characters (like <, >, &, ") into their corresponding HTML entities (like &amp;lt;, &amp;gt;, &amp;amp;, &amp;quot;), so they are displayed as text rather than being interpreted as code.</li>
+            <li>Script tag filtering and HTML tag sanitization - block XSS by removing or escaping dangerous tags and attributes (like &lt;script&gt;, onerror=, javascript:) from user input before rendering, preventing browser execution.</li>
+          </ul></li>
+          <li>WAFs (Web Application Firewalls) - by inspecting incoming web traffic for malicious patterns, such as script tags or event handlers, and filtering or blocking requests that match known attack signatures or exhibit suspicious behavior.</li>
+          <li>Content Security Policy (CSP) - blocks XSS by instructing the browser to only execute scripts from explicitly trusted sources</li>
+          <li>In Chrome - XSS auditor</li>
+        </ul>
+        <p>They are designed to prevent XSS, but they are not always perfect.</p>
+
+        <h4>E.g., How Filters Work:</h4>
+        <p>When we inject something like:</p>
+        <pre>&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+        <p>The website might sanitize it by converting:</p>
+        <pre>< → &amp;lt;
+> → &amp;gt;
+        </pre>
+        <p>so our input becomes:</p>
+        <pre>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</pre>
+        <p>That means our code shows up as text, not as executable JavaScript.</p>
+        <p>Our Job as a Hacker:</p>
+        <p>Learn to bypass those filters using clever tricks.</p>
+        <P>like if script is blocked then using img, svg, iframe, math tags or other uncommons tags.</P>
+        <h4>Tips:</h4>
+        <p>If our payload does not run, view the source of the page.<p>
+        <p>We’ll often find that our input has been changed or escaped, adjust the payload accordinly. That’s how we bypass the filter.</p>
+        <p>Can use Cheatsheet made for filter bypassing and others.</p>
+        <h3>Tools to Try:</h3>
+        </p>XSStrike for automated filter bypass testing</p>
+        </p>HackBar browser extension for fast injection</p>
+        <h3>That’s it for Day 6.</h3>
+      </div>
+      <!-- Day 6 End -->
+       <!-- Day 7 start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#day7">
+          <span style="font-size: larger;">Day 7: </span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day7-content" style="display: none;">
+        <!-- COntent Here -->
+      Coming Soon..
+      </div>
+      <!-- Day 7 End -->
+      <!--  Evasion Start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#context-evasion">
+          <span style="font-size: larger;">Additional Info: Evasion Techniques</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="context-evasion-content" style="display: none;">
         <P>Usefull <a href="https://github.com/payloadbox/xss-payload-list">XSS Payload List</a></P>
         <p>Usefull to bypass length restrictions: <a href="https://github.com/terjanq/Tiny-XSS-Payloads">Tiny XSS Payloads</a></p>
         <p>If XSS payloads are blocked based on specific blocklists (filters), then a horizontal tab, a new line, or a carriage return can break up the payload and evade the detection engines.</p>
@@ -631,5 +689,6 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
