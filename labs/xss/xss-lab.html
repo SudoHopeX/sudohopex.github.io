@@ -59,6 +59,8 @@
       
       let check = [vbn, lkj, fgh, zxc, asd].join('');
 
+      console.log('Param x:', x);
+      
       if (x === check) {
         const f = b.charAt(2) + a.charAt(1) + 'X-' + x.slice(0, 2).toLowerCase() + x.length + '-' + x.charCodeAt(2);
         document.getElementById('s').style.display = 'block';
@@ -68,7 +70,7 @@
       }
     }
 
-    console.log('Param x:', x);
+    
     
     (function(){
       let u = location + '';
