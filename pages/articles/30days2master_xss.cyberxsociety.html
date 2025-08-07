@@ -576,23 +576,26 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
         </a>
       </div>
       <div class="day6-content" style="display: none;">
-      <!-- COntent Here -->
         <p>So far, we’ve been working with simple payloads like &lt;script&gt;alert(1)&lt;/script&gt;.</p>
         <p>But in the real world, most sites have basic protections in place.</p>
-        <h4>These protections include:</h4>
+        <h3>These protections include:</h3>
         <ul>
           <li>Sanitization:
           <ul>
-            <li>HTML encoding - prevent XSS by converting special characters (like <, >, &, ") into their corresponding HTML entities (like &amp;lt;, &amp;gt;, &amp;amp;, &amp;quot;), so they are displayed as text rather than being interpreted as code.</li>
-            <li>Script tag filtering and HTML tag sanitization - block XSS by removing or escaping dangerous tags and attributes (like &lt;script&gt;, onerror=, javascript:) from user input before rendering, preventing browser execution.</li>
+            <li><b>HTML encoding</b> - prevent XSS by converting special characters (like <, >, &, ") into their corresponding HTML entities (like &amp;lt;, &amp;gt;, &amp;amp;, &amp;quot;), so they are displayed as text rather than being interpreted as code.</li>
+            <br>
+            <li><b>Script tag filtering and HTML tag sanitization</b> - block XSS by removing or escaping dangerous tags and attributes (like &lt;script&gt;, onerror=, javascript:) from user input before rendering, preventing browser execution.</li>
           </ul></li>
-          <li>WAFs (Web Application Firewalls) - by inspecting incoming web traffic for malicious patterns, such as script tags or event handlers, and filtering or blocking requests that match known attack signatures or exhibit suspicious behavior.</li>
-          <li>Content Security Policy (CSP) - blocks XSS by instructing the browser to only execute scripts from explicitly trusted sources</li>
-          <li>In Chrome - XSS auditor</li>
+          <br>
+          <li><b>WAFs (Web Application Firewalls)</b> - by inspecting incoming web traffic for malicious patterns, such as script tags or event handlers, and filtering or blocking requests that match known attack signatures or exhibit suspicious behavior.</li>
+          <br>
+          <li><b>Content Security Policy (CSP)</b> - blocks XSS by instructing the browser to only execute scripts from explicitly trusted sources.</li>
+          <br>
+          <li></b>In Chrome - XSS auditor can detect & block injected js.</b></li>
         </ul>
         <p>They are designed to prevent XSS, but they are not always perfect.</p>
 
-        <h4>E.g., How Filters Work:</h4>
+        <h3>E.g., How Filters Work:</h3>
         <p>When we inject something like:</p>
         <pre>&lt;script&gt;alert(1)&lt;/script&gt;</pre>
         <p>The website might sanitize it by converting:</p>
@@ -602,17 +605,17 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
         <p>so our input becomes:</p>
         <pre>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</pre>
         <p>That means our code shows up as text, not as executable JavaScript.</p>
-        <p>Our Job as a Hacker:</p>
+        <h4>Our Job as a Hacker:</h4>
         <p>Learn to bypass those filters using clever tricks.</p>
         <P>like if script is blocked then using img, svg, iframe, math tags or other uncommons tags.</P>
-        <h4>Tips:</h4>
+        <h3>Tips:</h3>
         <p>If our payload does not run, view the source of the page.<p>
         <p>We’ll often find that our input has been changed or escaped, adjust the payload accordinly. That’s how we bypass the filter.</p>
         <p>Can use Cheatsheet made for filter bypassing and others.</p>
         <h3>Tools to Try:</h3>
         </p>XSStrike for automated filter bypass testing</p>
         </p>HackBar browser extension for fast injection</p>
-        <h3>That’s it for Day 6.</h3>
+        <h4>That’s it for Day 6.</h4>
       </div>
       <!-- Day 6 End -->
        <!-- Day 7 start -->
@@ -689,6 +692,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
