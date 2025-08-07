@@ -37,31 +37,23 @@
   <script>
     function displaySoln(x) {
       const a = 'SuXope', b = 'dHdo', c = 'pXeXo';
-      
-      let zx = a.substring(0,1);    
-      let plm = a.charAt(1);        
-      let vbn = zx + plm;             
-      
+      let zxd = a.substring(0,1);    
+      let plm = a.charAt(1);
+      let edd = a.substring(0,1);
+      let edc = c.charAt(2);
+      let rty = a.charAt(4);
+      let vbn = zxd + plm;             
       let poi = b.charAt(0);         
-      let mko = b.charAt(3);      
+      let mko = b.charAt(3);
+      let bdc = [x.charAt(0), x.substring(1, 4), x.slice(4, 8), x[8]].join('');
+      let zxc = rty + edc;
+      let asd = c.charAt(3)
       let lkj = poi + mko;         
-      
-      let nbh = a.charAt(3);       
+      let nbh = a.charAt(3);
+      let zcx = rty + edc;
       let uyt = b.charAt(1);       
       let fgh = uyt + nbh;
-      
-      let rty = a.charAt(4);     
-      let edc = c.charAt(2);    
-      let zxc = rty + edc;        
-      
-      let asd = c.charAt(3)  
-      
-      let check = [vbn, lkj, fgh, zxc, asd].join('');
-
-      console.log('CHECk:',check);
-      console.log('Param x:', x);
-      
-      if (x === check) {
+      if (bdc === [vbn, lkj, fgh, zxc, asd].join('')) {
         const f = b.charAt(2) + a.charAt(1) + 'X-' + x.slice(0, 2).toLowerCase() + x.length + '-' + x.charCodeAt(2);
         document.getElementById('s').style.display = 'block';
         document.getElementById('s').innerHTML = `<h3>✅ Challenge Solved</h3>
@@ -70,8 +62,6 @@
       }
     }
 
-    
-    
     (function(){
       let u = location + '';
       let x = '', m;
