@@ -34,7 +34,7 @@ a:hover {
 }
 
 pre code {
-    font-size: .8em
+    font-size: 1em
 }
 
 ::selection {
@@ -94,8 +94,8 @@ pre code {
 .app-container {
     padding: 2.5rem;
     font-family: 'Inter', sans-serif;
-    font-size: 18px;
-    line-height: 1.75;
+    font-size: 24px;
+    line-height: 1.59;
     max-width: 720px;
     margin: 0 auto;
 }
