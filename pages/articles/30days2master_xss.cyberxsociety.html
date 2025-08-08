@@ -616,9 +616,9 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
         <p>If our payload does not run, view the source of the page.<p>
         <p>We’ll often find that our input has been changed or escaped, adjust the payload accordinly. That’s how we bypass the filter.</p>
         <p>Can use Cheatsheet made for filter bypassing and others.</p>
-        <h3>Tools to Try:</h3>
+<!--         <h3>Tools to Try:</h3>
         </p>XSStrike for automated filter bypass testing</p>
-        </p>HackBar browser extension for fast injection</p>
+        </p>HackBar browser extension for fast injection</p> -->
         <h4>That’s it for Day 6.</h4>
       </div>
       <!-- Day 6 End -->
@@ -673,7 +673,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
         <button>Submit Flag to See Solutions</button> 
         <!-- display iframe containing lab solutions -->
         <div class="suggested-topics">
-        <a class="topic" href="#" onclick='document.getElementByClass("google-xss-game-content").style.display="block"'>
+        <a class="topic" href="#" onclick="(e=document.querySelector('.google-xss-game-content')).style.display=e.style.display=='none'?'block':'none'; return false;">
           <span style="font-size: medium;">Google XSS Game</span>
           <span class="plus">+</span>
         </a>
@@ -765,7 +765,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
           
       </div>
         <div class="suggested-topics">
-        <a class="topic" href="#" onclick='document.getElementByClass("xss-labs.abay.sh-content").style.display="block"'>
+        <a class="topic" class="topic" href="#" onclick="(e=document.querySelector('.google-xss-game-content')).style.display=e.style.display=='none'?'block':'none'; return false;"'>
           <span style="font-size: medium;">xss-labs.abay.sh</span>
           <span class="plus">+</span>
         </a>
@@ -931,6 +931,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
