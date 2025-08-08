@@ -765,12 +765,12 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
           
       </div>
         <div class="suggested-topics">
-        <a class="topic" class="topic" href="#" onclick="(e=document.querySelector('.xss-labs.abay.sh-content')).style.display=e.style.display=='none'?'block':'none'; return false;"'>
+        <a class="topic" class="topic" href="#" onclick="(e=document.querySelector('.xss-labs-abay-sh-content')).style.display=e.style.display=='none'?'block':'none'; return false;"'>
           <span style="font-size: medium;">xss-labs.abay.sh</span>
           <span class="plus">+</span>
         </a>
       </div>
-      <div class="xss-labs.abay.sh-content" style="display: none;">
+      <div class="xss-labs-abay-sh-content" style="display: none;">
         <h3>Lab 01:</h3>
         <p>Context: within html code</p>
         <div class="code-block-wrapper"  style="margin-top: -50px;">
@@ -806,91 +806,6 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
             </div>
             <pre><code class="code-txt">x" onfocus="alert(1)</code></pre>
         </div>
-        <!-- <h3>Lab 03:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div>
-        <h3>Lab 04:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div>
-        <h3>Lab 05:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div>
-        <h3>Lab 06:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div>
-        <h3>Lab 07:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div>
-        <h3>Lab 08:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div>
-        <h3>Lab 09:</h3>
-        <p>Context: within html tags ( input box placeholder ) [NOTE: btw it broke page to continuously load and show popups infinitely ]</p>
-        <div class="code-block-wrapper"  style="margin-top: -50px;">
-            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
-              <button class="code-cp-btn"> 
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg> </button>
-            </div>
-            <pre><code class="code-txt">payload</code></pre>
-        </div> -->
-        
       </div>
         
       </div>
@@ -931,12 +846,3 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
-
-
-
-
-
-
-
-
-
