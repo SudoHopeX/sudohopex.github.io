@@ -625,15 +625,97 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
        <!-- Day 7 start -->
       <div class="suggested-topics">
         <a class="topic" href="#day7">
-          <span style="font-size: larger;">Day 7: </span>
+          <span style="font-size: larger;">Day 7 – Practice: Test, Fail, Learn, Repeat</span>
           <span class="plus">+</span>
         </a>
       </div>
       <div class="day7-content" style="display: none;">
-        <!-- COntent Here -->
-      Coming Soon..
+        <p>The best way to master XSS is hands-on practice.</p>
+        <p>Today is about applying everything from the last 6 days:</p>
+        <ul>
+          <li>XSS basics</li>
+          <li>JavaScript for hackers</li>
+          <li>Reflected XSS</li>
+          <li>HTML Injection vs XSS</li>
+          <li>Input context</li>
+          <li>Filter bypass basics</li>
+        </ul>
+        <h3>Today's Goal:</h3>
+        <h4>1. Practice, Practice and Practice (If solved once then resolve) -&gt;</h4>
+        <p><a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded">PortSwigger Reflected XSS Labs</a> (Only Basics and Reflected)</p>
+        <p><a href="https://tryhackme.com/room/axss">TryHackMe XSS Room</a></p>
+        <p>XSS Game by <a href="https://alf.nu/alert1?world=alert&level=alert0">Alf.nu</a></p>
+        <p><a href="https://xss-game.appspot.com/level1">XSS Game by Google</a></p>
+        <p>XSS Lab at<a href="https://xss-labs.abay.sh/xss/">xss-labs.abay.sh</a></p>
+        <h4>2. Test all payloads learned in 6 days & craft accordingly if needed, like -&gt;</h4>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;img src=x onerror​=alert(1)&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;svg/onload​=alert(1)&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">"&gt;&lt;​script&gt;alert(1)&lt;​/script&gt;</code></pre>
+        </div>
+        <h4>3. Observe the Behavior</h4>
+        <ul>
+          <li>Does our payload execute?</li>
+          <li>Does it get filtered or encoded?</li>
+          <li>Does it break the page?</li>
+          <li>What's the context so that we can customize our payloads?</li>
+          <li>What changes we need to make to make it executable?</li>
+        </ul>
+        <h4>4. Write Down -&gt;</h4>
+        <p>Keep a log of what worked and why</p>
+        <p>Note the context (HTML, attribute(tag), JS block)</h4>
+        <h3>Tips</h3>
+        <p>Every failed payload is a clue. It tells you how the application processes your input.</p>
+        <p>Smart hackers turn failures into new bypasses.</h3>
+        <p>My Solutions can be found below.....</p>
+        <h4>That's it for Day 7</h4>
       </div>
       <!-- Day 7 End -->
+      <!-- Day 8 Start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#day8">
+          <span style="font-size: larger;">Day 8: </span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day8-content" style="display: none;">
+      </div>
+      <!-- Day 8 End -->
       <!--  Evasion Start -->
       <div class="suggested-topics">
         <a class="topic" href="#context-evasion">
@@ -902,5 +984,6 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
