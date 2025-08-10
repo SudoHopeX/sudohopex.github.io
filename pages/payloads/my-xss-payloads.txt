@@ -2,6 +2,7 @@
 -------------------------------------------------------------------------------------
 
 [+] Test if Payload is working
+[!] NOTE: after testing check for window.origin or document.domain to check for scope and effected domain or subdomain
 
 + First step to check for xss
 <script>alert(1)</script>
