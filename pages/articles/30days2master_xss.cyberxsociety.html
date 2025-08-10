@@ -747,75 +747,112 @@ document.getElementById("output").innerHTML = search;</code></pre>
         </div>
       <P>The browser takes everything after #, puts it into the page with .innerHTML, and runs it.... that’s DOM-based XSS.</P>
       <h3>What to Do Today:</h3>
-      <h4>learn - How to spot DOM-based vulnerabilities:</h4>
-      <h3>1. Understand the DOM</h3>
-  <p>DOM (Document Object Model) represents the structure of a web page. DOM-based vulnerabilities occur in the browser when JavaScript handles user input unsafely, such as from <code>location</code>, <code>document.cookie</code>, or <code>window.name</code>.</p>
-
-  <h3>2. Look for Dangerous JavaScript Sinks</h3>
-  <p>These are functions that insert data into the page or execute code. Common sinks:</p>
-  <table>
-    <tr><th>Sink Function</th><th>Risky Because...</th></tr>
-    <tr><td><code>element.innerHTML</code></td><td>Parses as HTML (can execute tags)</td></tr>
-    <tr><td><code>eval()</code></td><td>Executes any JS string</td></tr>
-    <tr><td><code>setTimeout("...")</code></td><td>Can execute code if string-based</td></tr>
-    <tr><td><code>document.write()</code></td><td>Writes raw HTML</td></tr>
-    <tr><td><code>location.href = "..."</code></td><td>Can redirect user</td></tr>
-  </table>
-
-  <h3>3. Check for Tainted Sources</h3>
-  <p>Look for where the input comes from — these are sources:</p>
-  <table>
-    <tr><th>Source</th><th>Description</th></tr>
-    <tr><td><code>location.hash</code></td><td>After <code>#</code> in URL</td></tr>
-    <tr><td><code>location.search</code></td><td>After <code>?</code> in URL</td></tr>
-    <tr><td><code>document.referrer</code></td><td>Referring page</td></tr>
-    <tr><td><code>window.name</code></td><td>Cross-tab communication</td></tr>
-    <tr><td><code>localStorage</code></td><td>Stored browser data</td></tr>
-  </table>
-  <p>If data from a source is passed to a sink without sanitization, it’s a red flag.</p>
-
-  <h3>4. Use a Dev Tool or Extension</h3>
-  <p>These tools can help track the flow of user input and detect unsafe usage:</p>
-  <ul>
-    <li><strong>Burp Suite DOM Invader</strong> (Free with Community Edition)</li>
-    <li><strong>Chrome DevTools</strong> – Use the search panel to find usage of sinks/sources</li>
-    <li><strong>OWASP ZAP</strong> – With DOM XSS plugins</li>
-  </ul>
-
-  <h3>5. Manually Test in the URL</h3>
-  <p>Use simple payloads to test for execution:</p>
-  <pre>#&lt;script&gt;alert(1)&lt;/script&gt;</pre>
-  <pre>#&quot;&gt;&lt;img src=x onerror=alert(1)&gt;</pre>
-  <p>Try inserting these into:</p>
-  <ul>
-    <li>The hash (<code>#</code>)</li>
-    <li>The query string (<code>?</code>)</li>
-    <li>Cookies or <code>localStorage</code> using browser DevTools</li>
-  </ul>
-  <p>Then observe if it shows up on the page or triggers an alert.</p>
-
-  <h3>6. Check JavaScript Code (Static Analysis)</h3>
-  <p>Look for patterns where input flows from a source to a sink:</p>
-  <pre>
-var input = location.hash.substring(1);
-document.getElementById("output").innerHTML = input; // ⚠️ Dangerous!
-  </pre>
-  <p>Follow the data from <strong>source</strong> to <strong>sink</strong> in the code.</p>
-
-  <h3>7. Use Security Linters or Scanners</h3>
-  <p>Free tools to help catch unsafe JavaScript practices:</p>
-  <ul>
-    <li><strong>eslint-plugin-security</strong> – Highlights use of dangerous functions</li>
-    <li><strong>Custom ESLint rules</strong> – Detect use of <code>eval</code>, <code>innerHTML</code>, etc.</li>
-    <li><strong>OWASP ZAP</strong> – Static and dynamic scanning features</li>
-  </ul>
-<!--       <h4>Look for dangerous JavaScript sinks like .innerHTML, .outerHTML, document.write, eval, location.href</h4>
-      <h4>Use browser DevTools to search for these keywords in the site’s JS files</h4>
-      <h4>Inject payloads in URL fragments (#), query parameters, or even in clickable elements</h4> -->
-      <h3>Tools to try:</h3>
+      <h3>learn - How to spot DOM-based vulnerabilities:</h3>
+      <h4>1. Understand the DOM</h4>
+      <p>DOM (Document Object Model) represents the structure of a web page. DOM-based vulnerabilities occur in the browser when JavaScript handles user input unsafely, such as from <code>location</code>, <code>document.cookie</code>, or <code>window.name</code>.</p>
+      <h4>2. Look for Dangerous JavaScript Sinks</h4>
+      <p>These are functions that insert data into the page or execute code. Common sinks:</p>
+      <table style="margin-left: 20px; width: 90%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #ccc; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);">
+      <tbody>
+        <tr style="background-color: #f4f4f4;">
+          <th style="padding: 12px; border: 1px solid #ddd; font-weight: bold; text-align: left; color: #333;">Sink Function</th>
+          <th style="padding: 12px; border: 1px solid #ddd; font-weight: bold; text-align: left; color: #333;">Risky Because...</th>
+        </tr>
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 10px; border: 1px solid #eee;"><code>element.innerHTML</code></td>
+          <td style="padding: 10px; border: 1px solid #eee;">Parses as HTML (can execute tags)</td>
+        </tr>
+      
+        <tr style="background-color: #fafafa;">
+          <td style="padding: 10px; border: 1px solid #eee;"><code>eval()</code></td>
+          <td style="padding: 10px; border: 1px solid #eee;">Executes any JS string</td>
+        </tr>
+      
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 10px; border: 1px solid #eee;"><code>setTimeout("...")</code></td>
+          <td style="padding: 10px; border: 1px solid #eee;">Can execute code if string-based</td>
+        </tr>
+      
+        <tr style="background-color: #fafafa;">
+          <td style="padding: 10px; border: 1px solid #eee;"><code>document.write()</code></td>
+          <td style="padding: 10px; border: 1px solid #eee;">Writes raw HTML</td>
+        </tr>
+      
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 10px; border: 1px solid #eee;"><code>location.href = "..."</code></td>
+          <td style="padding: 10px; border: 1px solid #eee;">Can redirect user</td>
+        </tr>
+    </tbody></table>
+    
+      <h4>3. Check for Tainted Sources</h4>
+      <p>Look for where the input comes from — these are sources:</p>
+      <table  style="margin-left: 20px; width: 90%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #ccc; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);">
+      <tr style="background-color: #f4f4f4;">
+        <th style="padding: 12px; border: 1px solid #ddd; font-weight: bold; text-align: left; color: #333;"">Source</th>
+        <th style="padding: 12px; border: 1px solid #ddd; font-weight: bold; text-align: left; color: #333;"">Description</th>
+      </tr>
+      <tr style="background-color: #ffffff;">
+        <td style="padding: 10px; border: 1px solid #eee;"><code>location.hash</code></td>
+        <td style="padding: 10px; border: 1px solid #eee;">After <code>#</code> in URL</td>
+      </tr>
+    
+      <tr style="background-color: #fafafa;">
+        <td style="padding: 10px; border: 1px solid #eee;"><code>location.search</code></td>
+        <td style="padding: 10px; border: 1px solid #eee;">After <code>?</code> in URL</td>
+      </tr>
+    
+      <tr style="background-color: #ffffff;">
+        <td style="padding: 10px; border: 1px solid #eee;"><code>document.referrer</code></td>
+        <td style="padding: 10px; border: 1px solid #eee;">Referring page</td>
+      </tr>
+    
+      <tr style="background-color: #fafafa;">
+        <td style="padding: 10px; border: 1px solid #eee;"><code>window.name</code></td>
+        <td style="padding: 10px; border: 1px solid #eee;">Cross-tab communication</td>
+      </tr>
+    
+      <tr style="background-color: #ffffff;">
+        <td style="padding: 10px; border: 1px solid #eee;"><code>localStorage</code></td>
+        <td style="padding: 10px; border: 1px solid #eee;">Stored browser data</td>
+      </tr>
+    </table>
+    
+      <p>If data from a source is passed to a sink without sanitization, it’s a red flag.</p>
+    
+      <h4>4. Use a Dev Tool or Extension<h4>
+      <p>These tools can help track the flow of user input and detect unsafe usage:</p>
       <ul>
-        <li>Burp Suite DOM Invader (amazing for detecting DOM XSS)</li>
-        <li>Browser DevTools → Search all scripts for innerHTML and eval</li>
+        <li><strong>Burp Suite DOM Invader</strong> - amazing for detecting DOM XSS </li>
+        <li><strong>Browser DevTools</strong> – Use the search panel to find usage of sinks/sources or these keywords in the site’s JS files</li>
+        <li><strong>OWASP ZAP</strong> – With DOM XSS plugins</li>
+      </ul>
+    
+      <h4>5. Manually Test in the URL</h4>
+      <p>Use simple payloads to test for execution:</p>
+      <pre>#&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+      <pre>#&quot;&gt;&lt;img src=x onerror=alert(1)&gt;</pre>
+      <p>Try inserting these into:</p>
+      <ul>
+        <li>The hash (<code>#</code>)</li>
+        <li>The query string (<code>?</code>)</li>
+        <li>Cookies or <code>localStorage</code> using browser DevTools</li>
+      </ul>
+      <p>Then observe if it shows up on the page or triggers an alert.</p>
+    
+      <h4>6. Check JavaScript Code (Static Analysis)</h4>
+      <p>Look for patterns where input flows from a source to a sink:</p>
+      <pre>
+    var input = location.hash.substring(1);
+    document.getElementById("output").innerHTML = input; // ⚠️ Dangerous!
+      </pre>
+      <p>Follow the data from <strong>source</strong> to <strong>sink</strong> in the code.</p>
+    
+      <h4>7. Use Security Linters or Scanners</h4>
+      <p>Free tools to help catch unsafe JavaScript practices:</p>
+      <ul>
+        <li><strong>eslint-plugin-security</strong> – Highlights use of dangerous functions</li>
+        <li><strong>Custom ESLint rules</strong> – Detect use of <code>eval</code>, <code>innerHTML</code>, etc.</li>
+        <li><strong>OWASP ZAP</strong> – Static and dynamic scanning features</li>
       </ul>
       <h3>Tip:</h3>
       <p>DOM-based XSS is invisible to server logs many developers never notice it. That’s why it’s a goldmine for bug bounty hunters in modern single-page apps (React, Angular, Vue).</p>
@@ -1089,6 +1126,7 @@ document.getElementById("output").innerHTML = input; // ⚠️ Dangerous!
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
