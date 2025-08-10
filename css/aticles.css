@@ -19,7 +19,7 @@ pre {
 }
 
 code {
-   color: #c7254e;
+   color: aqua;
    padding: 2px 4px;
    border-radius: 4px;
 }
@@ -30,7 +30,7 @@ pre, code {
 }
          
 .code-txt {
-   color:#000000;
+   color: #57d713;
    font-size: medium;
    font-family: 'Fira Code', monospace;
 }
@@ -167,4 +167,5 @@ color: #888;
   visibility: visible;
   opacity: 1;
 }
+
 
