@@ -711,11 +711,114 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <!-- Day 8 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day8">
-          <span style="font-size: larger;">Day 8: </span>
+          <span style="font-size: larger;">Day 8 - Introduction to DOM-Based XSS</span>
           <span class="plus">+</span>
         </a>
       </div>
       <div class="day8-content" style="display: none;">
+      <p>DOM (Document Object Model) represents the structure of a web page.</p>
+      <p>In DOM-based XSS, the browser’s own JavaScript takes your input and inserts it into the page without proper sanitization no server involvement.</p>
+      <p>This means:<br>
+      &nbsp;The vulnerable code runs entirely in the user’s browser</p>
+      <p>It’s often hidden in JavaScript functions, event handlers, or AJAX responses</p>
+      <p>We will not see the payload in the HTML source sent by the server</p>
+      <h3>Simple Example:</h3>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">var search = location.hash.substring(1); 
+document.getElementById("output").innerHTML = search;</code></pre>
+        </div>
+        <h4>If we visit:</h4>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">https://example.com/#<​script>alert(1)<​/script></code></pre>
+        </div>
+      <P>The browser takes everything after #, puts it into the page with .innerHTML, and runs it.... that’s DOM-based XSS.</P>
+      <h3>What to Do Today:</h3>
+      <h4>learn - How to spot DOM-based vulnerabilities:</h4>
+      <h3>1. Understand the DOM</h3>
+  <p>DOM (Document Object Model) represents the structure of a web page. DOM-based vulnerabilities occur in the browser when JavaScript handles user input unsafely, such as from <code>location</code>, <code>document.cookie</code>, or <code>window.name</code>.</p>
+
+  <h3>2. Look for Dangerous JavaScript Sinks</h3>
+  <p>These are functions that insert data into the page or execute code. Common sinks:</p>
+  <table>
+    <tr><th>Sink Function</th><th>Risky Because...</th></tr>
+    <tr><td><code>element.innerHTML</code></td><td>Parses as HTML (can execute tags)</td></tr>
+    <tr><td><code>eval()</code></td><td>Executes any JS string</td></tr>
+    <tr><td><code>setTimeout("...")</code></td><td>Can execute code if string-based</td></tr>
+    <tr><td><code>document.write()</code></td><td>Writes raw HTML</td></tr>
+    <tr><td><code>location.href = "..."</code></td><td>Can redirect user</td></tr>
+  </table>
+
+  <h3>3. Check for Tainted Sources</h3>
+  <p>Look for where the input comes from — these are sources:</p>
+  <table>
+    <tr><th>Source</th><th>Description</th></tr>
+    <tr><td><code>location.hash</code></td><td>After <code>#</code> in URL</td></tr>
+    <tr><td><code>location.search</code></td><td>After <code>?</code> in URL</td></tr>
+    <tr><td><code>document.referrer</code></td><td>Referring page</td></tr>
+    <tr><td><code>window.name</code></td><td>Cross-tab communication</td></tr>
+    <tr><td><code>localStorage</code></td><td>Stored browser data</td></tr>
+  </table>
+  <p>If data from a source is passed to a sink without sanitization, it’s a red flag.</p>
+
+  <h3>4. Use a Dev Tool or Extension</h3>
+  <p>These tools can help track the flow of user input and detect unsafe usage:</p>
+  <ul>
+    <li><strong>Burp Suite DOM Invader</strong> (Free with Community Edition)</li>
+    <li><strong>Chrome DevTools</strong> – Use the search panel to find usage of sinks/sources</li>
+    <li><strong>OWASP ZAP</strong> – With DOM XSS plugins</li>
+  </ul>
+
+  <h3>5. Manually Test in the URL</h3>
+  <p>Use simple payloads to test for execution:</p>
+  <pre>#&lt;script&gt;alert(1)&lt;/script&gt;</pre>
+  <pre>#&quot;&gt;&lt;img src=x onerror=alert(1)&gt;</pre>
+  <p>Try inserting these into:</p>
+  <ul>
+    <li>The hash (<code>#</code>)</li>
+    <li>The query string (<code>?</code>)</li>
+    <li>Cookies or <code>localStorage</code> using browser DevTools</li>
+  </ul>
+  <p>Then observe if it shows up on the page or triggers an alert.</p>
+
+  <h3>6. Check JavaScript Code (Static Analysis)</h3>
+  <p>Look for patterns where input flows from a source to a sink:</p>
+  <pre>
+var input = location.hash.substring(1);
+document.getElementById("output").innerHTML = input; // ⚠️ Dangerous!
+  </pre>
+  <p>Follow the data from <strong>source</strong> to <strong>sink</strong> in the code.</p>
+
+  <h3>7. Use Security Linters or Scanners</h3>
+  <p>Free tools to help catch unsafe JavaScript practices:</p>
+  <ul>
+    <li><strong>eslint-plugin-security</strong> – Highlights use of dangerous functions</li>
+    <li><strong>Custom ESLint rules</strong> – Detect use of <code>eval</code>, <code>innerHTML</code>, etc.</li>
+    <li><strong>OWASP ZAP</strong> – Static and dynamic scanning features</li>
+  </ul>
+<!--       <h4>Look for dangerous JavaScript sinks like .innerHTML, .outerHTML, document.write, eval, location.href</h4>
+      <h4>Use browser DevTools to search for these keywords in the site’s JS files</h4>
+      <h4>Inject payloads in URL fragments (#), query parameters, or even in clickable elements</h4> -->
+      <h3>Tools to try:</h3>
+      <ul>
+        <li>Burp Suite DOM Invader (amazing for detecting DOM XSS)</li>
+        <li>Browser DevTools → Search all scripts for innerHTML and eval</li>
+      </ul>
+      <h3>Tip:</h3>
+      <p>DOM-based XSS is invisible to server logs many developers never notice it. That’s why it’s a goldmine for bug bounty hunters in modern single-page apps (React, Angular, Vue).</p>
       </div>
       <!-- Day 8 End -->
       <!--  Evasion Start -->
@@ -986,6 +1089,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
