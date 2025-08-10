@@ -108,19 +108,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // Auto sound play
 window.addEventListener('load', () => {
     const audio = document.getElementById('myAudio');
+    if (!audio) return; // If audio element doesn't exist, exit early
+
     let isPlaying = false;
 
     audio.play().catch((error) => { 
-        console.log("Autoplay prevented : ", error); 
-        // alert("Click anywhere to enable Sound..");
+        console.log("Autoplay prevented:", error); 
+        // Optionally show a message to user
     });
 
     document.body.addEventListener('click', () => {
-        if(!isPlaying) {
-            audio.play().then(() =>  {
-                    isPlaying = true;
+        if (!isPlaying) {
+            audio.play().then(() => {
+                isPlaying = true;
             }).catch((err) => { 
-                console.log(" Song play Blocked, error: ", err); 
+                console.log("Song play blocked, error:", err); 
             });
         } else {
             audio.pause();
@@ -129,6 +131,7 @@ window.addEventListener('load', () => {
         }
     });
 });
+
 
 // img zoom functionality
 document.addEventListener("DOMContentLoaded", function () {
@@ -189,18 +192,30 @@ const images = [
 const scrollBtn = document.getElementById("scrollToTopBtn");
 
 if (scrollBtn !== null) {
+  let lastScrollTop = 0;
+
   window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrollPercent = (scrollTop / docHeight) * 100;
 
-    scrollBtn.style.display = scrollPercent > 50 ? "flex" : "none";
+    const isScrollingUp = scrollTop < lastScrollTop;
+
+    // Only show when user is scrolling UP and below 25%
+    if (isScrollingUp && scrollPercent > 25) {
+      scrollBtn.style.display = "flex";
+    } else {
+      scrollBtn.style.display = "none";
+    }
+
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // prevent negative values
   });
 
   scrollBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
+
 
 function sendE(){
     const u = "sud0hope";
@@ -310,4 +325,5 @@ document.querySelectorAll('.topic').forEach(link => {
         }
     });
 });
+
 
