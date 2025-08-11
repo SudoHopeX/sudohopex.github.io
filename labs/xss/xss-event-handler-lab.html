@@ -107,40 +107,41 @@
     }
 
     function runLevel(level) {
-      const input = document.getElementById(`input${level}`).value;
-      const frame = document.getElementById(`frame${level}`);
-      const clean = sanitizeInput(level, input);
-      const encoded = clean.replace(/<\/script/gi, '<\\/script');
-    
-      const html = `
-        <!DOCTYPE html>
-        <html>
-        <body>
-        <script>
-          const oldAlert = window.alert;
-          window.alert = function(msg) {
-            const expected = [document.domain, window.origin];
-            if (expected.includes(msg)) {
-              window.parent.postMessage({ type: "solved", level: ${level} }, "*");
-            }
-            oldAlert(msg);
-          };
-        <\\/script>
-        <div>Output:</div>
-        ${encoded}
-        </body>
-        </html>
-      `;
-    
-      // Inject HTML directly
-      frame.src = "about:blank";
-      frame.onload = () => {
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        doc.open();
-        doc.write(html);
-        doc.close();
+  const input = document.getElementById(`input${level}`).value;
+  const frame = document.getElementById(`frame${level}`);
+  const clean = sanitizeInput(level, input);
+  const encoded = clean.replace(/<\/script/gi, '<\\/script');
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <body>
+    <script>
+      const oldAlert = window.alert;
+      window.alert = function(msg) {
+        const expected = [document.domain, window.origin];
+        if (expected.includes(msg)) {
+          window.parent.postMessage({ type: "solved", level: ${level} }, "*");
+        }
+        oldAlert(msg);
       };
-    }
+    <\/script>
+    <div>Output:</div>
+    ${encoded}
+    </body>
+    </html>
+  `;
+
+  frame.onload = () => {
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+    // Remove the onload so it won't trigger again unnecessarily
+    frame.onload = null;
+  };
+  frame.src = "about:blank";
+}
 
 
 
