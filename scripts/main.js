@@ -48,26 +48,27 @@ projectTriggers.forEach(trigger => {
     
 // Utility function to show a home section
 function showHomeSection(target) {
-    if (home) home.style.display = 'none';
-    if (home2) home2.style.display = 'none';
-    if (home3) home3.style.display = 'none';
-    if (writeups) writeups.style.display = 'none';
-    if (about) about.style.display = 'none';
-    if (projects) projects.style.display = 'none';
+        if (home) home.style.display = 'none';
+        if (home2) home2.style.display = 'none';
+        if (home3) home3.style.display = 'none';
+        if (writeups) writeups.style.display = 'none';
+        if (about) about.style.display = 'none';
+        if (projects) projects.style.display = 'none';
 
-    if (target === 'home2' && home2) home2.style.display = 'block';
-    else if (target === 'home3' && home3) home3.style.display = 'block';
-}
+        if (target === 'home2' && home2) home2.style.display = 'block';
+        else if (target === 'home3' && home3) home3.style.display = 'block';
+    }
 
-// Attach event listener to all elements with data-page-target
-pageTriggers.forEach(trigger => {
-    trigger.addEventListener('click', function(event) {
-        event.preventDefault();
-        const target = event.currentTarget.getAttribute('data-page-target');
-        console.log("Clicked, showing:", target);
-        showHomeSection(target);
+    // Attach event listener to all elements with data-page-target
+    const pageTriggers = document.querySelectorAll('[data-page-target]');
+    pageTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(event) {
+            event.preventDefault();
+            console.log("target:", target);
+            const target = event.currentTarget.getAttribute('data-page-target');
+            showHomeSection(target);
+        });
     });
-});
 
 }); 
 
@@ -310,6 +311,7 @@ document.querySelectorAll('.topic').forEach(link => {
         }
     });
 });
+
 
 
 
