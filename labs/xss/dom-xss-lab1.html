@@ -67,48 +67,49 @@
         <h2>${level.desc}</h2>
         <p>Open this level and try triggering: <code>alert(document.domain)</code> or <code>alert(window.origin)</code></p>
         <p>Sandboxed payload is rendered below based on URL hash or search.</p>
-        <iframe id="frame${levelNum}" sandbox="allow-scripts"></iframe>
+        <iframe id="frame${levelNum}" sandbox="allow-scripts allow-modals"></iframe>
       `;
 
       levelsContainer.appendChild(div);
       runLevel(levelNum, level.code); // preload
     });
 
-    function changeLevel() {
-      const selected = parseInt(selector.value);
-      document.querySelectorAll('.level').forEach(div => div.classList.remove('visible'));
-      document.getElementById(`level${selected}`).classList.add('visible');
-    }
+function runLevel(level, code) {
+  const iframe = document.getElementById(`frame${level}`);
 
-    function runLevel(level, code) {
-      const iframe = document.getElementById(`frame${level}`);
-
-      const html = `
-        <html>
-        <body>
-        <div id="target">Loading...</div>
-        <script>
-          const oldAlert = window.alert;
-          window.alert = function(msg) {
-            if ([document.domain, window.origin].includes(msg)) {
-              parent.levelSolved(${level});
-              window._solved = true;
-            }
-            oldAlert(msg);
-          };
-          try {
-            ${code}
-          } catch (e) {
-            document.body.innerHTML += '<pre>Error: ' + e.message + '</pre>';
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <body>
+      <div id="target">Loading...</div>
+      <script>
+        const oldAlert = window.alert;
+        window.alert = function(msg) {
+          if ([document.domain, window.origin].includes(msg)) {
+            window.parent.postMessage({ type: "solved", level: ${level} }, "*");
+            window._solved = true;
           }
-        </script>
-        </body></html>
-      `;
+          oldAlert(msg);
+        };
+        try {
+          ${code}
+        } catch (e) {
+          document.body.innerHTML += '<pre>Error: ' + e.message + '</pre>';
+        }
+      <\/script>
+    </body>
+    </html>
+  `;
 
-      const blob = new Blob([html], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      iframe.src = url;
-    }
+  iframe.src = "about:blank";
+  iframe.onload = () => {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+  };
+}
+
 
     function levelSolved(level) {
       if (!unlockedLevels.includes(level + 1) && level < totalLevels) {
@@ -117,6 +118,14 @@
         alert(`✅ Level ${level} Solved! Level ${level + 1} unlocked.`);
       }
     }
+
+    window.addEventListener("message", function (event) {
+  if (event.data?.type === "solved" && typeof event.data.level === "number") {
+    levelSolved(event.data.level);
+  }
+});
+
+    
   </script>
 
 </body>
