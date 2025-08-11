@@ -38,72 +38,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } 
 
-    const projectsTrigger1 = document.getElementById('projects-dis');
-    if (projectsTrigger1) {
-        projectsTrigger1.addEventListener('click', function(event) {
-            event.preventDefault();
-            showSection('projects');
-        });
-    }
-    
-    const projectsTrigger2 = document.getElementById('projects-dis2');
-    if (projectsTrigger2) {
-        projectsTrigger2.addEventListener('click', function(event) {
-            event.preventDefault();
-            showSection('projects'); // Reusing the same function for both triggers
-        });
-    } 
-
-    const element1 = document.getElementById('page-rotate-home2');
-    const element2 = document.getElementById('page-rotate-h2');
-    const element3 = document.getElementById('page-rotate-home3');
-    const element4 = document.getElementById('page-rotate-h3');
-
-    // Define functions
-    function show_home2() {
-        if (home) home.style.display = 'none';
-        if (home2) home2.style.display = 'block';
-        if (home3) home3.style.display = 'none';
-        if (writeups) writeups.style.display = 'none';
-        if (about) about.style.display = 'none';
-        if (projects) projects.style.display = 'none';
-    }
-
-    function show_home3() {
-        if (home) home.style.display = 'none';
-        if (home2) home2.style.display = 'none';
-        if (home3) home3.style.display = 'block';
-        if (writeups) writeups.style.display = 'none';
-        if (about) about.style.display = 'none';
-        if (projects) projects.style.display = 'none';
-    }
-
-    // Attach event listeners with null checks
-    if (element1) {
-        element1.addEventListener('click', function(event) {
-            event.preventDefault();
-            show_home2();
-        });
-    }
-    if (element2) {
-        element2.addEventListener('click', function(event) {
-            event.preventDefault();
-            show_home2();
-        });
-    }
-    if (element3) {
-        element3.addEventListener('click', function(event) {
-            event.preventDefault();
-            show_home3();
-        });
-    }
-    if (element4) {
-        element4.addEventListener('click', function(event) {
-            event.preventDefault();
-            show_home3();
-        });
-    }
+const projectTriggers = document.querySelectorAll('[data-role="projects-trigger"]');
+projectTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function(event) {
+        event.preventDefault();
+        showSection('projects');
+    });
 });
+    
+// Utility function to show a home section
+function showHomeSection(target) {
+    if (home) home.style.display = 'none';
+    if (home2) home2.style.display = 'none';
+    if (home3) home3.style.display = 'none';
+    if (writeups) writeups.style.display = 'none';
+    if (about) about.style.display = 'none';
+    if (projects) projects.style.display = 'none';
+
+    if (target === 'home2' && home2) home2.style.display = 'block';
+    else if (target === 'home3' && home3) home3.style.display = 'block';
+}
+
+// Attach event listener to all elements with data-page-target
+const pageTriggers = document.querySelectorAll('[data-page-target]');
+pageTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function(event) {
+        event.preventDefault();
+        const target = this.getAttribute('data-page-target');
+        showHomeSection(target);
+    });
+});
+
 
 // Auto sound play
 window.addEventListener('load', () => {
@@ -275,7 +240,7 @@ let charIndex = 0;
     document.addEventListener("DOMContentLoaded", startSloganChange);
     }
 
-// Central record object
+// Central record for project-articles-writeups
   const contentStats = {
     articles: 4,
     projectDocs: 5,
@@ -292,7 +257,8 @@ let charIndex = 0;
   // Run on page load
   window.onload = updateContentStats;
 
-// copy code
+    
+// copy code 
 document.addEventListener('DOMContentLoaded', function () {
     const copyButtons = document.querySelectorAll('.code-cp-btn');
 
@@ -342,6 +308,4 @@ document.querySelectorAll('.topic').forEach(link => {
         }
     });
 });
-
-
 
