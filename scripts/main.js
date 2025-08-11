@@ -192,10 +192,19 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     function updateContentStats() {
-        document.getElementById("articleCount").textContent = contentStats.articles;
-        document.getElementById("projectCount").textContent = contentStats.projectDocs;
-        document.getElementById("writeupCount").textContent = contentStats.writeups;
+        document.querySelectorAll(".articleCount").forEach(el => {
+            el.textContent = contentStats.articles;
+        });
+    
+        document.querySelectorAll(".projectCount").forEach(el => {
+            el.textContent = contentStats.projectDocs;
+        });
+    
+        document.querySelectorAll(".writeupCount").forEach(el => {
+            el.textContent = contentStats.writeups;
+        });
     }
+
 
     updateContentStats();
 });
@@ -253,4 +262,5 @@ function sendE() {
     const e = `${u}.${v}@${d}`;
     window.location.href = `mailto:${e}`;
 }
+
 
