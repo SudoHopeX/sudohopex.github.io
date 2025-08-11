@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FREE XSS Labs | 30 Days to Master XSS</title>
-  <meta name="robots" content="noindex, nofollow">
+  <title>FREE XSS Labs | 30 Days to Master XSS - SudoHopeX</title>
+  <meta name="description" content="Practice XSS with hands-on labs: reflected, DOM-based, event handler, and JS payload challenges by SudoHopeX." />
+  <meta name="keywords" content="XSS labs, cross-site scripting practice, DOM XSS, reflected XSS, event handler XSS, security labs, ethical hacking" />
+  <meta name="author" content="SudoHopeX" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://sudohopex.github.io/labs/xss/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FREE XSS Labs | 30 Days to Master XSS - SudoHopeX" />
+  <meta property="og:description" content="Practice XSS with hands-on labs: reflected, DOM-based, event handler, and JS payload challenges by SudoHopeX." />
+  <meta property="og:url" content="https://sudohopex.github.io/labs/xss/" />
+  <meta property="og:site_name" content="SudoHopeX Labs" />
+  <meta property="og:image" content="https://sudohopex.github.io/img/hope.jpg" />
+
+  <!-- Twitter Card (No handle specified) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FREE XSS Labs | 30 Days to Master XSS - SudoHopeX" />
+  <meta name="twitter:description" content="Practice XSS with hands-on labs: reflected, DOM-based, event handler, and JS payload challenges by SudoHopeX." />
+  <meta name="twitter:image" content="https://sudohopex.github.io/img/hope.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SudoHopeX Labs",
+    "url": "https://sudohopex.github.io/labs/xss/",
+    "description": "FREE XSS Labs with 30 Days to Master XSS challenges including reflected, DOM-based, and event handler XSS."
+  }
+  </script>
+</head>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -50,6 +80,19 @@
       font-size: 14px;
       margin-top: 30px;
       color: #555;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    select {
+      padding: 5px 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -60,31 +103,39 @@
 
     <div class="banner">
       🚨 This section contains intentionally vulnerable XSS labs for ethical hacking and learning purposes only. Do not attack real sites.
-    
-    <p>📖 Back to the main guide: 
-      <a href="https://sudohopex.github.io/pages/articles/30days2master_xss.cyberxsociety.html" target="_blank">
-        30 Days to Master XSS (SudoHopeX)
-      </a>
-    </p>
+      <p>📖 Back to the main guide: 
+        <a href="https://sudohopex.github.io/pages/articles/30days2master_xss.cyberxsociety.html" target="_blank" rel="noopener noreferrer">
+          30 Days to Master XSS (SudoHopeX)
+        </a>
+      </p>
     </div>
 
+    <label for="categoryFilter">Filter by Category:</label>
+    <select id="categoryFilter" aria-label="Filter labs by category">
+      <option value="all" selected>All</option>
+      <option value="basic">Basic</option>
+      <option value="reflected">Reflected</option>
+      <option value="dom">DOM</option>
+      <option value="js">JS</option>
+      <option value="challenge">Challenge</option>
+    </select>
 
     <h2>XSS Labs & Challenges by SudoHopeX</h2>
-    <ul>
-      <li><strong>LAB 01 - </strong> <a href="xss-js-lab1.html">Practice Basic Javascript funtions by SudoHopeX</a></li>
-      <li><strong>LAB 02 - </strong> <a href="reflected-xss-lab1.html">Practics Html & Js payloads by SudoHopeX</a></li>
-      <li><strong>LAB 03 - </strong> <a href="xss-challenge-lab1.html">XSS Challenge Lab by SudoHopeX</a></A></li>
-      <li><strong>LAB 04 - </strong> <a href="xss-event-handler-lab.html">XSS Event Handler Lab</a></li>
-      <li><strong>LAB 05 - </strong> <a href="dom-xss-lab1">DOM Based XSS Lab</a></li>
+    <ul id="labsList">
+      <li data-category="basic"><strong>LAB 01 - </strong> <a href="xss-js-lab1.html">Practice Basic Javascript functions by SudoHopeX</a></li>
+      <li data-category="reflected"><strong>LAB 02 - </strong> <a href="reflected-xss-lab1.html">Practice HTML & JS payloads by SudoHopeX</a></li>
+      <li data-category="challenge"><strong>LAB 03 - </strong> <a href="xss-challenge-lab1.html">XSS Challenge Lab by SudoHopeX</a></li>
+      <li data-category="js"><strong>LAB 04 - </strong> <a href="xss-event-handler-lab.html">XSS Event Handler Lab</a></li>
+      <li data-category="dom"><strong>LAB 05 - </strong> <a href="dom-xss-lab1.html">DOM Based XSS Lab</a></li>
     </ul>
 
     <h2>Other XSS Labs & Challenges</h2>
-    <ul>
-      <li><strong>LAB 01 - </strong> <a href="https://xss-game.appspot.com/level1">Google XSS Game</a></li>
-      <li><strong>LAB 02 - </strong> <a href="https://alf.nu/alert1?world=alert&level=alert0">Alf.nu XSS Game</a></li>
-      <li><strong>LAB 03 - </strong> <a href="https://tryhackme.com/room/axss">TryHackMe Basic XSS Lab 01</a></li>
-      <li><strong>LAB 04 - </strong> <a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded">Portswigger Basic Reflected XSS Lab</a></li>
-      <li><strong>LAB 05 - </strong> <a href="https://xss-labs.abay.sh/xss/">xss-labs.abay.sh</a></li>
+    <ul id="otherLabsList">
+      <li data-category="basic"><strong>LAB 01 - </strong> <a href="https://xss-game.appspot.com/level1" target="_blank" rel="noopener noreferrer">Google XSS Game</a></li>
+      <li data-category="basic"><strong>LAB 02 - </strong> <a href="https://alf.nu/alert1?world=alert&level=alert0" target="_blank" rel="noopener noreferrer">Alf.nu XSS Game</a></li>
+      <li data-category="basic"><strong>LAB 03 - </strong> <a href="https://tryhackme.com/room/axss" target="_blank" rel="noopener noreferrer">TryHackMe Basic XSS Lab 01</a></li>
+      <li data-category="reflected"><strong>LAB 04 - </strong> <a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded" target="_blank" rel="noopener noreferrer">PortSwigger Basic Reflected XSS Lab</a></li>
+      <li data-category="challenge"><strong>LAB 05 - </strong> <a href="https://xss-labs.abay.sh/xss/" target="_blank" rel="noopener noreferrer">xss-labs.abay.sh</a></li>
     </ul>
 
     <div class="footer">
@@ -92,6 +143,33 @@
       Maintained by <strong>SudoHopeX</strong> | For education only — Be ethical!
     </div>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    function filterLabs() {
+      const selected = categoryFilter.value;
+      // Filter SudoHopeX labs
+      document.querySelectorAll('#labsList li').forEach(li => {
+        if (selected === 'all' || li.dataset.category === selected) {
+          li.style.display = 'list-item';
+        } else {
+          li.style.display = 'none';
+        }
+      });
+      // Filter Other labs
+      document.querySelectorAll('#otherLabsList li').forEach(li => {
+        if (selected === 'all' || li.dataset.category === selected) {
+          li.style.display = 'list-item';
+        } else {
+          li.style.display = 'none';
+        }
+      });
+    }
+
+    categoryFilter.addEventListener('change', filterLabs);
+    // Initial filter on page load
+    filterLabs();
+  </script>
 </body>
 </html>
