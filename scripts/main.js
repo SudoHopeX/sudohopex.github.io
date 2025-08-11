@@ -69,6 +69,8 @@ pageTriggers.forEach(trigger => {
     });
 });
 
+}); 
+
 
 // Auto sound play
 window.addEventListener('load', () => {
@@ -308,5 +310,6 @@ document.querySelectorAll('.topic').forEach(link => {
         }
     });
 });
+
 
 
