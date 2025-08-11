@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DOM-Based XSS Lab (10 Levels)</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    textarea { width: 100%; height: 60px; margin-top: 0.5em; }
+    iframe { width: 100%; height: 200px; border: 1px solid #ccc; margin-top: 1em; }
+    .level { display: none; margin-top: 2em; }
+    .visible { display: block; }
+    .submit-btn { margin-top: 0.5em; }
+    select { margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+
+  <h1>🧪 DOM-Based XSS Lab</h1>
+  <p>Trigger <code>alert(document.domain)</code> or <code>alert(window.origin)</code> to pass each level.</p>
+
+  <label for="levelSelector">Select Level:</label>
+  <select id="levelSelector" onchange="changeLevel()">
+    <!-- Options will be populated dynamically -->
+  </select>
+
+  <div id="levelsContainer">
+    <!-- Levels will be injected here -->
+  </div>
+
+  <script>
+    const totalLevels = 10;
+    const unlockedLevels = [1];
+    const levelsData = [
+      { desc: "Level 1 – innerHTML with location.hash", code: "document.getElementById('target').innerHTML = location.hash.slice(1);" },
+      { desc: "Level 2 – document.write with hash", code: "document.write(location.hash.slice(1));" },
+      { desc: "Level 3 – innerHTML with location.search", code: "document.getElementById('target').innerHTML = new URLSearchParams(location.search).get('q');" },
+      { desc: "Level 4 – eval(location.hash)", code: "eval(location.hash.slice(1));" },
+      { desc: "Level 5 – setTimeout as string", code: "setTimeout(location.hash.slice(1), 500);" },
+      { desc: "Level 6 – innerHTML with Base64 decoded", code: "document.getElementById('target').innerHTML = atob(location.hash.slice(1));" },
+      { desc: "Level 7 – JS Template Injection", code: "let userInput = location.hash.slice(1); document.getElementById('target').innerHTML = `Hello ${userInput}`;" },
+      { desc: "Level 8 – Dynamic script injection", code: "let s = document.createElement('script'); s.src = location.hash.slice(1); document.body.appendChild(s);" },
+      { desc: "Level 9 – Hash-based SPA routing", code: "let page = location.hash.slice(1); document.getElementById('target').innerHTML = 'You are at: ' + page;" },
+      { desc: "Level 10 – Vulnerable object merge", code: "let data = JSON.parse(location.hash.slice(1)); Object.assign({}, data);" },
+    ];
+
+    const levelsContainer = document.getElementById("levelsContainer");
+    const selector = document.getElementById("levelSelector");
+
+    // Build levels dynamically
+    levelsData.forEach((level, i) => {
+      const levelNum = i + 1;
+
+      // Add selector option
+      const option = document.createElement("option");
+      option.value = levelNum;
+      option.textContent = `🔓 ${level.desc}`;
+      if (levelNum > 1) option.disabled = true;
+      selector.appendChild(option);
+
+      // Add level block
+      const div = document.createElement("div");
+      div.classList.add("level");
+      div.id = `level${levelNum}`;
+      if (levelNum === 1) div.classList.add("visible");
+
+      div.innerHTML = `
+        <h2>${level.desc}</h2>
+        <p>Open this level and try triggering: <code>alert(document.domain)</code> or <code>alert(window.origin)</code></p>
+        <p>Sandboxed payload is rendered below based on URL hash or search.</p>
+        <iframe id="frame${levelNum}" sandbox="allow-scripts"></iframe>
+      `;
+
+      levelsContainer.appendChild(div);
+      runLevel(levelNum, level.code); // preload
+    });
+
+    function changeLevel() {
+      const selected = parseInt(selector.value);
+      document.querySelectorAll('.level').forEach(div => div.classList.remove('visible'));
+      document.getElementById(`level${selected}`).classList.add('visible');
+    }
+
+    function runLevel(level, code) {
+      const iframe = document.getElementById(`frame${level}`);
+
+      const html = `
+        <html>
+        <body>
+        <div id="target">Loading...</div>
+        <script>
+          const oldAlert = window.alert;
+          window.alert = function(msg) {
+            if ([document.domain, window.origin].includes(msg)) {
+              parent.levelSolved(${level});
+              window._solved = true;
+            }
+            oldAlert(msg);
+          };
+          try {
+            ${code}
+          } catch (e) {
+            document.body.innerHTML += '<pre>Error: ' + e.message + '</pre>';
+          }
+        </script>
+        </body></html>
+      `;
+
+      const blob = new Blob([html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      iframe.src = url;
+    }
+
+    function levelSolved(level) {
+      if (!unlockedLevels.includes(level + 1) && level < totalLevels) {
+        unlockedLevels.push(level + 1);
+        selector.options[level].disabled = false;
+        alert(`✅ Level ${level} Solved! Level ${level + 1} unlocked.`);
+      }
+    }
+  </script>
+
+</body>
+</html>
