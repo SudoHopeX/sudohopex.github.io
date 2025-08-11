@@ -154,10 +154,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const content = document.querySelector(`.${dayId}-content`);
             if (!content) return;
 
-            const allContents = document.querySelectorAll('[class$="-content"]');
-            allContents.forEach(c => c.style.display = 'none');
-
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                document.querySelectorAll('[class$="-content"]').forEach(c => {
+                    c.style.display = 'none';
+                });
+                content.style.display = 'block';
+            }
         });
     });
 
@@ -249,3 +253,4 @@ function sendE() {
     const e = `${u}.${v}@${d}`;
     window.location.href = `mailto:${e}`;
 }
+
