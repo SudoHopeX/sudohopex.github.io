@@ -16,13 +16,13 @@
   <meta property="og:description" content="Practice XSS with hands-on labs: reflected, DOM-based, event handler, and JS payload challenges by SudoHopeX." />
   <meta property="og:url" content="https://sudohopex.github.io/labs/xss/" />
   <meta property="og:site_name" content="SudoHopeX Labs" />
-  <meta property="og:image" content="https://sudohopex.github.io/img/hope.jpg" />
+  <meta property="og:image" content="https://sudohopex.github.io/assets/og-image.png" />
 
-  <!-- Twitter Card (No handle specified) -->
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="FREE XSS Labs | 30 Days to Master XSS - SudoHopeX" />
   <meta name="twitter:description" content="Practice XSS with hands-on labs: reflected, DOM-based, event handler, and JS payload challenges by SudoHopeX." />
-  <meta name="twitter:image" content="https://sudohopex.github.io/img/hope.jpg" />
+  <meta name="twitter:image" content="https://sudohopex.github.io/assets/og-image.png" />
 
   <script type="application/ld+json">
   {
@@ -33,143 +33,198 @@
     "description": "FREE XSS Labs with 30 Days to Master XSS challenges including reflected, DOM-based, and event handler XSS."
   }
   </script>
-</head>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 40px;
+      font-family: 'Inter', sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
     }
     .container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 700px;
-      margin: auto;
+      max-width: 760px;
+      width: 100%;
+      background: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      padding: 30px 40px;
     }
     h1 {
       margin-top: 0;
-    }
-    ul {
-      padding-left: 20px;
-    }
-    li {
-      margin: 12px 0;
-    }
-    a {
-      text-decoration: none;
-      color: #007acc;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .no-lab {
-      color: gray;
-      font-style: italic;
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: #00bcd4;
+      text-align: center;
+      user-select: none;
     }
     .banner {
-      background: #ffdddd;
-      border: 2px solid red;
-      padding: 10px;
-      font-weight: bold;
-      margin-bottom: 20px;
+      background: #330000;
+      border: 2px solid #cc0000;
+      color: #ff9999;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 1rem 0 2rem;
+      line-height: 1.4;
     }
-    .footer {
-      font-size: 14px;
-      margin-top: 30px;
-      color: #555;
-      text-align: center;
+    .banner a {
+      color: #ffcccc;
+      text-decoration: underline;
     }
-    label {
-      font-weight: bold;
-      margin-right: 10px;
+    .banner a:hover {
+      color: #fff;
     }
-    select {
-      padding: 5px 10px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
+
+    /* Filter buttons */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .filter-btn {
+      background: #272727;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #bbb;
       cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #00bcd4;
+      color: #121212;
+      box-shadow: 0 0 8px #00bcd4;
+    }
+
+    ul.lab-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    ul.lab-list li {
+      background: #272727;
+      margin: 0.8rem 0;
+      border-radius: 8px;
+      padding: 14px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      transition: background 0.3s ease;
+    }
+    ul.lab-list li:hover {
+      background: #333;
+    }
+    ul.lab-list li a {
+      color: #00bcd4;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+    }
+    ul.lab-list li a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 36px;
+      font-size: 0.9rem;
+      color: #777;
+      user-select: none;
+    }
+    .footer strong {
+      color: #00bcd4;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <h1>🧪 XSS Lab Index – <code>30 Days to Master XSS</code></h1>
 
-    <div class="banner">
+    <div class="banner" role="alert">
       🚨 This section contains intentionally vulnerable XSS labs for ethical hacking and learning purposes only. Do not attack real sites.
-      <p>📖 Back to the main guide: 
+      <p style="margin-top:8px;">
+        📖 Back to the main guide: 
         <a href="https://sudohopex.github.io/pages/articles/30days2master_xss.cyberxsociety.html" target="_blank" rel="noopener noreferrer">
           30 Days to Master XSS (SudoHopeX)
         </a>
       </p>
     </div>
 
-    <label for="categoryFilter">Filter by Category:</label>
-    <select id="categoryFilter" aria-label="Filter labs by category">
-      <option value="all" selected>All</option>
-      <option value="basic">Basic</option>
-      <option value="reflected">Reflected</option>
-      <option value="dom">DOM</option>
-      <option value="js">JS</option>
-      <option value="challenge">Challenge</option>
-    </select>
+    <div class="filters" aria-label="Filter XSS labs by category">
+      <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter-btn" data-filter="basic" aria-pressed="false">Basic</button>
+      <button class="filter-btn" data-filter="reflected" aria-pressed="false">Reflected</button>
+      <button class="filter-btn" data-filter="dom" aria-pressed="false">DOM</button>
+      <button class="filter-btn" data-filter="event" aria-pressed="false">Event Handler</button>
+      <button class="filter-btn" data-filter="js" aria-pressed="false">JavaScript</button>
+      <button class="filter-btn" data-filter="challenge" aria-pressed="false">Challenge</button>
+    </div>
 
-    <h2>XSS Labs & Challenges by SudoHopeX</h2>
-    <ul id="labsList">
-      <li data-category="basic"><strong>LAB 01 - </strong> <a href="xss-js-lab1.html">Practice Basic Javascript functions by SudoHopeX</a></li>
-      <li data-category="reflected"><strong>LAB 02 - </strong> <a href="reflected-xss-lab1.html">Practice HTML & JS payloads by SudoHopeX</a></li>
-      <li data-category="challenge"><strong>LAB 03 - </strong> <a href="xss-challenge-lab1.html">XSS Challenge Lab by SudoHopeX</a></li>
-      <li data-category="js"><strong>LAB 04 - </strong> <a href="xss-event-handler-lab.html">XSS Event Handler Lab</a></li>
-      <li data-category="dom"><strong>LAB 05 - </strong> <a href="dom-xss-lab1.html">DOM Based XSS Lab</a></li>
+    <ul class="lab-list" aria-live="polite" aria-relevant="additions removals">
+      <li data-category="basic js"><strong>LAB 01 - </strong> <a href="xss-js-lab1.html" target="_blank" rel="noopener noreferrer">Practice Basic JavaScript Functions by SudoHopeX</a></li>
+      <li data-category="reflected html js"><strong>LAB 02 - </strong> <a href="reflected-xss-lab1.html" target="_blank" rel="noopener noreferrer">Practice HTML & JS Payloads by SudoHopeX</a></li>
+      <li data-category="challenge"><strong>LAB 03 - </strong> <a href="xss-challenge-lab1.html" target="_blank" rel="noopener noreferrer">XSS Challenge Lab by SudoHopeX</a></li>
+      <li data-category="event"><strong>LAB 04 - </strong> <a href="xss-event-handler-lab.html" target="_blank" rel="noopener noreferrer">XSS Event Handler Lab</a></li>
+      <li data-category="dom"><strong>LAB 05 - </strong> <a href="dom-xss-lab1.html" target="_blank" rel="noopener noreferrer">DOM Based XSS Lab</a></li>
     </ul>
 
-    <h2>Other XSS Labs & Challenges</h2>
-    <ul id="otherLabsList">
-      <li data-category="basic"><strong>LAB 01 - </strong> <a href="https://xss-game.appspot.com/level1" target="_blank" rel="noopener noreferrer">Google XSS Game</a></li>
-      <li data-category="basic"><strong>LAB 02 - </strong> <a href="https://alf.nu/alert1?world=alert&level=alert0" target="_blank" rel="noopener noreferrer">Alf.nu XSS Game</a></li>
+    <h2 style="margin-top: 40px; color: #00bcd4;">Other XSS Labs & Challenges</h2>
+    <ul class="lab-list" id="other-labs">
+      <li data-category="challenge"><strong>LAB 01 - </strong> <a href="https://xss-game.appspot.com/level1" target="_blank" rel="noopener noreferrer">Google XSS Game</a></li>
+      <li data-category="challenge"><strong>LAB 02 - </strong> <a href="https://alf.nu/alert1?world=alert&level=alert0" target="_blank" rel="noopener noreferrer">Alf.nu XSS Game</a></li>
       <li data-category="basic"><strong>LAB 03 - </strong> <a href="https://tryhackme.com/room/axss" target="_blank" rel="noopener noreferrer">TryHackMe Basic XSS Lab 01</a></li>
-      <li data-category="reflected"><strong>LAB 04 - </strong> <a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded" target="_blank" rel="noopener noreferrer">PortSwigger Basic Reflected XSS Lab</a></li>
+      <li data-category="reflected"><strong>LAB 04 - </strong> <a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded" target="_blank" rel="noopener noreferrer">Portswigger Basic Reflected XSS Lab</a></li>
       <li data-category="challenge"><strong>LAB 05 - </strong> <a href="https://xss-labs.abay.sh/xss/" target="_blank" rel="noopener noreferrer">xss-labs.abay.sh</a></li>
     </ul>
 
     <div class="footer">
-      Hosted at: <code>https://sudohopex.github.io/labs/xss/</code><br>
+      Hosted at: <code>https://sudohopex.github.io/labs/xss/</code><br />
       Maintained by <strong>SudoHopeX</strong> | For education only — Be ethical!
     </div>
   </div>
 
   <script>
-    const categoryFilter = document.getElementById('categoryFilter');
+    document.addEventListener('DOMContentLoaded', () => {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  // Select all lab items from all lists
+  const labs = document.querySelectorAll('.lab-list > li');
 
-    function filterLabs() {
-      const selected = categoryFilter.value;
-      // Filter SudoHopeX labs
-      document.querySelectorAll('#labsList li').forEach(li => {
-        if (selected === 'all' || li.dataset.category === selected) {
-          li.style.display = 'list-item';
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Reset all buttons
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+
+      // Activate clicked button
+      button.classList.add('active');
+      button.setAttribute('aria-pressed', 'true');
+
+      const selectedCategory = button.getAttribute('data-filter').toLowerCase();
+
+      labs.forEach(lab => {
+        const categories = lab.getAttribute('data-category')?.toLowerCase().split(' ') || [];
+
+        // Show if filter is 'all' OR the lab's categories include the selected category
+        if (selectedCategory === 'all' || categories.includes(selectedCategory)) {
+          lab.style.display = 'list-item';
         } else {
-          li.style.display = 'none';
+          lab.style.display = 'none';
         }
       });
-      // Filter Other labs
-      document.querySelectorAll('#otherLabsList li').forEach(li => {
-        if (selected === 'all' || li.dataset.category === selected) {
-          li.style.display = 'list-item';
-        } else {
-          li.style.display = 'none';
-        }
-      });
-    }
+    });
+  });
+});
 
-    categoryFilter.addEventListener('change', filterLabs);
-    // Initial filter on page load
-    filterLabs();
   </script>
 </body>
 </html>
