@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showSection('projects');
         });
     }
-
+    
     const projectsTrigger2 = document.getElementById('projects-dis2');
     if (projectsTrigger2) {
         projectsTrigger2.addEventListener('click', function(event) {
@@ -275,6 +275,23 @@ let charIndex = 0;
     document.addEventListener("DOMContentLoaded", startSloganChange);
     }
 
+// Central record object
+  const contentStats = {
+    articles: 4,
+    projectDocs: 5,
+    writeups: 0
+  };
+
+  // Function to inject values into HTML
+  function updateContentStats() {
+    document.getElementById("articleCount").textContent = contentStats.articles;
+    document.getElementById("projectCount").textContent = contentStats.projectDocs;
+    document.getElementById("writeupCount").textContent = contentStats.writeups;
+  }
+
+  // Run on page load
+  window.onload = updateContentStats;
+
 // copy code
 document.addEventListener('DOMContentLoaded', function () {
     const copyButtons = document.querySelectorAll('.code-cp-btn');
@@ -325,5 +342,6 @@ document.querySelectorAll('.topic').forEach(link => {
         }
     });
 });
+
 
 
