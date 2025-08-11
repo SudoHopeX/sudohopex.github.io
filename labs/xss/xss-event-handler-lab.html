@@ -106,40 +106,42 @@
       return clean;
     }
 
-   function runLevel(level) {
-        const input = document.getElementById(`input${level}`).value;
-        const frame = document.getElementById(`frame${level}`);
-        const clean = sanitizeInput(level, input);
-      
-        // Prevent breaking out of <script> tag
-        const encoded = clean.replace(/<\/script/gi, '<\\/script');
-      
-        const html = `
-          <!DOCTYPE html>
-          <html>
-          <body>
-            <script>
-              const oldAlert = window.alert;
-              window.alert = function(msg) {
-                const expected = [document.domain, window.origin];
-                if (expected.includes(msg)) {
-                  parent.postMessage({ type: "solved", level: ${level} }, "*");
-                  window._solved = true;
-                }
-                oldAlert(msg);
-              };
-            <\\/script>
-      
-            <div>Output:</div>
-            ${encoded}
-          </body>
-          </html>
-        `;
-      
-        const blob = new Blob([html], { type: "text/html" });
-        const url = URL.createObjectURL(blob);
-        frame.src = url;
+    function runLevel(level) {
+      const input = document.getElementById(`input${level}`).value;
+      const frame = document.getElementById(`frame${level}`);
+      const clean = sanitizeInput(level, input);
+      const encoded = clean.replace(/<\/script/gi, '<\\/script');
+    
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <body>
+        <script>
+          const oldAlert = window.alert;
+          window.alert = function(msg) {
+            const expected = [document.domain, window.origin];
+            if (expected.includes(msg)) {
+              window.parent.postMessage({ type: "solved", level: ${level} }, "*");
+            }
+            oldAlert(msg);
+          };
+        <\\/script>
+        <div>Output:</div>
+        ${encoded}
+        </body>
+        </html>
+      `;
+    
+      // Inject HTML directly
+      frame.src = "about:blank";
+      frame.onload = () => {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        doc.open();
+        doc.write(html);
+        doc.close();
+      };
     }
+
 
 
     function levelSolved(level) {
