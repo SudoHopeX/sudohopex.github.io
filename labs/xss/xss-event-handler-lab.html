@@ -40,7 +40,7 @@
 <body>
 
   <h1>🧪 Event Handler XSS Lab by <a href="https://sudohopex.github.io/Link-tree/">SudoHopeX</a></h1>
-  <p>Practice bypassing filters using HTML event handlers. Trigger <code>alert(document.domain)</code> or <code>alert(window.origin</code> to unlock the next level.</p>
+  <p>Practice bypassing filters using HTML event handlers. Trigger <code>alert(document.domain)</code> or <code>alert(window.origin)</code> to unlock the next level.</p>
 
   <label for="levelSelector">Select Level:</label>
   <select id="levelSelector" onchange="changeLevel()">
@@ -107,34 +107,37 @@
     }
 
     function runLevel(level) {
-      const input = document.getElementById(`input${level}`).value;
-      const frame = document.getElementById(`frame${level}`);
-      const clean = sanitizeInput(level, input);
+  const input = document.getElementById(`input${level}`).value;
+  const frame = document.getElementById(`frame${level}`);
+  const clean = sanitizeInput(level, input);
 
-      const html = `
-        <!DOCTYPE html>
-        <html>
-        <body>
-        <script>
-          const oldAlert = window.alert;
-          window.alert = function(msg) {
-            const expected = [document.domain, window.origin];
-            if (expected.includes(msg)) {
-              parent.levelSolved(${level});
-              window._solved = true;
-            }
-            oldAlert(msg);
-          };
-        </script>
-        <div>Output:</div>
-        ${clean}
-        </body></html>
-      `;
+  const encoded = clean.replace(/<\/script/gi, '<\\/script'); // prevent script tag breaking
 
-      const blob = new Blob([html], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      frame.src = url;
-    }
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <body>
+    <script>
+      const oldAlert = window.alert;
+      window.alert = function(msg) {
+        const expected = [document.domain, window.origin];
+        if (expected.includes(msg)) {
+          parent.levelSolved(${level});
+          window._solved = true;
+        }
+        oldAlert(msg);
+      };
+    <\/script>
+    <div>Output:</div>
+    ${encoded}
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  frame.src = url;
+}
 
     function levelSolved(level) {
       if (!unlockedLevels.includes(level + 1) && level < totalLevels) {
