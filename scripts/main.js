@@ -60,11 +60,11 @@ function showHomeSection(target) {
 }
 
 // Attach event listener to all elements with data-page-target
-const pageTriggers = document.querySelectorAll('[data-page-target]');
 pageTriggers.forEach(trigger => {
     trigger.addEventListener('click', function(event) {
         event.preventDefault();
-        const target = this.getAttribute('data-page-target');
+        const target = event.currentTarget.getAttribute('data-page-target');
+        console.log("Clicked, showing:", target);
         showHomeSection(target);
     });
 });
@@ -308,4 +308,5 @@ document.querySelectorAll('.topic').forEach(link => {
         }
     });
 });
+
 
