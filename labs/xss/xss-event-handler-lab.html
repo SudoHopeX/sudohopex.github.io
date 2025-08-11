@@ -55,7 +55,7 @@
     <p>Trigger <code>alert(1)</code> using a simple event handler like <code>onerror</code>.</p>
     <textarea id="input1" placeholder='Try: <img src=x onerror=alert(1)>'></textarea><br>
     <button class="submit-btn" onclick="runLevel(1)">Run</button>
-    <iframe sandbox="allow-scripts" id="frame1"></iframe>
+    <iframe sandbox="allow-scripts allow-modals" id="frame1"></iframe>
   </div>
 
   <div class="level" id="level2">
@@ -63,7 +63,7 @@
     <p>Use events like <code>onfocus</code>, <code>onmouseover</code>, etc. to trigger <code>alert(1)</code>.</p>
     <textarea id="input2" placeholder='Try: <input onfocus=alert(1) autofocus>'></textarea><br>
     <button class="submit-btn" onclick="runLevel(2)">Run</button>
-    <iframe sandbox="allow-scripts" id="frame2"></iframe>
+    <iframe sandbox="allow-scripts allow-modals" id="frame2"></iframe>
   </div>
 
   <div class="level" id="level3">
@@ -71,7 +71,7 @@
     <p>Bypass filtering of <code>onerror</code> and <code>onload</code>.</p>
     <textarea id="input3" placeholder="Try: <textarea oninput=alert(1)>type</textarea>"></textarea><br>
     <button class="submit-btn" onclick="runLevel(3)">Run</button>
-    <iframe sandbox="allow-scripts" id="frame3"></iframe>
+    <iframe sandbox="allow-scripts allow-modals" id="frame3"></iframe>
   </div>
 
   <div class="level" id="level4">
@@ -79,7 +79,7 @@
     <p>Bypass basic WAF that strips all <code>on*</code> attributes using creative techniques.</p>
     <textarea id="input4" placeholder="Try something sneaky here..."></textarea><br>
     <button class="submit-btn" onclick="runLevel(4)">Run</button>
-    <iframe sandbox="allow-scripts" id="frame4"></iframe>
+    <iframe sandbox="allow-scripts allow-modals" id="frame4"></iframe>
   </div>
 
   <script>
