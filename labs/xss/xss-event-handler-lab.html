@@ -132,7 +132,7 @@
     </html>
   `;
 
-  // Write immediately instead of waiting for onload
+  // Write HTML directly into the iframe
   const doc = frame.contentDocument || frame.contentWindow.document;
   doc.open();
   doc.write(html);
