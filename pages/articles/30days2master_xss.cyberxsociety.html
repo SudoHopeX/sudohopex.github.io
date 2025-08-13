@@ -1179,10 +1179,14 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
     <p>If it’s there without encoding (e.g., <code>&lt;</code> → <code>&amp;lt;</code>), it’s a candidate for XSS.</p>
 
     <h3>Step 4 — Try a Benign Payload</h3>
-    <p>Start harmless — don’t break pages.</p>
-    <pre style="background: #eee; padding: 10px; border-radius: 5px;">"><svg onload=alert('XSS')></pre>
-    <p>If you see an alert popup, that’s an XSS vulnerability.</p>
-
+    <p>Start harmless first — don’t break pages.</p>
+    <pre style="background: #eee; padding: 10px; border-radius: 5px;">&lt;h1&gt;test1234&lt;/h1&gt;</pre>
+    <p>Then try scripts: like:</p>
+    <pre>&lt;script&gt;alert(1)&lt;script&gt;</pre>
+    <p>If you see an alert popup, that’s an XSS vulnerability, but before that check for effected domain via <code>document.domain</code> or <code>window.origin</code>, like</p>
+    <pre>alert(document.domain)</pre>
+    <p>Now we have found XSS ( if any ) and also checked effected domain for verification.</p>
+        
     <h3>Step 5 — Escalate with Contextual Payloads</h3>
     <p>Depending on where your input lands:</p>
     <ul>
@@ -1194,6 +1198,7 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
     <h3>Step 6 — Confirm and Document</h3>
     <p>If you find it:</p>
     <ul>
+        <li>Check the effected domain to check scope via above method (if not done)</li>
         <li>Record the URL, payload, and proof (screenshot)</li>
         <li>Check if it’s <strong>Reflected</strong>, <strong>Stored</strong>, or <strong>DOM-based</strong> XSS</li>
         <li>Report it through the allowed channel (e.g., bug bounty portal)</li>
@@ -1618,6 +1623,7 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
