@@ -132,15 +132,13 @@
     </html>
   `;
 
-  frame.onload = () => {
-    const doc = frame.contentDocument || frame.contentWindow.document;
-    doc.open();
-    doc.write(html);
-    doc.close();
-    // Remove the onload so it won't trigger again unnecessarily
-    // frame.onload = null;
-  };
+  // Write immediately instead of waiting for onload
+  const doc = frame.contentDocument || frame.contentWindow.document;
+  doc.open();
+  doc.write(html);
+  doc.close();
 }
+
 
 
 
