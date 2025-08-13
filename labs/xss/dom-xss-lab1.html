@@ -101,15 +101,9 @@ function runLevel(level, code) {
     </html>
   `;
 
-  iframe.src = "about:blank";
-  iframe.onload = () => {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open();
-    doc.write(html);
-    doc.close();
-  };
+  // Directly set iframe content, avoids cross-origin access
+  iframe.srcdoc = html;
 }
-
 
     function levelSolved(level) {
       if (!unlockedLevels.includes(level + 1) && level < totalLevels) {
