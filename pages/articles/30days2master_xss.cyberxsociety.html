@@ -1121,15 +1121,85 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
         Coming soon...
       </div>
       <!-- Day 12 End -->
-       <!-- Day 13 Start -->  
+      <!-- Day 13 Start -->  
       <div class="suggested-topics">
-        <a class="topic" href="#day13">
+        <a class="topic" href="#day12">
           <span style="font-size: larger;">Day 13: --</span>
           <span class="plus">+</span>
         </a>
       </div>
-      <div class="day13-content" style="display: none;">
+      <div class="day12-content" style="display: none;">
         Coming soon...
+      </div>
+      <!-- Day 13 End -->
+       <!-- Steps to Take to Hunt for XSS Start -->  
+      <div class="suggested-topics">
+        <a class="topic" href="#steps-2-find-xss">
+          <span style="font-size: larger;">Steps to take to hunt(find) 4 XSS</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="steps-2-find-xss-content" style="display: none;">
+        <h3>Step 1 — Get Permission First</h3>
+    <p>Testing a site you don’t own without consent can be illegal.</p>
+    <p>Only test:</p>
+    <ul>
+        <li>Your own projects</li>
+        <li>Sites with a bug bounty program that explicitly allows XSS testing</li>
+        <li>Public vulnerable labs like <strong>PortSwigger Web Security Academy</strong>, <strong>DVWA</strong>, or <strong>bWAPP</strong></li>
+    </ul>
+
+    <h3>Step 2 — Identify User Input Points</h3>
+    <p>XSS needs <strong>input → output</strong> without proper sanitization.</p>
+    <p>Places to check:</p>
+    <ul>
+        <li>Search bars</li>
+        <li>Comment forms</li>
+        <li>Contact/feedback forms</li>
+        <li>Profile name / bio fields</li>
+        <li>URL parameters (<code>?q=</code>, <code>?search=</code>, <code>?id=</code>)</li>
+        <li>Hash fragments (<code>#section</code>)</li>
+        <li>HTTP headers that get reflected (rare, but useful)</li>
+    </ul>
+
+    <h3>Step 3 — Look for Reflection</h3>
+    <ol>
+        <li>Put something unique in the input:</li>
+    </ol>
+    <pre style="background: #eee; padding: 10px; border-radius: 5px;">test123ABC</pre>
+    <ol start="2">
+        <li>Submit and see if it appears in the HTML output when the page reloads.</li>
+        <li>If it does, view the <strong>HTML source</strong> to check whether it’s inside:</li>
+    </ol>
+    <ul>
+        <li>HTML text: <code>&lt;p&gt;test123ABC&lt;/p&gt;</code></li>
+        <li>Attributes: <code>&lt;input value="test123ABC"&gt;</code></li>
+        <li>Script blocks: <code>var name = 'test123ABC';</code></li>
+    </ul>
+    <p>If it’s there without encoding (e.g., <code>&lt;</code> → <code>&amp;lt;</code>), it’s a candidate for XSS.</p>
+
+    <h3>Step 4 — Try a Benign Payload</h3>
+    <p>Start harmless — don’t break pages.</p>
+    <pre style="background: #eee; padding: 10px; border-radius: 5px;">"><svg onload=alert('XSS')></pre>
+    <p>If you see an alert popup, that’s an XSS vulnerability.</p>
+
+    <h3>Step 5 — Escalate with Contextual Payloads</h3>
+    <p>Depending on where your input lands:</p>
+    <ul>
+        <li><strong>HTML context</strong> → <code>&lt;img src=x onerror=alert(1)&gt;</code></li>
+        <li><strong>Attribute context</strong> → <code>" autofocus onfocus=alert(1) x="</code></li>
+        <li><strong>JavaScript context</strong> → <code>';alert(1);//</code></li>
+    </ul>
+
+    <h3>Step 6 — Confirm and Document</h3>
+    <p>If you find it:</p>
+    <ul>
+        <li>Record the URL, payload, and proof (screenshot)</li>
+        <li>Check if it’s <strong>Reflected</strong>, <strong>Stored</strong>, or <strong>DOM-based</strong> XSS</li>
+        <li>Report it through the allowed channel (e.g., bug bounty portal)</li>
+    </ul>
+
+    <p><strong>💡 Pro Tip:</strong> You can use free tools like <strong>XSS Hunter Express</strong>, <strong>XSStrike</strong>, or <strong>Burp Suite Community Edition</strong> to help automate testing and find hidden injection points.</p>
       </div>
       <!-- Day 13 End -->
       <!--  Evasion Start -->
@@ -1548,6 +1618,7 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
