@@ -52,15 +52,13 @@
 
   <div class="level visible" id="level1">
     <h2>🔰 Level 1 – Basic Event Handler Injection</h2>
-    <p>Trigger <code>alert(1)</code> using a simple event handler like <code>onerror</code>.</p>
-    <textarea id="input1" placeholder='Try: <img src=x onerror=alert(1)>'></textarea><br>
+    <textarea id="input1" placeholder='Trigger alert(document.domain) or alert(window.origin)'></textarea><br>
     <button class="submit-btn" onclick="runLevel(1)">Run</button>
     <iframe sandbox="allow-scripts allow-modals" id="frame1" srcdoc=""></iframe>
   </div>
 
   <div class="level" id="level2">
     <h2>🎯 Level 2 – Less Common Events</h2>
-    <p>Use events like <code>onfocus</code>, <code>onmouseover</code>, etc. to trigger <code>alert(1)</code>.</p>
     <textarea id="input2" placeholder='Try: <input onfocus=alert(1) autofocus>'></textarea><br>
     <button class="submit-btn" onclick="runLevel(2)">Run</button>
     <iframe sandbox="allow-scripts allow-modals" id="frame2" srcdoc=""></iframe>
@@ -68,7 +66,6 @@
 
   <div class="level" id="level3">
     <h2>🧩 Level 3 – Filtered Events</h2>
-    <p>Bypass filtering of <code>onerror</code> and <code>onload</code>.</p>
     <textarea id="input3" placeholder="Try: <textarea oninput=alert(1)>type</textarea>"></textarea><br>
     <button class="submit-btn" onclick="runLevel(3)">Run</button>
     <iframe sandbox="allow-scripts allow-modals" id="frame3" srcdoc=""></iframe>
