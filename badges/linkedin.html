@@ -1,6 +1,6 @@
 <div class="linkedin-badge">
   <div class="badge-body">
-    <img class="profile-pic" src="https://sudohopex.github.io/img/hope.jpg" alt="Profile Picture">
+    <img class="profile-pic" src="../img/hope.jpg" alt="Profile Picture">
     <div class="details">
       <div style="overflow: hidden; display: flex; flex-direction: row; height: 24px;">
         <img class="linkedin-logo" src="https://cdn-icons-png.flaticon.com/512/174/174857.png">
@@ -10,12 +10,12 @@
         <span class="stat"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="green" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zM12 14.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>Followers: <span id="followers">327</span></span>
         <span class="stat"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="green" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4z"/></svg>Connections: <span id="connections">291</span></span>
       </div>
-      <div style="margin-top: 4px;">
+      <div style="margin-top: 4px; margin-left: .75px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link" >
             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
         </svg>
-        <a class="link" onclick="linkedin()" href="javascript:void(0)" target="_blank">in/dkrishna0124</a>
+        <a class="link" onclick="linkedin()" href="javascript:void(0)" target="_blank">View Profile</a>
       </div>
     </div>
   </div>
@@ -37,8 +37,12 @@ function linkedin(){
 
 <style>
 .linkedin-badge {
-  width: 370px;
-  background: black; /*url('img/linkedin-cover.png'); */
+  width: 322px;
+  height: 80px;
+  background: 
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), /* black transparent overlay */
+    url('https://sudohopex.github.io/img/linkedin-bg.png') no-repeat center center;
+  background-size: cover;
   color: white;
   border-radius: 12px;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
@@ -47,71 +51,80 @@ function linkedin(){
 }
 
 .linkedin-logo {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 3px;
   opacity: 60%;
   margin-right: 6px;
+  margin-left: .75px;
 }
 
 .badge-body {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
+  gap: 12px;
+  padding: 10px;
 }
 
 .profile-pic {
-  width: 72px;
-  height: 72px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: 3px solid #5628c2;
   object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.profile-pic:hover {
+  border: 3px solid greenyellow;
 }
 
 .details {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 14px;
   margin-top: 1px;
 }
 
 .details {
   margin: 0 0 12px;
-  font-size: 14px;
+  font-size: 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .stat {
   display: flex;
   align-items: center;
   gap: 2px;
+  font-weight: bold;
 }
 
 .stat:hover {
+  color: greenyellow;
   font-weight: bold;
 }
 
 .icon {
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: .85em;
+    height: .85em;
     margin-bottom: -.125em
 }
 
 .link {
   color: white;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: bold;
   transition: background 0.2s;
 }
 
 .link:hover {
-  color: #5628c2;
+  color: greenyellow;
   font-weight: bold;
 }
 
