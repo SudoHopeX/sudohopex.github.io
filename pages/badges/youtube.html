@@ -1,0 +1,75 @@
+<div class="youtube-badge">
+  <div class="badge-body">
+    <img class="profile-pic" id="yt-profile" src="" alt="Profile Picture">
+    <div class="details">
+      <div style="overflow: hidden; display: flex; flex-direction: row; height: 24px;">
+        <img class="youtube-logo" style="width: 16px; height: 16px; margin-right: 6px;" src="https://cdn-icons-png.flaticon.com/512/174/174883.png" alt="YouTube Logo ">
+        <h3 id="yt-channel">SudoHopeX</h3>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <span class="stat">Subscribers: <span id="yt-subs">0</span></span>
+        <span class="stat">Views: <span id="yt-views">0</span></span>
+        <span class="stat">Videos: <span id="yt-videos">0</span></span>
+      </div>
+      <a class="link" id="yt-link" href="https://youtube.com/@sudohopeX" target="_blank">View Channel</a>
+    </div>
+  </div>
+</div>
+
+<script>
+fetch("http://127.0.0.1:8000/api/youtube")
+  .then(res => res.json())
+  .then(data => {
+    if(data.error) return console.error(data.error);
+    document.getElementById("yt-profile").src = data.profile_pic;
+    document.getElementById("yt-channel").innerText = data.title;
+    document.getElementById("yt-subs").innerText = Number(data.subscribers).toLocaleString();
+    document.getElementById("yt-views").innerText = Number(data.views).toLocaleString();
+    document.getElementById("yt-videos").innerText = Number(data.videos).toLocaleString();
+  })
+  .catch(err => console.error(err));
+</script>
+
+<style>
+.youtube-badge {
+  width: 322px;
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+  color: white;
+  border-radius: 12px;
+  font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  overflow: hidden;
+  padding: 10px;
+}
+
+.badge-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-pic {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid red;
+  object-fit: cover;
+}
+
+.profile-pic:hover { border-color: yellow; }
+
+.details { display:flex; flex-direction: column; gap: 3px; font-size: 14px; }
+h3 { margin:0; font-size:14px; }
+
+.stat { font-weight: bold; }
+.stat:hover { color: yellow; }
+
+.link {
+  color: white;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 4px;
+}
+.link:hover { color: yellow; }
+</style>
