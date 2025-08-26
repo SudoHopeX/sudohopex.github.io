@@ -129,12 +129,12 @@
       
       <h2>Tech Stack & Requirements</h2>
       <pre><code class="code-txt">
-Linux system ( to be tested on Kali, Debian, etc. )
+Linux system  ( to be tested on Kali, Debian, etc. )
 Bash shell
-Python 3.13.x (for API/CLI)
-openai python module ( library )
-requests python module ( library )
-Ollama ( for local models )
+Python 3.13.x  (for API/CLI)
+openai - python module  ( library )
+requests -  python module  ( library )
+Ollama  ( for local models installation & uses )
 Chromium or other supported browsers ( for web use )
 Internet connection ( for API / initial setup / OpenAI GPT's usages)
       </code></pre>
@@ -162,7 +162,7 @@ Internet connection ( for API / initial setup / OpenAI GPT's usages)
                     <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
                 </svg> </button>
             </div>
-            <pre><code class="code-txt">git clone https://github.com/SudoHopeX/KaliGPT.gitcd KaliGPT</code></pre>
+            <pre><code class="code-txt">cd KaliGPT</code></pre>
           </div>        
         <li>Run the installer to see usages (Optional)</li>
         <div class="code-block-wrapper"  style="margin-top: -40px;" >  
@@ -196,25 +196,25 @@ KaliGPT Installer ~ SudoHopeX | Krishna Dwivedi
 [Contact SudoHopeX](https://sudohopex.github.io/)
 
 KaliGPT Installer Available commands:
-   --model <model-num>         -  install a specific model
+   --model &lt;model-num&gt;         -  install a specific model
    --listmodels                -  list available models
-   --uninstall-m <model-num>   -  uninstall a specific model
+   --uninstall-m &lt;model-num&gt;   -  uninstall a specific model
    --uninstall                 -  uninstall KaliGPT (everything)
    --help                      -  print this usage info
 
 KaliGPT Available MODELs:
-   1) OpenAI ChatGPT ( OpenAI, Free, Online ) [ requires API KEY ]
-   2) Mistral    ( Free, Offline - Min 6GB Data Required)
-   3) Llama      ( Free, Offline )
+   1) OpenAI ChatGPT     ( OpenAI, Free, Online ) [ requires API KEY ]
+   2) Mistral            ( Free, Offline - Min 6GB Data Required)
+   3) Llama              ( Free, Offline )
    4) KaliGPT -web based ( OpenAI, Free, Online )
       [Note: opttion 4 required 1 time logging & keep logged in config in chromium if not]
 
 Usages Examples:
-   sudo bash kaligpt_unified.sh --model 1       # install OpenAI ChatGPT4.0 with API access
-   sudo bash kaligpt_unified.sh --model 2       # install KaliGPT (Mistral AI locally)
-   bash kaligpt_unified.sh --help               # print script usages
-   sudo bash kaligpt_unified.sh --uninstall-m 1 # uninstall OpenAI installed files
-   sudo bash kaligpt_unified.sh --uninstall     # uninstall KaliGPT (everything)
+   sudo bash kaligpt_unified.sh --model 1         # install OpenAI ChatGPT4.0 with API access
+   sudo bash kaligpt_unified.sh --model 2         # install KaliGPT (Mistral AI locally)
+   bash kaligpt_unified.sh --help                 # print script usages
+   sudo bash kaligpt_unified.sh --uninstall-m 1   # uninstall OpenAI installed files
+   sudo bash kaligpt_unified.sh --uninstall       # uninstall KaliGPT (everything)
 
       </code></pre>
       <h2>KaliGPT Usages</h2>
@@ -227,12 +227,12 @@ Usages:
   kaligpt [mode] [Prompt (optional)]
 
 MODES: (Must Included)
-    -c  -  use ChatGPT-4o (OpenAI, Paid, Online)
-    -cw -  use KaliGPT in chromium web browser (OpenAI, Free, Online )
-            [ requires 1 time login & keep logged in config on web ]
-    -m  -  use Mistral via Ollama (Free, Offline)
-    -l  -  use LlaMa via Ollama (Free, Offline)
-    -h  -  show this help message and exit
+    -c   -  use ChatGPT-4o (OpenAI, Paid, Online)
+    -cw  -  use KaliGPT in chromium web browser (OpenAI, Free, Online )
+             [ requires 1 time login & keep logged in config on web ]
+    -m   -  use Mistral via Ollama (Free, Offline)
+    -l   -  use LlaMa via Ollama (Free, Offline)
+    -h   -  show this help message and exit
 
 Examples:
      kaligpt -m "How to Scan a website for subdomains using tools"
@@ -240,8 +240,8 @@ Examples:
      kaligpt -c
      kaligpt -cw
 
- NOTE: do not pass prompt with -cw
-      </code></pre>
+ NOTE:  do not pass prompt with -cw
+</code></pre>
 
       <h2>Switching AI Backends</h2>
       <p>You can choose between:</p>
