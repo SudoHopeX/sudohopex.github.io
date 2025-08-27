@@ -1,5 +1,3 @@
-ok do this with connections and followers in linkedin badge 
-
 <div class="linkedin-badge">
   <div class="badge-body">
     <img class="profile-pic" src="https://sudohopex.github.io/img/hope.jpg" alt="Profile Picture">
@@ -33,7 +31,7 @@ function formatNumber(num){
   return num.toString();
 }
 
-fetch("https://api-steel-rho-52.vercel.app/api/linkedin")
+fetch("https://https://badges-api-theta.vercel.app/api/linkedin")
   .then(res => res.json())
   .then(data => {
     document.getElementById("followers").innerText = formatNumber(data.followers);
