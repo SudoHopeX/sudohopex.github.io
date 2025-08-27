@@ -507,3 +507,22 @@ pre code {
     font-size: 1.1em;
     font-weight: bold;
 }
+
+
+iframe {
+  width: 330px;
+  height: 100px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  display: block;
+}
+
+/* Hover effect: glow + zoom */
+iframe:hover {
+  transform: scale(1.05);
+  border-color: #00ff80;
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.7), 0 0 40px rgba(0, 255, 128, 0.4);
+}
