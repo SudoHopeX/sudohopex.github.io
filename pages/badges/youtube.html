@@ -12,12 +12,23 @@
         <span class="stat">Views: <span id="yt-views">0</span></span>
         <span class="stat">Videos: <span id="yt-videos">0</span></span>
       </div>
-      <a class="link" id="yt-link" href="https://youtube.com/@sudohopeX" target="_blank">View Channel</a>
+      <div style="margin-top: 4px; margin-left: .75px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link" >
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        </svg>
+        <a class="link" onclick="yt()" id="yt-link" href="javascript:void(0)" target="_blank">View Channel</a>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+
+function yt(){
+  window.open('https://youtube.com/@sudohopeX', '_blank');
+}
+
 // Locale detection
 const userLocale = navigator.language || "en-US";
 const isIndia = userLocale.startsWith("hi") || userLocale === "en-IN";
