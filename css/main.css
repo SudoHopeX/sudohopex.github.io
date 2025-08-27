@@ -510,11 +510,10 @@ pre code {
 
 
 iframe {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 iframe:hover {
   transform: scale(1.05);
-  border-color: #00ff80;
-  box-shadow: 0 0 2px rgba(0, 255, 128, 0.7), 0 0 4px rgba(0, 255, 128, 0.4);
 }
+
