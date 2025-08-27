@@ -21,8 +21,12 @@
   </div>
 </div>
 
-<script>
 
+<script>
+function linkedin(){
+  window.open('https://linkedin.com/in/dkrishna0124', '_blank');
+}
+  
 function formatNumber(num){
   num = Number(num);
   if(num >= 1e9) return (num/1e9).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -38,12 +42,8 @@ fetch("https://badges-api-theta.vercel.app/api/linkedin")
     document.getElementById("connections").innerText = formatNumber(data.connections);
   })
   .catch(err => console.error(err));
-
-function linkedin(){
-  window.open('https://linkedin.com/in/dkrishna0124', '_blank');
-}
-  
 </script>
+
 
 <style>
 .linkedin-badge {
