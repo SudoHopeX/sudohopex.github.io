@@ -1,4 +1,5 @@
-<div class="youtube-badge">
+<div class="youtube-badge" id="yt-badge">
+  <div class="overlay"></div> <!-- Dark overlay -->
   <div class="badge-body">
     <img class="profile-pic" id="yt-profile" src="" alt="Profile Picture">
     <div class="details">
@@ -17,15 +18,39 @@
 </div>
 
 <script>
+// Locale detection
+const userLocale = navigator.language || "en-US";
+const isIndia = userLocale.startsWith("hi") || userLocale === "en-IN";
+
+function formatNumber(num) {
+  if (isIndia) {
+    if (num >= 10000000) return (num / 10000000).toFixed(1).replace(/\.0$/, '') + "Cr";
+    if (num >= 100000) return (num / 100000).toFixed(1).replace(/\.0$/, '') + "L";
+    if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + "K";
+    return num.toString();
+  } else {
+    if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + "B";
+    if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + "M";
+    if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + "K";
+    return num.toString();
+  }
+}
+
 fetch("https://badges-api-theta.vercel.app/api/youtube")
   .then(res => res.json())
   .then(data => {
     if(data.error) return console.error(data.error);
+    
     document.getElementById("yt-profile").src = data.profile_pic;
     document.getElementById("yt-channel").innerText = data.title;
-    document.getElementById("yt-subs").innerText = Number(data.subscribers).toLocaleString();
-    document.getElementById("yt-views").innerText = Number(data.views).toLocaleString();
-    document.getElementById("yt-videos").innerText = Number(data.videos).toLocaleString();
+    document.getElementById("yt-subs").innerText = formatNumber(Number(data.subscribers));
+    document.getElementById("yt-views").innerText = formatNumber(Number(data.views));
+    document.getElementById("yt-videos").innerText = formatNumber(Number(data.videos));
+
+    // Set background banner if available
+    if (data.banner) {
+      document.getElementById("yt-badge").style.backgroundImage = `url('${data.banner}')`;
+    }
   })
   .catch(err => console.error(err));
 </script>
@@ -33,19 +58,30 @@ fetch("https://badges-api-theta.vercel.app/api/youtube")
 <style>
 .youtube-badge {
   width: 322px;
-  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+  position: relative;
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)); /* fallback */
   color: white;
   border-radius: 12px;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
   box-shadow: 0 4px 15px rgba(0,0,0,0.4);
   overflow: hidden;
   padding: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55); /* Dark overlay for readability */
 }
 
 .badge-body {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
+  z-index: 1;
 }
 
 .profile-pic {
