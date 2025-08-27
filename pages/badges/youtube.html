@@ -49,7 +49,10 @@ fetch("https://badges-api-theta.vercel.app/api/youtube")
 
     // Set background banner if available
     if (data.banner) {
-      document.getElementById("yt-badge").style.backgroundImage = `url('${data.banner}')`;
+      document.getElementById("yt-badge").style.background = 
+        `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url(${data.banner})`;
+      document.getElementById("yt-badge").style.backgroundSize = "cover";
+      document.getElementById("yt-badge").style.backgroundPosition = "center";
     }
   })
   .catch(err => console.error(err));
