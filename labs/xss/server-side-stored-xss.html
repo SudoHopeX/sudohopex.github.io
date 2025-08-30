@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Server-side Stored XSS Lab — 20 Levels/title>
+<style>
+  body{font-family:Inter,system-ui,Arial;margin:20px;color:#0b1220}
+  h1{font-size:20px;margin:0 0 8px}
+  .meta{color:#6b7280;font-size:13px;margin-bottom:12px}
+  .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  textarea{width:90%;height:90px;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
+  .btn{padding:8px 12px;border-radius:8px;border:1px solid #e6e9ef;background:#f8fafc;cursor:pointer}
+  .grid{display:grid;grid-template-columns:1fr 420px;gap:12px}
+  .posts{display:flex;flex-direction:column;gap:8px}
+  .post{padding:8px;border-radius:8px;border:1px solid #eef2ff;background:#fff}
+  .muted{color:#6b7280;font-size:13px}
+  .small{font-size:12px;color:#6b7280}
+  label{font-size:13px}
+  select{padding:6px;border-radius:6px;border:1px solid #e6e9ef}
+  footer{margin-top:12px;font-size:12px;color:#6b7280}
+</style>
+</head>
+<body>
+  <h1>🔒 Server-side Stored XSS Lab — 20 Levels</h1>
+  <div class="meta">Simulates server-side storage and rendering. Each level applies a different server-side "filter" when a post is stored. Goal: store a payload that, when rendered back by the "server", triggers <code>alert(document.domain)</code> or <code>alert(window.origin)</code> to unlock next level.</div>
+
+  <div class="controls">
+    <label for="levelSel">Level:</label>
+    <select id="levelSel"></select>
+    <button class="btn" id="resetAll">Reset Lab</button>
+    <button class="btn" id="exportBtn">Export Posts</button>
+    <button class="btn" id="importBtn">Import Posts</button>
+    <input type="file" id="importFile" style="display:none" accept="application/json" />
+  </div>
+
+  <div class="grid">
+    <div>
+      <label for="postInput">Write post (payload):</label>
+      <textarea id="postInput" placeholder="Enter payload to store on server..."></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="btn" id="storeBtn">Store on Server</button>
+        <button class="btn" id="storeUnsafeBtn">Store Unsafe (bypass server filter)</button>
+        <button class="btn" id="clearPosts">Clear Posts</button>
+      </div>
+
+      <div style="margin-top:12px">
+        <div class="small">Server-side filter (applied on store; hidden from user): <span id="filterDesc">--</span></div>
+        <div class="small">Posts are persisted in <code>localStorage</code> to simulate server DB and allow restore/export/import.</div>
+      </div>
+
+      <hr style="margin:12px 0">
+      <div class="small">Saved posts (click "Render" to view):</div>
+      <div id="posts" class="posts"></div>
+    </div>
+
+    <div>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+        <div class="small">Render area (sandboxed). When a stored payload executes <code>alert(document.domain)</code> or <code>alert(window.origin)</code>, the lab will detect it and unlock next level.</div>
+        <div>
+          <button class="btn" id="saveProgress">Save Progress</button>
+          <button class="btn" id="loadProgress">Load Progress</button>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <iframe id="renderFrame" sandbox="allow-scripts allow-modals" style="width:100%;height:420px;border:1px solid #e6e9ef;border-radius:8px"></iframe>
+      </div>
+      <div style="margin-top:8px" class="muted">Tip: Use the "Store on Server" button to apply server filters. "Store Unsafe" saves raw input (for testing server-side bypasses).</div>
+    </div>
+  </div>
+
+  <footer>Lab stores everything locally in your browser. Nothing is uploaded anywhere. Use export/import to move progress between machines.</footer>
+
+<script>
+(function(){
+  const TOTAL = 20;
+  const levelSel = document.getElementById('levelSel');
+  const postInput = document.getElementById('postInput');
+  const storeBtn = document.getElementById('storeBtn');
+  const storeUnsafeBtn = document.getElementById('storeUnsafeBtn');
+  const postsDiv = document.getElementById('posts');
+  const renderFrame = document.getElementById('renderFrame');
+  const filterDesc = document.getElementById('filterDesc');
+  const resetAll = document.getElementById('resetAll');
+  const clearPosts = document.getElementById('clearPosts');
+  const exportBtn = document.getElementById('exportBtn');
+  const importBtn = document.getElementById('importBtn');
+  const importFile = document.getElementById('importFile');
+  const saveProgress = document.getElementById('saveProgress');
+  const loadProgress = document.getElementById('loadProgress');
+
+  // localStorage keys
+  const POSTS_KEY = 'ssx_posts_v1';
+  const PROGRESS_KEY = 'ssx_progress_v1';
+
+  // Simulated server-side filters per level.
+  // Applied when storing posts. These are intentionally varied and become stricter with level.
+  const serverFilters = {
+    1: { name:'None (raw store)', fn: s => s },
+    2: { name:'Escape < and >', fn: s => s.replace(/</g,'&lt;').replace(/>/g,'&gt;') },
+    3: { name:'Strip <script> tags', fn: s => s.replace(/<script[\s\S]*?<\/script\s*>/gi,'') },
+    4: { name:'Strip on* attributes', fn: s => s.replace(/on\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^>\s]+)/gi,'') },
+    5: { name:'HTML encode quotes & ampersand', fn: s => s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/\'/g,'&#39;') },
+    6: { name:'Remove javascript: scheme', fn: s => s.replace(/javascript\s*:/gi,'') },
+    7: { name:'Strip event handlers + script tags', fn: s => s.replace(/<script[\s\S]*?<\/script\s*>/gi,'').replace(/on\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^>\s]+)/gi,'') },
+    8: { name:'Remove <img> tags entirely', fn: s => s.replace(/<img[^>]*>/gi,'') },
+    9: { name:'Remove svg tags', fn: s => s.replace(/<svg[\s\S]*?<\/svg\s*>/gi,'') },
+    10:{ name:'Whitelist tags: allow only <b>,<i>,<u>,<p>', fn: s => s.replace(/<(?!\/?(?:b|i|u|p)\b)[^>]+>/gi,'') },
+    11:{ name:'Strip attributes entirely', fn: s => s.replace(/<([a-zA-Z0-9\-]+)(?:\s+[^>]*)?>/g,'<$1>') },
+    12:{ name:'Remove angle brackets (escape)', fn: s => s.replace(/[<>]/g,'') },
+    13:{ name:'Collapse whitespace + remove \" and \'', fn: s => s.replace(/["']+/g,'').replace(/\s+/g,' ') },
+    14:{ name:'Encode as text node (wrap in <pre>)', fn: s => '&lt;pre&gt;'+s.replace(/</g,'&lt;')+'&lt;/pre&gt;' },
+    15:{ name:'Strip <iframe> and <object> tags', fn: s => s.replace(/<(iframe|object)[\s\S]*?<\/\1\s*>/gi,'') },
+    16:{ name:'Remove style and script related constructs', fn: s => s.replace(/<style[\s\S]*?<\/style\s*>/gi,'').replace(/expression\(/gi,'') },
+    17:{ name:'Neutralize angle brackets & equals', fn: s => s.replace(/[<>]/g,'').replace(/=/g,'') },
+    18:{ name:'Strip data: and javascript: URIs', fn: s => s.replace(/(data|javascript)\s*:/gi,'') },
+    19:{ name:'Remove form-related tags', fn: s => s.replace(/<(form|input|button|select|textarea)[^>]*>[\s\S]*?<\/\1\s*>/gi,'') },
+    20:{ name:'Aggressive: strip tags & attributes', fn: s => s.replace(/<[^>]*>/g,'').replace(/on\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^>\s]+)/gi,'') }
+  };
+
+  function init(){
+    for(let i=1;i<=TOTAL;i++){ const o = document.createElement('option'); o.value=i; o.textContent=`Level ${i}`; if(i!==1) o.disabled=true; levelSel.appendChild(o); }
+    levelSel.addEventListener('change', renderLevelInfo);
+    storeBtn.addEventListener('click', storePost);
+    storeUnsafeBtn.addEventListener('click', storeUnsafe);
+    resetAll.addEventListener('click', resetLab);
+    clearPosts.addEventListener('click', clearPostsFn);
+    exportBtn.addEventListener('click', exportPosts);
+    importBtn.addEventListener('click', ()=>importFile.click());
+    importFile.addEventListener('change', handleImportFile);
+    saveProgress.addEventListener('click', saveProgressFn);
+    loadProgress.addEventListener('click', loadProgressFn);
+
+    // load posts from storage
+    loadPostsFromStorage();
+    // render initial level info
+    renderLevelInfo();
+
+    window.addEventListener('message', ev => {
+      if(ev?.data?.type==='ssx_solved' && typeof ev.data.level === 'number'){
+        unlockNext(ev.data.level);
+      }
+    });
+  }
+
+  function currentLevel(){ return Number(levelSel.value||1); }
+
+  function renderLevelInfo(){
+    const L = currentLevel();
+    filterDesc.textContent = serverFilters[L]?.name || '--';
+    // toggle ability to navigate only unlocked levels
+    clampOptions();
+  }
+
+  function clampOptions(){
+    const unlocked = getProgress().unlocked || [1];
+    for(const o of levelSel.options){ const v=Number(o.value); o.disabled = !unlocked.includes(v); }
+  }
+
+  // Posts are saved as array: {id, level, raw, stored, timestamp}
+  function loadPostsFromStorage(){
+    const raw = localStorage.getItem(POSTS_KEY);
+    let arr = [];
+    try{ arr = raw ? JSON.parse(raw) : []; }catch(e){ arr = []; }
+    window._ssx_posts = arr; renderPosts();
+  }
+
+  function persistPosts(){ localStorage.setItem(POSTS_KEY, JSON.stringify(window._ssx_posts||[])); }
+
+  function saveProgressFn(){ localStorage.setItem(PROGRESS_KEY, JSON.stringify(getProgress())); alert('Progress saved locally.'); }
+  function loadProgressFn(){ const raw = localStorage.getItem(PROGRESS_KEY); if(!raw){ alert('No saved progress found'); return;} try{ const p = JSON.parse(raw); setProgress(p); alert('Progress loaded'); clampOptions(); }catch(e){ alert('Invalid progress'); } }
+
+  function getProgress(){ const raw = localStorage.getItem(PROGRESS_KEY); if(!raw) return { unlocked:[1] }; try{ return JSON.parse(raw); }catch(e){ return { unlocked:[1] } } }
+  function setProgress(p){ localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); }
+
+  function storePost(){ const raw = postInput.value || ''; const L = currentLevel(); const filter = serverFilters[L]; const stored = filter && filter.fn ? filter.fn(raw) : raw; const posts = window._ssx_posts || []; const id = Date.now() + Math.random().toString(36).slice(2,7);
+    const entry = {id, level:L, raw, stored, ts: Date.now()}; posts.unshift(entry); window._ssx_posts = posts; persistPosts(); renderPosts(); postInput.value=''; alert('Stored on server (with server filter).'); }
+
+  function storeUnsafe(){ const raw = postInput.value || ''; const posts = window._ssx_posts || []; const id = Date.now() + Math.random().toString(36).slice(2,7);
+    const entry = {id, level:currentLevel(), raw, stored:raw, ts: Date.now(), unsafe:true}; posts.unshift(entry); window._ssx_posts = posts; persistPosts(); renderPosts(); postInput.value=''; alert('Stored without server filtering (unsafe).'); }
+
+  function renderPosts(){ postsDiv.innerHTML=''; const posts = window._ssx_posts || []; if(!posts.length){ postsDiv.innerHTML='<div class="small muted">No posts yet.</div>'; return; }
+    for(const p of posts){ const d = document.createElement('div'); d.className='post'; d.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><strong>post:</strong> <span class="small">id:${p.id} lvl:${p.level}</span></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn" onclick='renderStored("${p.id}")'>Render</button>
+          <button class="btn" onclick='renderStoredInline("${p.id}")'>Render Inline</button>
+          <button class="btn" onclick='deletePost("${p.id}")'>Delete</button>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:13px;color:#374151"><em>stored representation</em>:</div>
+      <pre style="white-space:pre-wrap;margin-top:6px;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #eef2ff">${escapeHtml(p.stored)}</pre>
+    `;
+      postsDiv.appendChild(d);
+    }
+  }
+
+  // Render the stored content inside the sandbox iframe as the "page" that would display stored posts.
+  function renderStored(id){ const p = (window._ssx_posts||[]).find(x=>x.id===id); if(!p) return alert('Post not found');
+    // Build page that mimics server-side rendering: we simply output the stored HTML in a container.
+    const html = `<!doctype html><html><body>
+      <script>
+        const oldAlert = window.alert;
+        window.alert = function(msg){ try{ const ok=[document.domain, window.origin]; if(ok.includes(msg)){ parent.postMessage({type:'ssx_solved', level:${p.level}}, '*'); } }catch(e){}
+          return oldAlert.apply(window, arguments);
+        };
+      <\/script>
+      <div id="page">
+        <h3>Stored post</h3>
+        <div id="content">${p.stored}</div>
+      </div>
+    </body></html>`;
+    renderFrame.srcdoc = html; }
+
+  // Render inline: inject the stored content into the existing renderFrame page inside a container (useful to simulate stored posts aggregated)
+  function renderStoredInline(id){ const p = (window._ssx_posts||[]).find(x=>x.id===id); if(!p) return alert('Post not found');
+    const existing = renderFrame.srcdoc || '<!doctype html><html><body></body></html>';
+    // Place previous content and append new stored content
+    const html = `<!doctype html><html><body>
+      <script>
+        const oldAlert = window.alert;
+        window.alert = function(msg){ try{ const ok=[document.domain, window.origin]; if(ok.includes(msg)){ parent.postMessage({type:'ssx_solved', level:${p.level}}, '*'); } }catch(e){}
+          return oldAlert.apply(window, arguments);
+        };
+      <\/script>
+      <div id="posts-wrap">${(window._ssx_posts||[]).map(x=>`<div class=post>${x.stored}</div>`).join('\n')}</div>
+    </body></html>`;
+    renderFrame.srcdoc = html; }
+
+  function deletePost(id){ const arr = (window._ssx_posts||[]).filter(x=>x.id!==id); window._ssx_posts = arr; persistPosts(); renderPosts(); }
+
+  function clearPostsFn(){ if(confirm('Clear all stored posts?')){ window._ssx_posts = []; persistPosts(); renderPosts(); renderFrame.srcdoc='<!doctype html><html><body></body></html>'; } }
+
+  function resetLab(){ if(!confirm('Reset lab: clear posts and progress?')) return; window._ssx_posts = []; persistPosts(); setProgress({unlocked:[1]}); // reset options
+    for(const o of levelSel.options) o.disabled = o.value !== '1'; levelSel.value = '1'; renderPosts(); renderFrame.srcdoc='<!doctype html><html><body></body></html>'; alert('Lab reset'); }
+
+  function exportPosts(){ const data = { posts: window._ssx_posts||[], progress:getProgress() }; const blob = new Blob([JSON.stringify(data, null,2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download = 'ssx_posts_export.json'; a.click(); URL.revokeObjectURL(url); }
+
+  function handleImportFile(e){ const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = function(){ try{ const obj = JSON.parse(r.result); if(obj.posts){ window._ssx_posts = obj.posts; persistPosts(); renderPosts(); if(obj.progress) setProgress(obj.progress); alert('Imported posts'); }else{ alert('Invalid file'); } }catch(err){ alert('Invalid JSON'); } }; r.readAsText(f); }
+
+  function exportObject(){ return { posts: window._ssx_posts||[], progress:getProgress() }; }
+
+  function unlockNext(level){ const prog = getProgress(); const unlocked = new Set(prog.unlocked || [1]); if(!unlocked.has(level+1) && level < TOTAL){ unlocked.add(level+1); prog.unlocked = Array.from(unlocked).sort((a,b)=>a-b); setProgress(prog); // enable option
+      const opt = [...levelSel.options].find(o=>Number(o.value)===level+1); if(opt) opt.disabled = false; alert(`✅ Level ${level} solved — unlocked ${level+1}`); } else if(level===TOTAL){ alert('🎉 All levels solved'); } }
+
+  function deleteAllStorage(){ localStorage.removeItem(POSTS_KEY); localStorage.removeItem(PROGRESS_KEY); }
+
+  function exportToClipboard(){ const obj = exportObject(); navigator.clipboard.writeText(JSON.stringify(obj)).then(()=>alert('Copied to clipboard'), ()=>alert('Clipboard failed')); }
+
+  // helper to escape pre display (not used for stored representation but for UI safety)
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  window.escapeHtml = escapeHtml;
+
+  // helpers exposed for inline button onclick resolution
+  window.renderStored = renderStored; window.renderStoredInline = renderStoredInline; window.deletePost = deletePost;
+
+  // initial load
+  init();
+})();
+</script>
+</body>
+</html>
