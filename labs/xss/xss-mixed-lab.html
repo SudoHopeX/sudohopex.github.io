@@ -32,42 +32,25 @@
     const sel = document.getElementById('sel');
     const container = document.getElementById('container');
 
-    // different sinks/contexts used across levels
     const SINKS = [
-      // reflected into innerHTML
       s=>`<div>Result: ${s}</div>`,
-      // injected into attribute value
       s=>`<img src=x alt="${s}">`,
-      // placed into href
       s=>`<a href="${s}">link</a>`,
-      // inside script string
       s=>`<script>var data = "${s}";console.log(data);<\/script>`,
-      // inside JS expression
       s=>`<script>try{(0,eval)("${s}")}catch(e){}<\/script>`,
-      // inside comment
       s=>`<!-- ${s} --><div>ok</div>`,
-      // inside SVG
       s=>`<svg xmlns='http://www.w3.org/2000/svg'>${s}</svg>`,
-      // inside style block
       s=>`<style>body::after{content:'${s}';}</style>`,
-      // inside textarea (requires breakout)
       s=>`<textarea>${s}</textarea>`,
-      // inside data- attribute unquoted
       s=>`<div data-info=${s}>x</div>`,
-      // inside JSON in script
       s=>`<script>window.__INJECT=${JSON.stringify(s)};<\/script>`,
-      // inside template tag
       s=>`<template>${s}</template>`,
-      // inside event handler attribute
       s=>`<button id=btn ${s}>Click</button>`,
-      // URL fragment reflected
       s=>`<div id=res>Fragment: <span id=frag></span></div><script>document.getElementById('frag').textContent = location.hash.slice(1);<\/script>`
     ];
 
-    // progressive filters per level to force different techniques
     function sanitizeForLevel(level,input){
       let s = String(input);
-      // level groups and filters
       if(level%5===0) s = s.replace(/on\w+\s*=\s*("[^"]*"|'[^']*'|[^>\s]*)/gi,'');
       if(level%7===0) s = s.replace(/<script/gi,'<scr' );
       if(level%6===0) s = s.replace(/javascript:/gi,'');
@@ -76,12 +59,10 @@
       if(level%11===0) s = s.replace(/>/g,'&gt;');
       if(level%13===0) s = s.replace(/\\/g,'');
       if(level%17===0) s = s.replace(/\s+/g,' ');
-      // prevent closing script breaking host
       s = s.replace(/<\/script/gi,'<\\/script');
       return s;
     }
 
-    // create UI
     for(let i=1;i<=TOTAL;i++){
       const opt = document.createElement('option'); opt.value=i; opt.textContent=`Level ${i}`; if(i!==1) opt.disabled=true; sel.appendChild(opt);
 
@@ -106,7 +87,6 @@
       const v=+sel.value; for(let i=1;i<=TOTAL;i++){ document.getElementById('lvl-'+i).classList.toggle('visible', i===v);}    });
 
     function getContextHint(i){
-      // very small non-actionable hint so user knows DOM sink type without giving payloads
       const types = ['innerHTML','attr','href','script-string','eval-like','comment','svg','style','textarea','data-attr','json-script','template','event-attr','fragment-reflect'];
       return types[i % types.length];
     }
@@ -127,7 +107,6 @@
 
     window.resetF = function(level){ document.getElementById('frame-'+level).srcdoc='<!doctype html><html><body></body></html>'; }
 
-    // unlock flow
     const unlocked = new Set([1]);
     window.addEventListener('message', (ev)=>{
       if(ev?.data?.type==='solved' && Number.isInteger(ev.data.level)){
@@ -138,8 +117,38 @@
       }
     });
 
-    // avoid selecting locked levels via mouse
     sel.addEventListener('mousedown',()=>{ for(const o of sel.options){ if(!unlocked.has(+o.value)) o.disabled=true; }});
+
+
+function saveProgress(){
+  localStorage.setItem('xssEventLabProgress', JSON.stringify({
+    unlocked: [...unlocked]
+  }));
+}
+
+function loadProgress(){
+  try {
+    const data = JSON.parse(localStorage.getItem('xssEventLabProgress'));
+    if(!data || !data.unlocked) return;
+    data.unlocked.forEach(lvl => {
+      unlocked.add(lvl);
+      const opt = Array.from(sel.options).find(o => +o.value === lvl);
+      if(opt) opt.disabled = false;
+    });
+    const lastLevel = Math.max(...data.unlocked);
+    sel.value = lastLevel;
+    sel.dispatchEvent(new Event('change'));
+  } catch(e){ console.error(e); }
+}
+
+loadProgress();
+
+const origUnlockNext = unlockNext;
+unlockNext = function(levelId){
+  origUnlockNext(levelId);
+  saveProgress();
+};
+
   </script>
 </body>
 </html>
