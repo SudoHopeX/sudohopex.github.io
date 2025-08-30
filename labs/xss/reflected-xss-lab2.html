@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reflected XSS Lab</title>
+  <style>
+    :root{--bg:#fff;--muted:#6b7280;--line:#e6e9ef}
+    body{font-family:Inter,system-ui,Arial;margin:18px;color:#0b1220;background:var(--bg)}
+    h1{margin:0 0 8px;font-size:20px}
+    .meta{color:var(--muted);margin-bottom:12px}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+    select{padding:8px;border-radius:8px;border:1px solid var(--line)}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:12px}
+    textarea{width:90%;height:96px;padding:10px;border-radius:8px;border:1px solid var(--line)}
+    .btn{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:#f8fafc;cursor:pointer}
+    iframe{width:100%;height:360px;border:1px solid var(--line);border-radius:8px}
+    .level{display:none}
+    .level.visible{display:block}
+    .small{font-size:13px;color:var(--muted)}
+    .postarea{background:#fff;padding:10px;border-radius:8px;border:1px solid var(--line)}
+  </style>
+</head>
+<body>
+  <h1>🔁 Reflected XSS Lab — 50 Levels</h1>
+  <div class="meta">Practice reflected XSS techniques across 50 progressively restrictive levels. No payload hints are shown. Goal: reflect input so that it executes <code>alert(document.domain)</code> or <code>alert(window.origin)</code> inside the rendered result to unlock the next level.</div>
+
+  <div class="controls">
+    <label for="levelSel">Level</label>
+    <select id="levelSel"></select>
+    <button class="btn" id="saveProgress">Save Progress</button>
+    <button class="btn" id="loadProgress">Load Progress</button>
+    <button class="btn" id="resetLab">Reset Lab</button>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="postarea">
+        <div class="small">Reflected input (this simulates URL parameter / form input that the server reflects back into the page):</div>
+        <textarea id="payload" placeholder="Type payload to reflect..."></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn" id="reflectBtn">Reflect (Run)</button>
+          <button class="btn" id="reflectUnsafeBtn">Reflect Unsafe (no server sanit)</button>
+          <button class="btn" id="copyUrlBtn">Copy reflect URL</button>
+        </div>
+        <div style="margin-top:8px" class="small">Tip: 'Reflect' applies the server-side filter for the current level before rendering; 'Reflect Unsafe' bypasses the filter (useful for testing).</div>
+      </div>
+
+      <div style="margin-top:12px">
+        <div class="small"><strong>Current level filter:</strong> <span id="filterName">--</span></div>
+        <div style="margin-top:6px" class="small">Progress: <span id="progressDisplay">1</span>/<span id="totalLevels">50</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="small">Rendered page (sandboxed). When reflected payload executes <code>alert(document.domain)</code> or <code>alert(window.origin)</code>, the lab will detect it and unlock the next level.</div>
+      <div style="margin-top:8px"><iframe id="renderFrame" sandbox="allow-scripts allow-modals"></iframe></div>
+    </div>
+  </div>
+
+  <hr style="margin:14px 0">
+  <div class="small">Locked levels cannot be selected. Use the lab to unlock them sequentially.</div>
+
+<script>
+(() => {
+  const TOTAL = 50;
+  const levelSel = document.getElementById('levelSel');
+  const payloadEl = document.getElementById('payload');
+  const reflectBtn = document.getElementById('reflectBtn');
+  const reflectUnsafeBtn = document.getElementById('reflectUnsafeBtn');
+  const renderFrame = document.getElementById('renderFrame');
+  const filterName = document.getElementById('filterName');
+  const progressDisplay = document.getElementById('progressDisplay');
+  const saveProgressBtn = document.getElementById('saveProgress');
+  const loadProgressBtn = document.getElementById('loadProgress');
+  const resetLabBtn = document.getElementById('resetLab');
+  const copyUrlBtn = document.getElementById('copyUrlBtn');
+
+  const STORAGE_KEY = 'reflected_xss_lab_v1';
+
+  // Define various sinks/contexts used for reflection
+  const SINKS = [
+    s => `<div>Search results: ${s}</div>`,
+    s => `<p>Message: ${s}</p>`,
+    s => `<img src=x alt="${s}">`,
+    s => `<a href="${s}">Click</a>`,
+    s => `<div data-info='${s}'>meta</div>`,
+    s => `<textarea>${s}</textarea>`,
+    s => `<svg xmlns='http://www.w3.org/2000/svg'><foreignObject><div xmlns='http://www.w3.org/1999/xhtml'>${s}</div></foreignObject></svg>`,
+    s => `<script>try{(0,eval)("${s}");}catch(e){}</script>`,
+    s => `<style>body:after{content:"${s}"}</style>`,
+    s => `<button ${s}>Click</button>`,
+  ];
+
+  // Define progressive server-side filters for each level (50 distinct filters)
+  // Each filter is a function that takes input and returns the stored/reflected string.
+  const filters = {};
+
+  // helper regex-safe
+  const esc = s => String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  for(let i=1;i<=TOTAL;i++){
+    // build different filters based on level number
+    if(i===1) filters[i] = {name:'No filter', fn: s=>s};
+    else if(i===2) filters[i] = {name:'Escape < and >', fn: s=>esc(s)};
+    else if(i===3) filters[i] = {name:'Remove <script> blocks', fn: s=>s.replace(/<script[\s\S]*?<\/script>/gi,'')};
+    else if(i===4) filters[i] = {name:'Strip on* attributes', fn: s=>s.replace(/on\w+\s*=\s*("[^"]*"|'[^']*'|[^>\s]+)/gi,'')};
+    else if(i===5) filters[i] = {name:'Encode quotes & ampersand', fn: s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/\'/g,'&#39;')};
+    else if(i===6) filters[i] = {name:'Remove javascript: scheme', fn: s=>s.replace(/javascript\s*:/gi,'')};
+    else if(i===7) filters[i] = {name:'Strip svg tags', fn: s=>s.replace(/<svg[\s\S]*?<\/svg>/gi,'')};
+    else if(i===8) filters[i] = {name:'Whitelist tags <b><i><u><p>', fn: s=>s.replace(/<(?!\/?(?:b|i|u|p)\b)[^>]+>/gi,'')};
+    else if(i===9) filters[i] = {name:'Remove attributes', fn: s=>s.replace(/<([a-zA-Z0-9\-]+)(?:\s+[^>]*)?>/g,'<$1>')};
+    else if(i===10) filters[i] = {name:'Remove quotes', fn: s=>s.replace(/[\"\']/g,'')};
+    else if(i===11) filters[i] = {name:'Strip &lt;iframe&gt;', fn: s=>s.replace(/<iframe[\s\S]*?<\/iframe>/gi,'')};
+    else if(i===12) filters[i] = {name:'Neutralize angle brackets', fn: s=>s.replace(/[<>]/g,'')};
+    else if(i===13) filters[i] = {name:'Collapse whitespace & remove backslashes', fn: s=>s.replace(/\\/g,'').replace(/\s+/g,' ')};
+    else if(i===14) filters[i] = {name:'Remove '=' signs', fn: s=>s.replace(/=/g,'')};
+    else if(i===15) filters[i] = {name:'Strip form and input tags', fn: s=>s.replace(/<(form|input|button|select|textarea)[\s\S]*?<\/\1>/gi,'')};
+    else if(i===16) filters[i] = {name:'Remove style blocks & expressions', fn: s=>s.replace(/<style[\s\S]*?<\/style>/gi,'').replace(/expression\(/gi,'')};
+    else if(i===17) filters[i] = {name:'HTML-encode partially', fn: s=>String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\/g,'')};
+    else if(i===18) filters[i] = {name:'Strip data: URIs', fn: s=>s.replace(/data\s*:/gi,'')};
+    else if(i===19) filters[i] = {name:'Escape <script start', fn: s=>s.replace(/<script/gi,'&lt;script')};
+    else if(i===20) filters[i] = {name:'Remove event handlers & script', fn: s=>s.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/on\w+\s*=\s*("[^"]*"|'[^']*'|[^>\s]+)/gi,'')};
+    else if(i===21) filters[i] = {name:'Strip tag names longer than 6 chars', fn: s=>s.replace(/<\/?([a-zA-Z0-9\-]{7,})[^>]*>/g,'')};
+    else if(i===22) filters[i] = {name:'Remove angle brackets & quotes', fn: s=>String(s).replace(/[<>"']/g,'')};
+    else if(i===23) filters[i] = {name:'Remove colon and equals', fn: s=>s.replace(/[:=]/g,'')};
+    else if(i===24) filters[i] = {name:'Strip comments <!-- -->', fn: s=>s.replace(/<!--([\s\S]*?)-->/g,'')};
+    else if(i===25) filters[i] = {name:'Escape attributes & content', fn: s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')};
+    else if(i===26) filters[i] = {name:'Remove parentheses and brackets', fn: s=>s.replace(/[()\[\]]/g,'')};
+    else if(i===27) filters[i] = {name:'Strip javascript and data schemes', fn: s=>s.replace(/(javascript|data)\s*:/gi,'')};
+    else if(i===28) filters[i] = {name:'Remove angle brackets but keep &lt; text', fn: s=>s.replace(/[<>]/g,'')};
+    else if(i===29) filters[i] = {name:'Remove words: script, iframe, svg', fn: s=>s.replace(/script|iframe|svg/gi,'')};
+    else if(i===30) filters[i] = {name:'Aggressive: strip tags & attributes', fn: s=>s.replace(/<[^>]*>/g,'').replace(/on\w+\s*=\s*("[^"]*"|'[^']*'|[^>\s]+)/gi,'')};
+    else if(i===31) filters[i] = {name:'Replace < with entity, remove equals', fn: s=>String(s).replace(/</g,'&lt;').replace(/=/g,'')};
+    else if(i===32) filters[i] = {name:'Remove < and quotes', fn: s=>String(s).replace(/</g,'').replace(/["']/g,'')};
+    else if(i===33) filters[i] = {name:'Strip backticks and backslashes', fn: s=>s.replace(/[`\\]/g,'')};
+    else if(i===34) filters[i] = {name:'Collapse whitespace, remove tags', fn: s=>s.replace(/<[^>]*>/g,'').replace(/\s+/g,' ')};
+    else if(i===35) filters[i] = {name:'Remove > and quotes', fn: s=>String(s).replace(/>/g,'').replace(/["']/g,'')};
+    else if(i===36) filters[i] = {name:'Neutralize `<` only', fn: s=>s.replace(/</g,'&lt;')};
+    else if(i===37) filters[i] = {name:'Remove attribute values (keep names)', fn: s=>s.replace(/(\w+)\s*=\s*("[^"]*"|'[^']*'|[^>\s]+)/g,'$1')};
+    else if(i===38) filters[i] = {name:'Strip URL schemes', fn: s=>s.replace(/^[a-zA-Z]+:\/\//g,'')};
+    else if(i===39) filters[i] = {name:'Escape percent signs & remove "="', fn: s=>s.replace(/%/g,'%25').replace(/=/g,'')};
+    else if(i===40) filters[i] = {name:'Remove angle brackets, parentheses', fn: s=>s.replace(/[<>\(\)]/g,'')};
+    else if(i===41) filters[i] = {name:'Strip words: onload,onerror,onclick', fn: s=>s.replace(/onload|onerror|onclick/gi,'')};
+    else if(i===42) filters[i] = {name:'Replace <script start & remove quotes', fn: s=>s.replace(/<script/gi,'&lt;script').replace(/['"]/g,'')};
+    else if(i===43) filters[i] = {name:'Remove hex sequences and backslash', fn: s=>s.replace(/\\x[0-9A-Fa-f]{2}/g,'').replace(/\\/g,'')};
+    else if(i===44) filters[i] = {name:'Strip tag names containing letters a-m', fn: s=>s.replace(/<\/?[a-mA-M][^>]*>/g,'')};
+    else if(i===45) filters[i] = {name:'Remove all '<' characters', fn: s=>s.replace(/</g,'')};
+    else if(i===46) filters[i] = {name:'Remove slashes and quotes', fn: s=>s.replace(/[\\"']/g,'')};
+    else if(i===47) filters[i] = {name:'Replace < and > with entities and remove ":"', fn: s=>String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/:/g,'')};
+    else if(i===48) filters[i] = {name:'Strip on* attributes and javascript:', fn: s=>s.replace(/on\w+\s*=\s*("[^"]*"|'[^']*'|[^>\s]+)/gi,'').replace(/javascript\s*:/gi,'')};
+    else if(i===49) filters[i] = {name:'Aggressive: remove non-alphanumerics', fn: s=>s.replace(/[^a-zA-Z0-9 ]/g,'')};
+    else if(i===50) filters[i] = {name:'Maximum: return plain text only', fn: s=>String(s).replace(/<[^>]*>/g,'').replace(/[^\x20-\x7E]/g,'')};
+  }
+
+  // Build levels array with context rotation
+  const levels = Array.from({length:TOTAL}, (_,i)=>({id:i+1, sinkIdx: (i+1) % SINKS.length}));
+
+  // Progress storage
+  function getProgress(){ try{ const p = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); return p; }catch(e){ return {}; } }
+  function setProgress(obj){ localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); }
+
+  // Render select options
+  function setupUI(){
+    for(let i=1;i<=TOTAL;i++){ const o=document.createElement('option'); o.value=i; o.textContent=`Level ${i}`; if(i!==1) o.disabled=true; levelSel.appendChild(o); }
+    document.getElementById('totalLevels').textContent = TOTAL;
+    levelSel.addEventListener('change', updateUIForLevel);
+    reflectBtn.addEventListener('click', ()=>reflect(false));
+    reflectUnsafeBtn.addEventListener('click', ()=>reflect(true));
+    saveProgressBtn.addEventListener('click', ()=>{ const p = getProgress(); setProgress(p); alert('Progress saved'); });
+    loadProgressBtn.addEventListener('click', ()=>{ const p = getProgress(); applyProgress(p); alert('Progress loaded'); });
+    resetLabBtn.addEventListener('click', resetLab);
+    copyUrlBtn.addEventListener('click', copyReflectUrl);
+
+    // initialize from storage
+    const p = getProgress(); if(!p.unlocked) p.unlocked = [1]; if(!p.current) p.current = 1; setProgress(p); applyProgress(p);
+  }
+
+  function applyProgress(p){ // enable unlocked options and select current
+    const unlocked = new Set(p.unlocked || [1]);
+    for(const o of levelSel.options){ const v=Number(o.value); o.disabled = !unlocked.has(v); }
+    levelSel.value = p.current || 1; updateUIForLevel(); }
+
+  function updateUIForLevel(){ const lvl = Number(levelSel.value); filterName.textContent = filters[lvl].name || '--'; progressDisplay.textContent = `${lvl}`; const p = getProgress(); p.current = lvl; setProgress(p); }
+
+  // Sanitize for level (server-side filter simulation)
+  function applyFilter(level, input){ const f = filters[level]; if(!f) return input; try{ return f.fn(String(input)); }catch(e){ return String(input); } }
+
+  // Build reflected page using selected sink
+  function buildPage(level, reflected){ const sink = SINKS[level % SINKS.length]; const body = sink(reflected); const html = `<!doctype html><html><body>\n<script>\nconst oldAlert=window.alert; window.alert=function(msg){ try{ const ok=[document.domain, window.origin]; if(ok.includes(msg)){ parent.postMessage({type:'ref_solved', level:${level}}, '*'); } }catch(e){} return oldAlert.apply(window, arguments); };\n<\/script>\n${body}\n</body></html>`; return html; }
+
+  // Reflect (simulate server reflect + render)
+  function reflect(unsafe=false){ const lvl = Number(levelSel.value); const raw = payloadEl.value || '';
+    const reflected = unsafe ? raw : applyFilter(lvl, raw);
+    renderFrame.srcdoc = buildPage(lvl, reflected);
+  }
+
+  // copy URL with reflected param (for user to test external encoding)
+  function copyReflectUrl(){ const raw = encodeURIComponent(payloadEl.value || ''); const lvl = Number(levelSel.value); const u = `${location.origin}${location.pathname}?q=${raw}&lvl=${lvl}`; navigator.clipboard?.writeText(u).then(()=>alert('Copied URL to clipboard'), ()=>alert('Clipboard failed')) }
+
+  // unlock next level when iframe posts solved
+  window.addEventListener('message', ev => {
+    if(ev?.data?.type==='ref_solved' && Number.isInteger(ev.data.level)){
+      const lvl = Number(ev.data.level);
+      const p = getProgress(); p.unlocked = p.unlocked || [1]; const unlocked = new Set(p.unlocked); if(!unlocked.has(lvl+1) && lvl < TOTAL){ unlocked.add(lvl+1); p.unlocked = Array.from(unlocked).sort((a,b)=>a-b); p.current = lvl+1; setProgress(p); // enable option
+          const opt = [...levelSel.options].find(o=>Number(o.value)===lvl+1); if(opt) opt.disabled = false; alert(`✅ Level ${lvl} solved — unlocked ${lvl+1}`); }
+      else if(lvl===TOTAL){ alert('🎉 All levels solved'); }
+    }
+  });
+
+  function resetLab(){ if(!confirm('Reset lab (clear progress)?')) return; setProgress({unlocked:[1], current:1}); for(const o of levelSel.options){ o.disabled = o.value !== '1'; } levelSel.value = '1'; updateUIForLevel(); renderFrame.srcdoc='<!doctype html><html><body></body></html>'; alert('Lab reset'); }
+
+  // apply a URL param reflect (optional) if user opens with ?q=...&lvl=
+  function maybeAutoReflectFromURL(){ try{ const url = new URL(location.href); const q = url.searchParams.get('q'); const lvl = Number(url.searchParams.get('lvl')) || null; if(q!==null && lvl && lvl>=1 && lvl<=TOTAL){ // set level and reflect (unsafe=false)
+      const p = getProgress(); p.unlocked = p.unlocked || [1]; if(!p.unlocked.includes(lvl)) { p.unlocked.push(lvl); p.unlocked.sort((a,b)=>a-b); }
+      p.current = lvl; setProgress(p); applyProgress(p); payloadEl.value = decodeURIComponent(q); // reflect using filter for that level
+      reflect(false);
+    } }catch(e){} }
+
+  // init
+  setupUI(); maybeAutoReflectFromURL();
+})();
+</script>
+</body>
+</html>
