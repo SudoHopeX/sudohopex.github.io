@@ -36,11 +36,9 @@
   <div class="wrap" id="levels"></div>
 
   <script>
-  // ===== CONFIGURATION =====
   const TOTAL_LEVELS = 60; // \o/
   document.getElementById('ttl').textContent = TOTAL_LEVELS;
 
-  // Event pools (for banning per level without revealing in UI)
   const COMMON_EVENTS = [
     'onclick','onerror','onload','onmouseover','onmouseenter','onmouseleave','onmousemove','onmouseout','oncontextmenu',
     'onfocus','onblur','onchange','oninput','onkeydown','onkeyup','onkeypress','onsubmit','onreset','ondblclick',
@@ -53,71 +51,50 @@
     'ondurationchange','onratechange','onseeked','onseeking','onstalled','onsuspend','ontimeupdate','ontoggle','onabort'
   ];
 
-  // Context templates for injecting the (sanitized) payload in different sinks
-  // NOTE: No hints in UI; only the resulting DOM will expose context to observant players.
+
   const CONTEXTS = [
-    // 0: raw innerHTML drop
     (s) => `<div class="out">${s}</div>`,
-    // 1: inside attribute (double quotes)
     (s) => `<img alt="${s}" src=x onload="/*maybe*/">`,
-    // 2: inside attribute (single quotes)
     (s) => `<img title='${s}' src=x onload='/*maybe*/'>`,
-    // 3: unquoted attribute
     (s) => `<img data-x=${s} src=x>`,
-    // 4: inside textarea (requires breakout)
     (s) => `<textarea>${s}</textarea>`,
-    // 5: inside HTML comment (requires breakout)
     (s) => `<!-- ${s} --><div class=pad></div>`,
-    // 6: SVG context
     (s) => `<svg xmlns="http://www.w3.org/2000/svg"><text>${s}</text></svg>`,
-    // 7: within <a> text & attribute nearby
     (s) => `<a href="#" class=lnk>${s}</a>`,
-    // 8: inside video tag children
     (s) => `<video controls width=320>${s}</video>`,
-    // 9: inside details/summary
     (s) => `<details><summary>more</summary>${s}</details>`,
-    // 10: inside button text
     (s) => `<button>${s}</button>`,
-    // 11: table context
     (s) => `<table><tr><td>${s}</td></tr></table>`,
-    // 12: select/option context
     (s) => `<select><option>${s}</option></select>`,
-    // 13: form action adjacent
     (s) => `<form><input name=q value="${s}"></form>`,
-    // 14: pre/code
     (s) => `<pre><code>${s}</code></pre>`,
   ];
 
-  // Per-level configuration
-  // We synthesize 60 levels by combining contexts + filters. No hints are shown.
+
   const levels = Array.from({length: TOTAL_LEVELS}, (_,i)=>{
     const n = i+1;
-    // Rotate contexts to keep variety
     const ctxIdx = n % CONTEXTS.length;
 
-    // Base bans: progressively ban common/rare events
-    const banCountCommon = Math.floor(n/6); // grows over time
+    const banCountCommon = Math.floor(n/6); 
     const banCountRare = Math.floor(n/10);
     const bannedEvents = new Set([
       ...COMMON_EVENTS.slice(0, banCountCommon),
       ...RARE_EVENTS.slice(0, banCountRare)
     ]);
 
-    // Progressive extra constraints
     const constraints = {
-      noQuotes: (n % 7 === 0),          // remove quotes occasionally
-      squashWhitespace: (n % 5 === 0),  // collapse whitespace
+      noQuotes: (n % 7 === 0),          
+      squashWhitespace: (n % 5 === 0), 
       stripAutofocus: (n % 8 === 0),
-      stripJsScheme: (n % 9 === 0),     // remove javascript:
-      stripClosingTags: (n % 11 === 0), // remove </...>
+      stripJsScheme: (n % 9 === 0),     
+      stripClosingTags: (n % 11 === 0), 
       forceLower: (n % 13 === 0),
-      stripEquals: (n % 17 === 0),      // remove '=' once in a while
+      stripEquals: (n % 17 === 0),
     };
 
     return { id:n, ctxIdx, bannedEvents:[...bannedEvents], constraints };
   });
 
-  // ===== RENDER UI =====
   const sel = document.getElementById('levelSel');
   const container = document.getElementById('levels');
   const unlocked = new Set([1]);
@@ -152,18 +129,15 @@
     }
   });
 
-  // ===== SANITIZER PIPELINE =====
   function applyBans(levelId, input){
     const L = levels[levelId-1];
     let s = String(input);
 
-    // Remove banned event handler attributes (case-insensitive)
     if (L.bannedEvents.length){
       const re = new RegExp(`\\s(?:${L.bannedEvents.map(e=>e.replace(/on/,'on')).join('|')})\\s*=\\s*([^>\\s"']+|\"[^\"]*\"|'[^']*')`, 'gi');
       s = s.replace(re, '');
     }
 
-    // Constraints
     if (L.constraints.stripAutofocus){ s = s.replace(/autofocus/gi,''); }
     if (L.constraints.stripJsScheme){ s = s.replace(/javascript\s*:/gi,''); }
     if (L.constraints.forceLower){ s = s.toLowerCase(); }
@@ -172,7 +146,6 @@
     if (L.constraints.stripEquals){ s = s.replace(/=/g,''); }
     if (L.constraints.squashWhitespace){ s = s.replace(/\s+/g,' '); }
 
-    // Prevent breaking parent <script> in the sandbox wrapper
     s = s.replace(/<\/script/gi,'<\\/script');
     return s;
   }
@@ -198,7 +171,6 @@
     </body></html>`;
   }
 
-  // ===== RUNTIME =====
   function runLevel(levelId){
     const input = document.getElementById(`in-${levelId}`).value || '';
     const frame = document.getElementById(`frame-${levelId}`);
@@ -214,7 +186,6 @@
   }
   window.resetFrame = resetFrame;
 
-  // Unlock flow
   function unlockNext(levelId){
     if(levelId < TOTAL_LEVELS && !unlocked.has(levelId+1)){
       unlocked.add(levelId+1);
@@ -232,7 +203,6 @@
     }
   });
 
-  // Prevent selecting locked levels with mouse wheel etc.
   sel.addEventListener('mousedown', ()=>{
     for (const o of sel.options){
       const v = +o.value; if(!unlocked.has(v)) o.disabled = true;
@@ -240,7 +210,6 @@
   });
 
 
-  // ===== LOCAL STORAGE SAVE/LOAD =====
 function saveProgress(){
   localStorage.setItem('xssEventLabProgress', JSON.stringify({
     unlocked: [...unlocked]
@@ -256,17 +225,14 @@ function loadProgress(){
       const opt = Array.from(sel.options).find(o => +o.value === lvl);
       if(opt) opt.disabled = false;
     });
-    // Select the last unlocked level automatically
     const lastLevel = Math.max(...data.unlocked);
     sel.value = lastLevel;
     sel.dispatchEvent(new Event('change'));
   } catch(e){ console.error(e); }
 }
 
-// Auto-load progress on page load
 loadProgress();
 
-// Hook saveProgress into unlocking levels
 const origUnlockNext = unlockNext;
 unlockNext = function(levelId){
   origUnlockNext(levelId);
