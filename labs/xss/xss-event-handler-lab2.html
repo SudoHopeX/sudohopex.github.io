@@ -75,6 +75,16 @@
     const n = i+1;
     const ctxIdx = n % CONTEXTS.length;
 
+    if (n % 17 === 0) {
+      while (
+        CONTEXTS[ctxIdx].toString().includes('title=') ||
+        CONTEXTS[ctxIdx].toString().includes('alt=') ||
+        CONTEXTS[ctxIdx].toString().includes('data-x=')
+      ) {
+        ctxIdx = Math.floor(Math.random() * CONTEXTS.length);
+      }
+    }
+        
     const banCountCommon = Math.floor(n/6); 
     const banCountRare = Math.floor(n/10);
     const bannedEvents = new Set([
