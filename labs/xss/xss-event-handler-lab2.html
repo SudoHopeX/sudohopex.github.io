@@ -72,8 +72,8 @@
 
 
   const levels = Array.from({length: TOTAL_LEVELS}, (_,i)=>{
-    const n = i+1;
-    const ctxIdx = n % CONTEXTS.length;
+    let n = i+1;
+    let ctxIdx = n % CONTEXTS.length;
 
     if (n % 17 === 0) {
       while (
