@@ -76,15 +76,16 @@
     let ctxIdx = n % CONTEXTS.length;
 
     if (n % 17 === 0) {
+    // skip contexts with title=, alt=, or data-x=
       while (
-        CONTEXTS[ctxIdx].toString().includes('title=') ||
-        CONTEXTS[ctxIdx].toString().includes('alt=') ||
-        CONTEXTS[ctxIdx].toString().includes('data-x=')
-      ) {
-        n = i+1;
-        ctxIdx = n % CONTEXTS.length;
-      }
+          CONTEXTS[ctxIdx].toString().includes('title=') ||
+          CONTEXTS[ctxIdx].toString().includes('alt=') ||
+          CONTEXTS[ctxIdx].toString().includes('data-x=')
+        ) {
+          ctxIdx = (ctxIdx + 1) % CONTEXTS.length; // move to next safely
+        }
     }
+
         
     const banCountCommon = Math.floor(n/6); 
     const banCountRare = Math.floor(n/10);
