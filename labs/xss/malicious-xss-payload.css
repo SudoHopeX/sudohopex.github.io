@@ -1,0 +1,4 @@
+body {
+    background: pink !important;
+/*     background-image: url('data:text\javascript,alert(window.origin)'); */
+}
