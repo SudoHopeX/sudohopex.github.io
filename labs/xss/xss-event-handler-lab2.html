@@ -101,7 +101,8 @@
       stripJsScheme: (n % 9 === 0),     
       stripClosingTags: (n % 11 === 0), 
       forceLower: (n % 13 === 0),
-      stripEquals: (n % 17 === 0),
+      stripEqualsOnce: (n % 17 === 0),
+      stripEqualsAll: ( n % 60 === 0)
     };
 
     return { id:n, ctxIdx, bannedEvents:[...bannedEvents], constraints };
@@ -155,7 +156,8 @@
     if (L.constraints.forceLower){ s = s.toLowerCase(); }
     if (L.constraints.stripClosingTags){ s = s.replace(/<\/(script|img|svg|textarea|video|a|button|details|table|select|form|pre|code|div)[^>]*>/gi,''); }
     if (L.constraints.noQuotes){ s = s.replace(/[\"\']/g,''); }
-    if (L.constraints.stripEquals){ s = s.replace(/=/g,''); }
+    if (L.constraints.stripEqualsOnce){ s = s.replace(/=/,''); }
+    if (L.constraints.stripEqualsAll){ s = s.replace(/=/g,''); }
     if (L.constraints.squashWhitespace){ s = s.replace(/\s+/g,' '); }
 
     s = s.replace(/<\/script/gi,'<\\/script');
