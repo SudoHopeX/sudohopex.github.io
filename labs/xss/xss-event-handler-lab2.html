@@ -87,8 +87,8 @@
     }
 
         
-    const banCountCommon = Math.floor(n/6); 
-    const banCountRare = Math.floor(n/10);
+    const banCountCommon = Math.floor(n/2); 
+    const banCountRare = Math.floor(n/4);
     const bannedEvents = new Set([
       ...COMMON_EVENTS.slice(0, banCountCommon),
       ...RARE_EVENTS.slice(0, banCountRare)
