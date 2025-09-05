@@ -1,0 +1,100 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<div class="whatsapp-badge" id="wa-badge">
+  <div class="overlay"></div>
+  <div class="badge-body">
+    <img class="profile-pic" id="wa-profile" src="" alt="Profile Picture">
+    <div class="details">
+      <div style="display:flex; align-items:center; gap:6px; overflow:hidden; height:24px;">
+        <img class="whatsapp-logo" style="width:16px; height:16px;"
+             src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+             alt="WhatsApp Logo">
+        <h3 id="wa-channel">Cyber Mentor</h3>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center; margin-top:4px;">
+        <span class="stat">
+          <i class="fa fa-users" style="margin-right:4px;"></i>
+          <span id="wa-followers">0 followers</span>
+            <span > | Level up cyber safety💯</span>
+        </span>
+      </div>
+      <div style="margin-top:6px; display: flex; flex-direction: row; gap: 8px;">
+        <a class="link" id="wa-channel-link" href="javascript:void(0)" target="_blank">
+          <i class="fa fa-link"></i> Visit Channel
+        </a>
+        <a class="link" id="wa-group-link" href="javascript:void(0)" target="_blank">
+          <i class="fa fa-comments"></i> Join Group
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+fetch("https://badges-api-theta.vercel.app/api/whtsappchannel")
+  .then(res => res.json())
+  .then(data => {
+    if(data.error) return console.error(data.error);
+
+    document.getElementById("wa-profile").src = data.profile_img_url;
+    document.getElementById("wa-channel").innerText = data.channel_name;
+    document.getElementById("wa-followers").innerText = data.followers + " followers";
+    document.getElementById("wa-channel-link").href = data.channel_url;
+    document.getElementById("wa-group-link").href = data.whatsapp_group_link;
+
+    // Optional: Use profile image as background tint
+    document.getElementById("wa-badge").style.background =
+      `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.8)), url(${data.profile_img_url})`;
+    document.getElementById("wa-badge").style.backgroundSize = "cover";
+    document.getElementById("wa-badge").style.backgroundPosition = "center";
+  })
+  .catch(err => console.error(err));
+</script>
+
+<style>
+.whatsapp-badge {
+  width: 322px;
+  position: relative;
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+  color: white;
+  border-radius: 12px;
+  font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  overflow: hidden;
+  padding: 10px;
+  background-size: cover;
+  background-position: center;
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+.badge-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+}
+.profile-pic {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid rgba(37, 211, 102, 0.6); /* WhatsApp green */
+  object-fit: cover;
+}
+.profile-pic:hover { border-color: #00FF7F; } #light green on hover
+.details { display:flex; flex-direction: column; gap: 3px; font-size: 14px; }
+h3 { margin:0; font-size:14px; }
+.stat { font-weight: bold; font-size:12px; }
+.stat:hover { color:#00FF7F; }
+.link {
+  color: rgba(37, 211, 102, 0.6);
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.link:hover { color: #00FF7F; }
+</style>
