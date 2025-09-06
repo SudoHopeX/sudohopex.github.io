@@ -1,4 +1,4 @@
-<div class="linkedin-badge">
+<div class="linkedin-badge" id="linkedin-badge">
   <div class="badge-body">
     <img class="profile-pic" src="https://sudohopex.github.io/img/hope.jpg" alt="Profile Picture">
     <div class="details">
@@ -42,7 +42,7 @@ fetch("https://badges-api-theta.vercel.app/api/linkedin")
     document.getElementById("connections").innerText = formatNumber(data.connections);
     if (data.cover_image) {
       document.getElementById("linkedin-badge").style.background = 
-        `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${data.cover_image}) no-repeat center center`;
+        `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${data.cover_image}) center/cover no-repeat`;
     }
   })
   .catch(err => console.error(err));
@@ -56,7 +56,7 @@ fetch("https://badges-api-theta.vercel.app/api/linkedin")
   background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)); /* black transparent overlay */
   background-size: cover;
   color: white;
-  border: 2px bold white;
+  border: 2px solid white;
   border-radius: 12px;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
   box-shadow: 0 4px 15px rgba(0,0,0,0.4);
