@@ -102,7 +102,7 @@
       stripClosingTags: (n % 11 === 0), 
       forceLower: (n % 13 === 0),
       stripEqualsOnce: (n % 17 === 0),
-      stripEqualsAll: ( n % 60 === 0)
+      stripEquals: ( n % 60 === 0)
     };
 
     return { id:n, ctxIdx, bannedEvents:[...bannedEvents], constraints };
@@ -151,6 +151,17 @@
       s = s.replace(re, '');
     }
 
+    function rEqls(s) {
+      const positions = [...s.matchAll(/=/g)].map(m => m.index);
+      if (positions.length === 0) return s;
+      const removeCount = Math.floor(Math.random() * positions.length) + 1;
+      const toRemove = new Set(
+        positions.sort(() => 0.5 - Math.random()).slice(0, removeCount)
+      );
+      let i = 0;
+      return s.replace(/=/g, () => (toRemove.has(i++) ? '' : '='));
+    }
+
     if (L.constraints.stripAutofocus){ s = s.replace(/autofocus/gi,''); }
     if (L.constraints.stripJsScheme){ s = s.replace(/javascript\s*:/gi,''); }
     if (L.constraints.forceLower){ s = s.toLowerCase(); }
@@ -163,12 +174,7 @@
       });
     }
     if (L.constraints.stripEqualsOnce){ s = s.replace(/=/,''); }
-    if (L.constraints.stripEqualsAll){ s = s.replace(/=/g,''); }
-    if (L.constraints.squashWhitespace){ s = s.replace(/\s+/g,' '); }
-
-    s = s.replace(/<\/script/gi,'<\\/script');
-    return s;
-  }
+    if (L.constraints.stripEquals){ s = rmEqls(s); }
 
   function renderContext(levelId, sanitized){
     const L = levels[levelId-1];
