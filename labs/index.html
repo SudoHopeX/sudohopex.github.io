@@ -8,9 +8,8 @@
   <meta name="description" content="Explore SudoHopeX Labs for hands-on security vulnerability practice including XSS, SQL Injection, CSRF, and more. Learn with safe, educational challenges." />
   <meta name="keywords" content="security labs, xss labs, sql injection labs, csrf labs, web security practice, ethical hacking, vulnerability testing" />
   <meta name="author" content="SudoHopeX" />
-  <meta name="robots" content="index, follow" />
 
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SudoHopeX Labs - Security Vulnerability Practice Labs" />
   <meta property="og:description" content="Hands-on labs for XSS, SQLi, CSRF, and more. Learn ethical hacking and web security." />
@@ -25,91 +24,157 @@
   <meta name="twitter:image" content="https://sudohopex.github.io/assets/og-image.png" />
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    :root {
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --bg-header: #1f1f1f;
+      --primary: #00bcd4;
+      --text-main: #e0e0e0;
+      --text-muted: #999;
+      --radius: 10px;
+      --shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #121212;
-      color: #e0e0e0;
+      background: var(--bg-dark);
+      color: var(--text-main);
       margin: 0; padding: 0;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
+
     header {
-      background: #1f1f1f;
-      padding: 1.5rem 2rem;
+      background: var(--bg-header);
+      padding: 1.75rem 2rem;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow);
     }
     header h1 {
       margin: 0;
       font-weight: 700;
-      font-size: 2.4rem;
-      letter-spacing: 0.05em;
-      color: #00bcd4;
+      font-size: 2.6rem;
+      letter-spacing: 0.06em;
+      color: var(--primary);
       text-transform: uppercase;
       user-select: none;
     }
+
     main {
       flex-grow: 1;
-      max-width: 480px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      max-width: 600px;
+      margin: 2.5rem auto;
+      padding: 0 1.2rem;
     }
+
     ul {
       list-style: none;
-      padding-left: 0;
+      padding: 0;
+      margin: 0;
     }
     li {
-      background: #1e1e1e;
-      margin: 1rem 0;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      background: var(--bg-card);
+      margin: 1.2rem 0;
+      border-radius: var(--radius);
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: var(--shadow);
     }
     li:hover {
       background: #272727;
+      transform: translateY(-2px);
     }
     a {
       display: block;
-      padding: 1rem 1.5rem;
-      color: #00bcd4;
+      padding: 1.2rem 1.6rem;
+      color: var(--primary);
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       text-decoration: none;
       border-left: 4px solid transparent;
       transition: border-color 0.3s ease;
     }
     a:hover, a:focus {
-      border-left: 4px solid #00bcd4;
+      border-left: 4px solid var(--primary);
       outline: none;
     }
+
     footer {
-      background: #1f1f1f;
+      background: var(--bg-header);
       text-align: center;
-      padding: 1rem 2rem;
-      font-size: 0.875rem;
-      color: #999;
+      padding: 1.2rem 2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
       user-select: none;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.5);
     }
     footer a {
-      color: #00bcd4;
+      color: var(--primary);
       text-decoration: none;
+      font-weight: 600;
     }
     footer a:hover {
       text-decoration: underline;
     }
-    .disclaimer {
-      max-width: 480px;
-      margin: 1rem auto 0;
+    footer .disclaimer {
+      margin-top: 1rem;
       font-size: 0.9rem;
       color: #888;
-      line-height: 1.4;
+      line-height: 1.5;
       font-style: italic;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 500px;
       text-align: center;
-      user-select: none;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .modal-content p {
+      font-size: 1rem;
+      color: #ccc;
+      line-height: 1.6;
+    }
+    .close-btn {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.4rem;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .close-btn:hover {
+      background: #0097a7;
     }
   </style>
 </head>
@@ -126,15 +191,38 @@
       <li><a href="./csrf/" target="_blank" rel="noopener noreferrer">CSRF Labs</a></li>
       <li><a href="./xxe/" target="_blank" rel="noopener noreferrer">XXE Labs</a></li> -->
     </ul>
-
-    <div class="disclaimer">
-      ⚠️ <strong>Disclaimer:</strong> These labs are for educational purposes only. Use responsibly and never on unauthorized systems.
-    </div>
   </main>
 
   <footer>
-    © 2025 SudoHopeX — <a href="https://sudohopex.github.io" target="_blank" rel="noopener noreferrer">sudohopex.github.io</a>
+    © 2025 <strong>SudoHopeX</strong> — 
+    <a href="https://sudohopex.github.io" target="_blank" rel="noopener noreferrer">sudohopex.github.io</a>
+    <div class="disclaimer">
+      ⚠️ Disclaimer: These labs are for educational purposes only. Use responsibly and never on unauthorized systems.
+    </div>
   </footer>
+
+  <!-- Disclaimer Modal -->
+  <div class="modal" id="disclaimerModal">
+    <div class="modal-content">
+      <h2>⚠️ Disclaimer</h2>
+      <p>
+        These labs are provided for <em>educational purposes only</em>.  
+        Practice responsibly and never test vulnerabilities on unauthorized systems.
+      </p>
+      <button class="close-btn" id="closeModal">I Understand</button>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('disclaimerModal');
+      const closeBtn = document.getElementById('closeModal');
+      modal.classList.add('show');
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+      });
+    });
+  </script>
 
 </body>
 </html>
