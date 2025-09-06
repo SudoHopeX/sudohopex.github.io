@@ -141,17 +141,8 @@
       document.getElementById(`level-${L.id}`).classList.toggle('visible', L.id===v);
     }
   });
-
-  function applyBans(levelId, input){
-    const L = levels[levelId-1];
-    let s = String(input);
-
-    if (L.bannedEvents.length){
-      const re = new RegExp(`\\s(?:${L.bannedEvents.map(e=>e.replace(/on/,'on')).join('|')})\\s*=\\s*([^>\\s"']+|\"[^\"]*\"|'[^']*')`, 'gi');
-      s = s.replace(re, '');
-    }
-
-    function rEqls(s) {
+    
+  function rEqls(s) {
       const positions = [...s.matchAll(/=/g)].map(m => m.index);
       if (positions.length === 0) return s;
       const removeCount = Math.floor(Math.random() * positions.length) + 1;
@@ -161,7 +152,15 @@
       let i = 0;
       return s.replace(/=/g, () => (toRemove.has(i++) ? '' : '='));
     }
+    
+  function applyBans(levelId, input){
+    const L = levels[levelId-1];
+    let s = String(input);
 
+    if (L.bannedEvents.length){
+      const re = new RegExp(`\\s(?:${L.bannedEvents.map(e=>e.replace(/on/,'on')).join('|')})\\s*=\\s*([^>\\s"']+|\"[^\"]*\"|'[^']*')`, 'gi');
+      s = s.replace(re, '');
+    }
     if (L.constraints.stripAutofocus){ s = s.replace(/autofocus/gi,''); }
     if (L.constraints.stripJsScheme){ s = s.replace(/javascript\s*:/gi,''); }
     if (L.constraints.forceLower){ s = s.toLowerCase(); }
@@ -174,8 +173,8 @@
       });
     }
     if (L.constraints.stripEqualsOnce){ s = s.replace(/=/,''); }
-    if (L.constraints.stripEquals){ s = rmEqls(s); }
-
+    if (L.constraints.stripEquals){ s = rEqls(s); }
+  }
   function renderContext(levelId, sanitized){
     const L = levels[levelId-1];
     const tpl = CONTEXTS[L.ctxIdx] || CONTEXTS[0];
