@@ -27,14 +27,16 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     :root {
-      --bg-dark: #121212;
-      --bg-card: #1e1e1e;
-      --bg-header: #1f1f1f;
-      --primary: #00bcd4;
-      --text-main: #e0e0e0;
-      --text-muted: #999;
-      --radius: 10px;
-      --shadow: 0 4px 10px rgba(0,0,0,0.5);
+      --bg-dark: #0d0d12;
+      --bg-card: rgba(255, 255, 255, 0.05);
+      --bg-header: linear-gradient(135deg, #6a11cb, #2575fc);
+      --primary: #7b5fff;
+      --primary-hover: #9a7dff;
+      --text-main: #f2f2f7;
+      --text-muted: #aaa;
+      --radius: 12px;
+      --shadow: 0 8px 20px rgba(0,0,0,0.6);
+      --glow: 0 0 12px rgba(123, 95, 255, 0.6);
     }
 
     * { box-sizing: border-box; }
@@ -51,25 +53,32 @@
 
     header {
       background: var(--bg-header);
-      padding: 1.75rem 2rem;
+      padding: 2rem 2rem;
       text-align: center;
       box-shadow: var(--shadow);
+      animation: gradientShift 8s ease infinite alternate;
+      background-size: 200% 200%;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
     }
     header h1 {
       margin: 0;
       font-weight: 700;
       font-size: 2.6rem;
-      letter-spacing: 0.06em;
-      color: var(--primary);
+      letter-spacing: 0.05em;
+      color: #fff;
       text-transform: uppercase;
       user-select: none;
+      text-shadow: var(--glow);
     }
 
     main {
       flex-grow: 1;
-      max-width: 600px;
-      margin: 2.5rem auto;
-      padding: 0 1.2rem;
+      max-width: 640px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
     }
 
     ul {
@@ -79,38 +88,40 @@
     }
     li {
       background: var(--bg-card);
-      margin: 1.2rem 0;
+      backdrop-filter: blur(8px);
+      margin: 1.4rem 0;
       border-radius: var(--radius);
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
       box-shadow: var(--shadow);
     }
     li:hover {
-      background: #272727;
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--glow);
     }
     a {
       display: block;
-      padding: 1.2rem 1.6rem;
+      padding: 1.4rem 1.8rem;
       color: var(--primary);
       font-weight: 600;
       font-size: 1.25rem;
       text-decoration: none;
       border-left: 4px solid transparent;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, color 0.3s ease;
     }
     a:hover, a:focus {
       border-left: 4px solid var(--primary);
+      color: var(--primary-hover);
       outline: none;
     }
 
     footer {
-      background: var(--bg-header);
+      background: rgba(20,20,30,0.95);
       text-align: center;
-      padding: 1.2rem 2rem;
+      padding: 1.5rem 2rem;
       font-size: 0.9rem;
       color: var(--text-muted);
       user-select: none;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.5);
     }
     footer a {
       color: var(--primary);
@@ -119,11 +130,12 @@
     }
     footer a:hover {
       text-decoration: underline;
+      color: var(--primary-hover);
     }
     footer .disclaimer {
       margin-top: 1rem;
       font-size: 0.9rem;
-      color: #888;
+      color: #bbb;
       line-height: 1.5;
       font-style: italic;
     }
@@ -135,7 +147,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.75);
       z-index: 1000;
       opacity: 0;
       pointer-events: none;
@@ -147,24 +159,31 @@
     }
     .modal-content {
       background: var(--bg-card);
+      backdrop-filter: blur(12px);
       padding: 2rem;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       max-width: 500px;
       text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
     .modal-content h2 {
       margin-top: 0;
       color: var(--primary);
+      text-shadow: var(--glow);
     }
     .modal-content p {
       font-size: 1rem;
-      color: #ccc;
+      color: #ddd;
       line-height: 1.6;
     }
     .close-btn {
       margin-top: 1.5rem;
-      padding: 0.6rem 1.4rem;
+      padding: 0.7rem 1.6rem;
       border: none;
       background: var(--primary);
       color: #fff;
@@ -174,7 +193,7 @@
       transition: background 0.3s ease;
     }
     .close-btn:hover {
-      background: #0097a7;
+      background: var(--primary-hover);
     }
   </style>
 </head>
