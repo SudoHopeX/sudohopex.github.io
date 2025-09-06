@@ -42,13 +42,13 @@
   const COMMON_EVENTS = [
     'onclick','onerror','onload','onmouseover','onmouseenter','onmouseleave','onmousemove','onmouseout','oncontextmenu',
     'onfocus','onblur','onchange','oninput','onkeydown','onkeyup','onkeypress','onsubmit','onreset','ondblclick',
-    'onwheel','onscroll','onplay','onpause','onended','oncanplay','oncanplaythrough','onvolumechange'
+    'onwheel','onscroll','onplay','onpause','onended','oncanplay','oncanplaythrough','onvolumechange', 'onselect'
   ];
   const RARE_EVENTS = [
-    'onanimationstart','onanimationend','onanimationiteration','ontransitionstart','ontransitionend','ontransitionrun',
-    'onpointerdown','onpointerup','onpointermove','onpointerenter','onpointerleave','ongotpointercapture','onlostpointercapture',
+    'onanimationstart','onabort', 'onmouseup','onmousedown','onanimationend','onanimationiteration','ontransitionstart','ontransitionend',
+    'ontransitionrun', 'onpointerdown','onpointerup','onpointermove','onpointerenter','onpointerleave','ongotpointercapture',
     'ontouchstart','ontouchend','ontouchmove','oncopy','oncut','onpaste','ondrag','ondragstart','ondragend','ondragover','ondrop',
-    'ondurationchange','onratechange','onseeked','onseeking','onstalled','onsuspend','ontimeupdate','ontoggle','onabort'
+    'ondurationchange','onratechange','onseeked','onseeking','onstalled','onsuspend','ontimeupdate','ontoggle','onlostpointercapture'
   ];
 
 
@@ -88,7 +88,7 @@
 
         
     const banCountCommon = Math.floor(n/2); 
-    const banCountRare = Math.floor(n/4);
+    const banCountRare = Math.floor(n/2);
     const bannedEvents = new Set([
       ...COMMON_EVENTS.slice(0, banCountCommon),
       ...RARE_EVENTS.slice(0, banCountRare)
