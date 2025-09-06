@@ -40,6 +40,10 @@ fetch("https://badges-api-theta.vercel.app/api/linkedin")
   .then(data => {
     document.getElementById("followers").innerText = formatNumber(data.followers);
     document.getElementById("connections").innerText = formatNumber(data.connections);
+    if (data.cover_image) {
+      document.getElementById("linkedin-badge").style.background = 
+        `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${data.cover_image}) no-repeat center center`;
+    }
   })
   .catch(err => console.error(err));
 </script>
@@ -49,9 +53,7 @@ fetch("https://badges-api-theta.vercel.app/api/linkedin")
 .linkedin-badge {
   width: 322px;
   height: 80px;
-  background: 
-    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), /* black transparent overlay */
-    url('https://sudohopex.github.io/img/linkedin-bg.png') no-repeat center center;
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)); /* black transparent overlay */
   background-size: cover;
   color: white;
   border: 2px bold white;
