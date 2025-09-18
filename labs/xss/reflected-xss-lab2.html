@@ -28,8 +28,6 @@
   <div class="controls">
     <label for="levelSel">Level</label>
     <select id="levelSel"></select>
-    <button class="btn" id="saveProgress">Save Progress</button>
-    <button class="btn" id="loadProgress">Load Progress</button>
     <button class="btn" id="resetLab">Reset Lab</button>
   </div>
 
@@ -71,8 +69,6 @@
   const renderFrame = document.getElementById('renderFrame');
   const filterName = document.getElementById('filterName');
   const progressDisplay = document.getElementById('progressDisplay');
-  const saveProgressBtn = document.getElementById('saveProgress');
-  const loadProgressBtn = document.getElementById('loadProgress');
   const resetLabBtn = document.getElementById('resetLab');
   const copyUrlBtn = document.getElementById('copyUrlBtn');
 
@@ -167,8 +163,6 @@
     levelSel.addEventListener('change', updateUIForLevel);
     reflectBtn.addEventListener('click', ()=>reflect(false));
     reflectUnsafeBtn.addEventListener('click', ()=>reflect(true));
-    saveProgressBtn.addEventListener('click', ()=>{ const p = getProgress(); setProgress(p); alert('Progress saved'); });
-    loadProgressBtn.addEventListener('click', ()=>{ const p = getProgress(); applyProgress(p); alert('Progress loaded'); });
     resetLabBtn.addEventListener('click', resetLab);
     copyUrlBtn.addEventListener('click', copyReflectUrl);
 
