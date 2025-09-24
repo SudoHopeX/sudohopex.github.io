@@ -173,7 +173,7 @@
     </div>
 
     <h2 style="margin-top: 40px; color: #00bcd4;">XSS Labs & Challenges by SudoHopeX </h2>
-    <ul class="lab-list" aria-live="polite" aria-relevant="additions removals">
+    <ol class="lab-list" aria-live="polite" aria-relevant="additions removals">
       <li data-category="basic js"><strong>LAB 01 - </strong> <a href="xss-js-lab1.html" target="_blank" rel="noopener noreferrer">Practice Basic JavaScript Functions by SudoHopeX</a></li>
       <li data-category="reflected html js"><strong>LAB 02 - </strong> <a href="reflected-xss-lab1.html" target="_blank" rel="noopener noreferrer">Practice HTML & JS Payloads by SudoHopeX</a></li>
       <li data-category="challenge"><strong>LAB 03 - </strong> <a href="xss-challenge-lab1.html" target="_blank" rel="noopener noreferrer">XSS Challenge Lab by SudoHopeX</a></li>
@@ -183,18 +183,171 @@
       <li data-category="reflected stored dom csp svg url"><strong>LAB 07 - </strong> <a href="xss-mixed-lab.html" target="_blank" rel="noopener noreferrer">XSS Mixed Lab - Reflected/Stored/DOM/CSP/SVG/URL ( 50 Levels )</a></li>
       <li data-category="reflected"><strong>LAB 08 - </strong> <a href="reflected-xss-lab2.html" target="_blank" rel="noopener noreferrer">Reflected XSS Lab 2 ( 50 Levels )</a></li>
       <li data-category="stored"><strong>LAB 09 - </strong> <a href="reflected-xss-lab2.html" target="_blank" rel="noopener noreferrer">Server Side (Stored ) Lab ( 20 Levels )</a></li>
-
-    </ul>
+    </ol>
     
 
-    <h2 style="margin-top: 40px; color: #00bcd4;">Other XSS Labs & Challenges</h2>
+    <h2 style="margin-top: 40px; color: #00bcd4;">Other XSS Labs</h2>
+    <ol class="lab-list" id="other-labs">
+      <li data-category="basic"><strong>TryHackMe - </strong> <a href="https://tryhackme.com/room/axss" target="_blank" rel="noopener noreferrer">TryHackMe Basic XSS Lab 01</a></li>
+
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Solved" title="Reflected XSS into HTML context with nothing encoded">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded" target="_blank" rel="noopener noreferrer">Reflected XSS into HTML context with nothing encoded</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Solved" title="Stored XSS into HTML context with nothing encoded">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/stored/lab-html-context-nothing-encoded" target="_blank" rel="noopener noreferrer">Stored XSS into HTML context with nothing encoded</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="DOM XSS in document.write sink using source location.search">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-document-write-sink" target="_blank" rel="noopener noreferrer">DOM XSS in document.write sink using source location.search</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="DOM XSS in innerHTML sink using source location.search">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-innerhtml-sink" target="_blank" rel="noopener noreferrer">DOM XSS in innerHTML sink using source location.search</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="DOM XSS in jQuery anchor href attribute sink using location.search source">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-jquery-href-attribute-sink" target="_blank" rel="noopener noreferrer">DOM XSS in jQuery anchor href attribute sink using location.search source</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="DOM XSS in jQuery selector sink using a hashchange event">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-jquery-selector-hash-change-event" target="_blank" rel="noopener noreferrer">DOM XSS in jQuery selector sink using a hashchange event</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="Reflected XSS into attribute with angle brackets HTML-encoded">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-attribute-angle-brackets-html-encoded" target="_blank" rel="noopener noreferrer">Reflected XSS into attribute with angle brackets HTML-encoded</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="Stored XSS into anchor href attribute with double quotes HTML-encoded">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-href-attribute-double-quotes-html-encoded" target="_blank" rel="noopener noreferrer">Stored XSS into anchor href attribute with double quotes HTML-encoded</a>
+      </li>
+    
+      <li data-category="basic" data-lab-level="APPRENTICE" data-status="Not solved" title="Reflected XSS into a JavaScript string with angle brackets HTML encoded">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-javascript-string-angle-brackets-html-encoded" target="_blank" rel="noopener noreferrer">Reflected XSS into a JavaScript string with angle brackets HTML encoded</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="DOM XSS in document.write sink using source location.search inside a select element">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-document-write-sink-inside-select-element" target="_blank" rel="noopener noreferrer">DOM XSS in document.write sink using source location.search inside a select element</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-angularjs-expression" target="_blank" rel="noopener noreferrer">DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected DOM XSS">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected" target="_blank" rel="noopener noreferrer">Reflected DOM XSS</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Stored DOM XSS">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored" target="_blank" rel="noopener noreferrer">Stored DOM XSS</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS into HTML context with most tags and attributes blocked">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-html-context-with-most-tags-and-attributes-blocked" target="_blank" rel="noopener noreferrer">Reflected XSS into HTML context with most tags and attributes blocked</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS into HTML context with all tags blocked except custom ones">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-html-context-with-all-standard-tags-blocked" target="_blank" rel="noopener noreferrer">Reflected XSS into HTML context with all tags blocked except custom ones</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS with some SVG markup allowed">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-some-svg-markup-allowed" target="_blank" rel="noopener noreferrer">Reflected XSS with some SVG markup allowed</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS in canonical link tag">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-canonical-link-tag" target="_blank" rel="noopener noreferrer">Reflected XSS in canonical link tag</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS into a JavaScript string with single quote and backslash escaped">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-javascript-string-single-quote-backslash-escaped" target="_blank" rel="noopener noreferrer">Reflected XSS into a JavaScript string with single quote and backslash escaped</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS into a JavaScript string with angle brackets and double quotes HTML-encoded and single quotes escaped">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-javascript-string-angle-brackets-double-quotes-encoded-single-quotes-escaped" target="_blank" rel="noopener noreferrer">Reflected XSS into a JavaScript string with angle brackets and double quotes HTML-encoded and single quotes escaped</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Stored XSS into onclick event with angle brackets and double quotes HTML-encoded and single quotes and backslash escaped">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-onclick-event-angle-brackets-double-quotes-html-encoded-single-quotes-backslash-escaped" target="_blank" rel="noopener noreferrer">Stored XSS into onclick event with angle brackets and double quotes HTML-encoded and single quotes and backslash escaped</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Reflected XSS into a template literal with angle brackets, single, double quotes, backslash and backticks Unicode-escaped">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-javascript-template-literal-angle-brackets-single-double-quotes-backslash-backticks-escaped" target="_blank" rel="noopener noreferrer">Reflected XSS into a template literal with angle brackets, single, double quotes, backslash and backticks Unicode-escaped</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Exploiting cross-site scripting to steal cookies">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies" target="_blank" rel="noopener noreferrer">Exploiting cross-site scripting to steal cookies</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Exploiting cross-site scripting to capture passwords">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-capturing-passwords" target="_blank" rel="noopener noreferrer">Exploiting cross-site scripting to capture passwords</a>
+      </li>
+    
+      <li data-category="intermediate" data-lab-level="PRACTITIONER" data-status="Not solved" title="Exploiting XSS to bypass CSRF defenses">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf" target="_blank" rel="noopener noreferrer">Exploiting XSS to bypass CSRF defenses</a>
+      </li>
+    
+      <li data-category="expert" data-lab-level="EXPERT" data-status="Not solved" title="Reflected XSS with AngularJS sandbox escape without strings">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/client-side-template-injection/lab-angular-sandbox-escape-without-strings" target="_blank" rel="noopener noreferrer">Reflected XSS with AngularJS sandbox escape without strings</a>
+      </li>
+    
+      <li data-category="expert" data-lab-level="EXPERT" data-status="Not solved" title="Reflected XSS with AngularJS sandbox escape and CSP">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/client-side-template-injection/lab-angular-sandbox-escape-and-csp" target="_blank" rel="noopener noreferrer">Reflected XSS with AngularJS sandbox escape and CSP</a>
+      </li>
+    
+      <li data-category="expert" data-lab-level="EXPERT" data-status="Not solved" title="Reflected XSS with event handlers and href attributes blocked">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-event-handlers-and-href-attributes-blocked" target="_blank" rel="noopener noreferrer">Reflected XSS with event handlers and href attributes blocked</a>
+      </li>
+    
+      <li data-category="expert" data-lab-level="EXPERT" data-status="Not solved" title="Reflected XSS in a JavaScript URL with some characters blocked">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/contexts/lab-javascript-url-some-characters-blocked" target="_blank" rel="noopener noreferrer">Reflected XSS in a JavaScript URL with some characters blocked</a>
+      </li>
+    
+      <li data-category="expert" data-lab-level="EXPERT" data-status="Not solved" title="Reflected XSS protected by very strict CSP, with dangling markup attack">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/content-security-policy/lab-very-strict-csp-with-dangling-markup-attack" target="_blank" rel="noopener noreferrer">Reflected XSS protected by very strict CSP, with dangling markup attack</a>
+      </li>
+    
+      <li data-category="expert" data-lab-level="EXPERT" data-status="Not solved" title="Reflected XSS protected by CSP, with CSP bypass">
+        <strong>Portswigger LAB - </strong>
+        <a href="https://portswigger.net/web-security/cross-site-scripting/content-security-policy/lab-csp-bypass" target="_blank" rel="noopener noreferrer">Reflected XSS protected by CSP, with CSP bypass</a>
+      </li>      
+    </ol>
+
+     <h2 style="margin-top: 40px; color: #00bcd4;">XSS Challenges</h2>
     <ul class="lab-list" id="other-labs">
-      <li data-category="challenge"><strong>LAB 01 - </strong> <a href="https://xss-game.appspot.com/level1" target="_blank" rel="noopener noreferrer">Google XSS Game</a></li>
-      <li data-category="challenge"><strong>LAB 02 - </strong> <a href="https://alf.nu/alert1?world=alert&level=alert0" target="_blank" rel="noopener noreferrer">Alf.nu XSS Game</a></li>
-      <li data-category="basic"><strong>LAB 03 - </strong> <a href="https://tryhackme.com/room/axss" target="_blank" rel="noopener noreferrer">TryHackMe Basic XSS Lab 01</a></li>
-      <li data-category="reflected"><strong>LAB 04 - </strong> <a href="https://portswigger.net/web-security/cross-site-scripting/reflected/lab-html-context-nothing-encoded" target="_blank" rel="noopener noreferrer">Portswigger Basic Reflected XSS Lab</a></li>
-      <li data-category="challenge"><strong>LAB 05 - </strong> <a href="https://xss-labs.abay.sh/xss/" target="_blank" rel="noopener noreferrer">Code Latte XSS Lab</a></li>
+      <li data-category="challenge"><strong>Challenge 01 - </strong> <a href="https://xss-game.appspot.com/level1" target="_blank" rel="noopener noreferrer">Google XSS Game</a></li>
+      <li data-category="challenge"><strong>Challenge 02 - </strong> <a href="https://alf.nu/alert1?world=alert&level=alert0" target="_blank" rel="noopener noreferrer">Alf.nu XSS Game</a></li>
+      <li data-category="challenge"><strong>Challenge 03 - </strong> <a href="https://xss-labs.abay.sh/xss/" target="_blank" rel="noopener noreferrer">Code Latte XSS Lab</a></li>
     </ul>
+    
 
     <div class="footer">
       Hosted at: <code>https://sudohopex.github.io/labs/xss/</code><br />
