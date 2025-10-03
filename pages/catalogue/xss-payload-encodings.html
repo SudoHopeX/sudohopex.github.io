@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS Payload Encodings Resource</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb; /* Light background */
+        }
+        /* Custom Teal Accent */
+        .accent-teal {
+            color: #0d9488; /* Tailwind teal-600 */
+        }
+        .bg-accent-teal-light {
+            background-color: #ccfbf1; /* Tailwind teal-100 */
+        }
+        .hover\:bg-teal-700:hover {
+            background-color: #0f766e;
+        }
+        .code-box {
+            background-color: #1f2937; /* Gray-800 for code background */
+            color: #d1d5db; /* Light gray text */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Navigation Back Button: Condensed to a single line to prevent parser errors -->
+        <a href="/pages/catalogue/" class="inline-flex items-center text-teal-600 hover:text-teal-800 transition-colors mb-8 font-medium"><span class="text-lg mr-1 leading-none">&larr;</span>Back to Resource Index</a>
+
+        <!-- Header Section -->
+        <header class="text-center mb-10 py-4 border-b border-gray-200">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
+                XSS Payload Encodings Guide
+            </h1>
+            <p class="mt-3 text-lg text-gray-500 max-w-3xl mx-auto">
+                Techniques to obfuscate malicious JavaScript payloads, bypassing filters and WAFs. Understanding these methods is key for both defense and offense.
+            </p>
+        </header>
+
+        <!-- Content Sections Grid -->
+        <main class="space-y-8">
+
+            <!-- Encoding Type 1: HTML Entity Encoding -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="text-3xl accent-teal mr-2">&amp;</span> HTML Entity Encoding
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    Uses numerical (decimal or hexadecimal) representations of characters. This is often effective in `&lt;script&gt;` tags when HTML parsers decode entities before the JavaScript engine executes the code.
+                </p>
+                <div class="code-box">
+                    <p>// Original Payload (Alert)</p>
+                    <code class="block whitespace-pre-wrap mb-4">&lt;script&gt;alert(1)&lt;/script&gt;</code>
+                    <p>// Encoded Version (Decimal)</p>
+                    <code class="block whitespace-pre-wrap mb-4">&lt;scr&amp;#105;pt&gt;&amp;#97;lert(1)&lt;/scr&amp;#105;pt&gt;</code>
+                    <p>// Encoded Version (Hexadecimal)</p>
+                    <code class="block whitespace-pre-wrap">&lt;scr&amp;#x69;pt&gt;&amp;#x61;lert(1)&lt;/scr&amp;#x69;pt&gt;</code>
+                </div>
+            </div>
+
+            <!-- Encoding Type 2: URL Encoding (Percent Encoding) -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="text-3xl accent-teal mr-2">%</span> URL Encoding (Percent)
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    Replaces unsafe ASCII characters with a '%' followed by the two-digit hexadecimal value. This is typically used in the URL bar, but can also be relevant when data is reflected in a context that requires URL decoding first (e.g., within `href` attributes).
+                </p>
+                <div class="code-box">
+                    <p>// Original Payload (Alert)</p>
+                    <code class="block whitespace-pre-wrap mb-4">alert(1)</code>
+                    <p>// Encoded Version (Basic)</p>
+                    <code class="block whitespace-pre-wrap mb-4">%61%6C%65%72%74%28%31%29</code>
+                    <p>// Double Encoded (useful for testing WAF bypasses)</p>
+                    <code class="block whitespace-pre-wrap">%2561%256C%2565%2572%2574%2528%2531%2529</code>
+                </div>
+            </div>
+
+            <!-- Encoding Type 3: JavaScript String Encoding (Octal/Hex/Unicode) -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="text-3xl accent-teal mr-2">\</span> JavaScript String Escapes
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    JavaScript allows characters inside strings to be represented using octal (`\xxx`), hexadecimal (`\x`), or Unicode (`\u`) escape sequences. This is often used when the payload is injected *inside* an existing JavaScript block.
+                </p>
+                <div class="code-box">
+                    <p>// Example: `var x = "PAYLOAD";`</p>
+                    <p>// Encoded using Hex (`\x`) - Target: `alert(1)`</p>
+                    <code class="block whitespace-pre-wrap mb-4">\x61\x6c\x65\x72\x74\x28\x31\x29</code>
+                    <p>// Encoded using Unicode (`\u`) - Target: `alert(1)`</p>
+                    <code class="block whitespace-pre-wrap mb-4">\u0061\u006c\u0065\u0072\u0074\u0028\u0031\u0029</code>
+                    <p>// Encoded using Octal - Target: `alert(1)`</p>
+                    <code class="block whitespace-pre-wrap">\141\154\145\162\164\050\061\051</code>
+                </div>
+            </div>
+
+            <!-- Useful Encoding Tools -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 accent-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.526.323 1.144.382 1.724.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Useful Encoding Tools
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    Leverage these powerful, open-source tools to quickly encode and decode payloads for testing and analysis:
+                </p>
+                <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>
+                        <a href="https://gchq.github.io/CyberChef/" target="_blank" class="accent-teal font-semibold hover:text-teal-800 transition-colors">CyberChef (GCHQ)</a>: A "Swiss Army Knife" for web cryptography and encoding, featuring a massive library of operations.
+                    </li>
+                    <li>
+                        <a href="https://portswigger.net/burp/community" target="_blank" class="accent-teal font-semibold hover:text-teal-800 transition-colors">Burp Suite Decoder</a>: Integrated into the Burp Suite framework, essential for manually encoding/decoding data for proxy testing.
+                    </li>
+                    <li>
+                        <a href="https://www.url-encode-decode.com/" target="_blank" class="accent-teal font-semibold hover:text-teal-800 transition-colors">Online URL Encoder/Decoder</a>: Simple web-based utility for quick URL (percent) and base64 encoding/decoding operations.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Notes and Caution -->
+            <div class="bg-teal-50 p-6 rounded-xl shadow-md border border-teal-200">
+                <h2 class="text-xl font-bold accent-teal mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856a2 2 0 001.938-2V7a2 2 0 00-1.938-2H5.082a2 2 0 00-1.938 2v10a2 2 0 001.938 2z" />
+                    </svg>
+                    Important Note on Decoders
+                </h2>
+                <p class="text-gray-700 text-sm">
+                    Effective XSS requires understanding which context (HTML, URL, JavaScript) the payload is being reflected into, and how many times the browser or server will decode the input before interpretation. Often, double or triple encoding is necessary to bypass certain security controls.
+                </p>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>
