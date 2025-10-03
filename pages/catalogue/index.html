@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Resource Catalogue Index</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb; /* Light background */
+        }
+        /* Custom Teal Accent */
+        .accent-teal {
+            color: #0d9488; /* Tailwind teal-600 */
+        }
+        .bg-accent-teal-light {
+            background-color: #ccfbf1; /* Tailwind teal-100 */
+        }
+        .hover\:bg-teal-700:hover {
+            background-color: #0f766e;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12 py-6 border-b border-gray-200">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
+                Security Resource & Tool Catalogue
+            </h1>
+            <p class="mt-3 text-lg text-gray-500 max-w-2xl mx-auto">
+                Select a resource guide below to find cheat sheets, payload encodings, and common mitigation code snippets for various security concepts.
+            </p>
+        </header>
+
+        <!-- Catalogue Grid -->
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Resource 1: HTML Event Handlers for XSS-->
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 border-t-4 border-teal-500">
+                <div class="flex items-center mb-4">
+                    <span class="p-3 rounded-full bg-accent-teal-light accent-teal">
+                        <!-- Icon Placeholder for Script/Code -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </span>
+                    <h2 class="ml-4 text-xl font-bold text-gray-900">HTML Event Handlers for XSS</h2>
+                </div>
+                <p class="text-gray-600 mb-6 text-sm">
+                    A comprehensive guide to various Event Handlers / attributes ( e.g. onmouseover, onanimationstart, oninput, etc.) that can be used for xss payloads.
+                </p>
+                <a href="xss-event-handlers.html" class="inline-block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-md">
+                    View Resource
+                </a>
+            </div>
+
+            <!-- Resource 2: XSS Payload Encodings -->
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 border-t-4 border-teal-500">
+                <div class="flex items-center mb-4">
+                    <span class="p-3 rounded-full bg-accent-teal-light accent-teal">
+                        <!-- Icon Placeholder for Script/Code -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </span>
+                    <h2 class="ml-4 text-xl font-bold text-gray-900">XSS Payload Encodings</h2>
+                </div>
+                <p class="text-gray-600 mb-6 text-sm">
+                    A comprehensive guide to various encoding techniques (HTML entities, URL encoding, Hex, etc.) used to bypass input filters and Web Application Firewalls (WAFs).
+                </p>
+                <a href="xss-payload-encodings.html" class="inline-block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-md">
+                    View Resource
+                </a>
+            </div>
+
+            <!-- Resource 3: SQLi Cheat Sheet -->
+<!--            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 border-t-4 border-teal-500">-->
+<!--                <div class="flex items-center mb-4">-->
+<!--                    <span class="p-3 rounded-full bg-accent-teal-light accent-teal">-->
+<!--                        &lt;!&ndash; Icon Placeholder for SQL &ndash;&gt;-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10m0 0h3m-3 0h-3m3 0a3 3 0 003-3V7a3 3 0 00-3-3m0 3h7m-7 0a3 3 0 013-3h7a3 3 0 013 3v7a3 3 0 01-3 3h-7a3 3 0 01-3-3V7a3 3 0 013-3h7" />-->
+<!--                        </svg>-->
+<!--                    </span>-->
+<!--                    <h2 class="ml-4 text-xl font-bold text-gray-900">SQLi Command Reference</h2>-->
+<!--                </div>-->
+<!--                <p class="text-gray-600 mb-6 text-sm">-->
+<!--                    A quick reference for common injectable commands, union attacks, time-based techniques, and typical error-based injection strings for various database types.-->
+<!--                </p>-->
+<!--                <a href="./sqli-cheat-sheet.html" class="inline-block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-md">-->
+<!--                    View Resource-->
+<!--                </a>-->
+<!--            </div>-->
+
+            <!-- Resource 4: CSRF Mitigation Code Snippets -->
+<!--            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 border-t-4 border-teal-500">-->
+<!--                <div class="flex items-center mb-4">-->
+<!--                    <span class="p-3 rounded-full bg-accent-teal-light accent-teal">-->
+<!--                        &lt;!&ndash; Icon Placeholder for Lock/Key &ndash;&gt;-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2v5.5a3.5 3.5 0 00-3.5 3.5h-5a3.5 3.5 0 00-3.5-3.5V9a2 2 0 012-2h7zM15 7V4a2 2 0 00-2-2H9a2 2 0 00-2 2v3" />-->
+<!--                        </svg>-->
+<!--                    </span>-->
+<!--                    <h2 class="ml-4 text-xl font-bold text-gray-900">CSRF Mitigation Snippets</h2>-->
+<!--                </div>-->
+<!--                <p class="text-gray-600 mb-6 text-sm">-->
+<!--                    Ready-to-use code examples (in Python, JS, etc.) for implementing synchronizer tokens, utilizing SameSite cookies, and checking the Referer/Origin headers.-->
+<!--                </p>-->
+<!--                <a href="./csrf-mitigation-snippets.html" class="inline-block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-md">-->
+<!--                    View Resource-->
+<!--                </a>-->
+<!--            </div>-->
+
+            <!-- Resource 5: Authentication Best Practices -->
+<!--            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 border-t-4 border-teal-500">-->
+<!--                <div class="flex items-center mb-4">-->
+<!--                    <span class="p-3 rounded-full bg-accent-teal-light accent-teal">-->
+<!--                        &lt;!&ndash; Icon Placeholder for User/Identity &ndash;&gt;-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                          <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+<!--                        </svg>-->
+<!--                    </span>-->
+<!--                    <h2 class="ml-4 text-xl font-bold text-gray-900">Authentication Best Practices</h2>-->
+<!--                </div>-->
+<!--                <p class="text-gray-600 mb-6 text-sm">-->
+<!--                    Guidelines and implementation steps for modern password hashing (Argon2, bcrypt), secure session management, and implementing strong Multi-Factor Authentication (MFA).-->
+<!--                </p>-->
+<!--                <a href="./authn-best-practices.html" class="inline-block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-md">-->
+<!--                    View Resource-->
+<!--                </a>-->
+<!--            </div>-->
+
+            <!-- Resource 6: Input Validation & Sanitization Libraries -->
+<!--            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 border-t-4 border-teal-500">-->
+<!--                <div class="flex items-center mb-4">-->
+<!--                    <span class="p-3 rounded-full bg-accent-teal-light accent-teal">-->
+<!--                        &lt;!&ndash; Icon Placeholder for Object/Resource &ndash;&gt;-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-2.185-2.185M12 17.5a.5.5 0 110-1 .5.5 0 010 1zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />-->
+<!--                        </svg>-->
+<!--                    </span>-->
+<!--                    <h2 class="ml-4 text-xl font-bold text-gray-900">Validation Library List</h2>-->
+<!--                </div>-->
+<!--                <p class="text-gray-600 mb-6 text-sm">-->
+<!--                    A curated list of trusted, language-specific libraries for input validation, output encoding, and data sanitization, covering major frameworks.-->
+<!--                </p>-->
+<!--                <a href="./validation-libraries.html" class="inline-block w-full text-center bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors shadow-md">-->
+<!--                    View Resource-->
+<!--                </a>-->
+<!--            </div>-->
+
+            <!-- Card 7: Upcoming Resource Placeholder -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-dashed border-2 border-gray-300 flex flex-col items-center justify-center text-center">
+                <span class="p-3 rounded-full bg-gray-100 text-gray-500 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+                <h2 class="text-xl font-bold text-gray-400">Add New Resource</h2>
+                <p class="text-gray-400 mt-2 text-sm">
+                    Plan your next resource, such as tools, testing methodologies, or general security guides.
+                </p>
+                <button disabled class="mt-4 w-full bg-gray-300 text-gray-600 py-3 rounded-lg font-semibold cursor-not-allowed">
+                    Coming Soon
+                </button>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>
