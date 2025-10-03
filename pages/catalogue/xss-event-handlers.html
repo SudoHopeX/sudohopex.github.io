@@ -330,7 +330,13 @@
                     <div className="max-w-7xl mx-auto">
 
                         {/* Minimalist Header (Adjusted Padding) */}
-                        <header className="py-8 mb-6 border-b border-gray-200">
+                        <header className="py-0 mb-6 border-b border-gray-200">
+
+                            {/* Navigation Back Button: Condensed to a single line to prevent parser errors */}
+                            <a href="/pages/catalogue/" className="inline-flex items-center text-teal-600 hover:text-teal-800 transition-colors mb-2 mt-2 font-medium">
+                                <span class="text-lg mr-1 leading-none">&larr;</span> Back to Resource Index
+                            </a>
+
                             <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
                                 <span className="text-accent-teal mr-2">/</span> XSS Ethical Pentesting Event Handler Catalog
                             </h1>
@@ -432,7 +438,7 @@
                         <footer className="mt-20 pt-8 border-t border-gray-200 text-sm text-gray-500 text-center">
                             <p className="mt-4 text-xs font-semibold text-gray-800 text-center text-gray-500 text-sm">
                                 Event Handler Catalog | {HANDLERS.length} Handlers |
-                                Developed for Ethical Hacking Pentesting| by <a href="https://sudohopex.github.io/"> SudoHopeX </a>
+                                Developed for Ethical Hacking & Pentesting | by <a href="https://sudohopex.github.io/"> SudoHopeX </a>
                             </p>
                         </footer>
                     </div>
