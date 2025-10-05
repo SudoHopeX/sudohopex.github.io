@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easily Document Ethical Hacking Writeups - SudoHopeX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* Custom scrollbar for a sleek look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* Dark gray */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; /* Medium gray */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* Light gray on hover */
+        }
+        /* Style for the 'Lab Details' section to prevent cutting off in PDF */
+        #lab-details-container {
+            padding: 2rem;
+            background-color: #1f2937; /* Darker background for the output area */
+            color: #f3f4f6;
+        }
+        /* Specific styling for <pre> to handle code blocks */
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: #111827; /* Extra dark background for code */
+            color: #facc15; /* Yellow text for code */
+            overflow-x: auto; /* Handle long lines gracefully */
+        }
+        .textarea-code {
+            font-family: monospace;
+            background-color: #111827 !important;
+            color: #facc15 !important;
+        }
+        .section-header {
+            border-bottom: 2px solid #374151;
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-extrabold text-indigo-400 mb-6 border-b border-indigo-500 pb-2">Easily Document E-Hacking Writeup's</h1>
+        <p class="text-gray-400 mb-4">Document your ethical hacking writeup. Data is automatically saved to Browser Local Storage until Cleared.</p>
+        <p class="text-green-300 mb-4">Spend more time on Hacking, less on documenting.</p>
+        <p class="font-mono text-yellow-300 mb-4">Happy Hacking 😉 ~ SudoHopeX</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <div id="input-form" class="lg:col-span-2 space-y-6 bg-gray-800 p-6 rounded-xl shadow-2xl">
+                <h2 class="text-2xl font-semibold text-indigo-300">Writeup Details Input</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="lab-name" placeholder="Lab Name (e.g., XSS Stored Lab #1)" class="p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400">
+
+                    <div>
+                        <select id="lab-category" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="XSS">XSS (Cross-Site Scripting)</option>
+                            <option value="SQLi">SQLi (SQL Injection)</option>
+                            <option value="IDOR">IDOR (Insecure Direct Object Reference)</option>
+                            <option value="CSRF">CSRF (Cross-Site Request Forgery)</option>
+                            <option value="LFI_RFI">LFI/RFI (Local/Remote File Inclusion)</option>
+                            <option value="Command Injection">Command Injection</option>
+                            <option value="Business Logic">Business Logic</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <input type="text" id="lab-category-custom" placeholder="Type custom category name..." class="mt-2 p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 hidden">
+                    </div>
+
+                </div>
+
+                <input type="url" id="lab-link" placeholder="Lab Link (e.g., https://portswigger.net/...)" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400">
+                <input type="text" id="vulnerable-point" placeholder="Vulnerable Point (e.g., Comment field in blog post)" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400">
+                <input type="text" id="lab-domain" placeholder="Final Lab Domain Verification (e.g., /admin-panel/delete-user)" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400">
+
+
+                <textarea id="scope" placeholder="Scope & Target: Briefly describe the lab's scope and target application." rows="3" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"></textarea>
+
+                <textarea id="tried" placeholder="What is Tried: All attempts, failed payloads, and methodology. (Markdown accepted)" rows="5" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"></textarea>
+
+                <textarea id="worked" placeholder="What Worked: The exact steps and observations that led to success." rows="5" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"></textarea>
+
+                <textarea id="not-worked" placeholder="What Not Worked: Specific failures that helped narrow down the solution." rows="3" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"></textarea>
+
+                <textarea id="final-payload" placeholder="Final Payload" rows="4" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 textarea-code"></textarea>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <button id="clear-data" class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition duration-200 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                        Clear All Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-gray-800 p-6 rounded-xl shadow-2xl top-8">
+                    <h2 class="text-2xl font-semibold text-indigo-300 mb-4">Export Options</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="export-pdf" class="col-span-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition duration-200 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4V3a1 1 0 00-1-1H3a1 1 0 000 2h1v12a2 2 0 002 2h8a2 2 0 002-2V4h1a1 1 0 100-2h-1V3a1 1 0 00-1-1H5zm10 2H5v10h10V6zM7 9a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
+                            Export to PDF
+                        </button>
+                        <button id="export-txt" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition duration-200">Export .TXT</button>
+                        <button id="export-md" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition duration-200">Export .MD</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-xl shadow-2xl">
+                    <h2 class="text-2xl font-semibold text-indigo-300 mb-4">Live Preview</h2>
+                    <div id="lab-details-container" class="border border-gray-700 rounded-lg">
+                        <h2 id="preview-lab-name" class="text-3xl font-bold text-indigo-300 mb-2">Lab Writeup Title</h2>
+                        <p id="preview-lab-category" class="text-lg text-gray-400 mb-4 font-mono"></p>
+
+                        <div class="mb-4">
+                            <strong class="text-indigo-400">Lab Link:</strong> <a id="preview-lab-link" target="_blank" class="text-blue-400 hover:underline"></a>
+                        </div>
+
+                        <h3 class="section-header text-xl font-semibold">Scope & Target</h3>
+                        <p id="preview-scope" class="whitespace-pre-wrap"></p>
+
+                        <h3 class="section-header text-xl font-semibold">Vulnerable Point</h3>
+                        <p id="preview-vulnerable-point" class="whitespace-pre-wrap font-mono text-yellow-300"></p>
+
+                        <h3 class="section-header text-xl font-semibold">What is Tried (Methodology)</h3>
+                        <p id="preview-tried" class="whitespace-pre-wrap"></p>
+
+                        <h3 class="section-header text-xl font-semibold">What Not Worked (Key Failures)</h3>
+                        <p id="preview-not-worked" class="whitespace-pre-wrap"></p>
+
+                        <h3 class="section-header text-xl font-semibold">What Worked (Success Steps)</h3>
+                        <p id="preview-worked" class="whitespace-pre-wrap"></p>
+
+                        <h3 class="section-header text-xl font-semibold">Final Payload</h3>
+                        <pre id="preview-final-payload" class="text-sm"></pre>
+
+                        <h3 class="section-header text-xl font-semibold">Scope Verification</h3>
+                        <p id="preview-lab-domain" class="whitespace-pre-wrap font-mono text-green-400"></p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        const FIELDS = [
+            'lab-name', 'lab-category', 'lab-category-custom', 'lab-link',
+            'scope', 'vulnerable-point', 'tried', 'worked', 'not-worked',
+            'final-payload', 'lab-domain'
+        ];
+
+        // --- Utility Functions ---
+
+        /**
+         * Cleans a string for safe use in filenames.
+         * @param {string} str
+         * @returns {string} Cleaned string
+         */
+        function slugify(str) {
+            return str
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, '') // Remove non-word chars
+                .replace(/[\s_-]+/g, '-') // Replace spaces and hyphens with a single hyphen
+                .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+        }
+
+        /**
+         * Converts the form data into a plain text string.
+         * @returns {string}
+         */
+        function getPlainTextWriteup() {
+            const data = getFormData();
+
+            let text = `
+==================================================
+LAB WRITEUP: ${data['lab-name'] || 'N/A'}
+==================================================
+Category: ${data['lab-category'] || 'N/A'}
+Lab Link: ${data['lab-link'] || 'N/A'}
+
+[+] Scope & Target
+--------------------------------------------------
+${data.scope || 'No scope provided.'}
+
+[+] Vulnerable Point
+--------------------------------------------------
+${data['vulnerable-point'] || 'No vulnerable point identified.'}
+
+[+] What is Tried (Methodology)
+--------------------------------------------------
+${data.tried || 'No attempts recorded.'}
+
+[+] What Not Worked (Key Failures)
+--------------------------------------------------
+${data['not-worked'] || 'No failures recorded.'}
+
+[+] What Worked (Success Steps)
+--------------------------------------------------
+${data.worked || 'No success steps recorded.'}
+
+[+] Final Payload
+--------------------------------------------------
+${data['final-payload'] || 'No final payload.'}
+
+[+] Final Lab Verification
+--------------------------------------------------
+${data['lab-domain'] || 'No verification path recorded.'}
+`;
+            return text.trim();
+        }
+
+        /**
+         * Converts the form data into a Markdown string.
+         * @returns {string}
+         */
+        function getMarkdownWriteup() {
+            const data = getFormData();
+
+            let markdown = `
+# ${data['lab-name'] || 'Lab Writeup Title'}
+
+**Category:** ${data['lab-category'] || 'N/A'}
+**Lab Link:** [${data['lab-link'] || 'N/A'}](${data['lab-link'] || '#'})
+
+---
+
+## 🎯 Scope & Target
+${data.scope || '*No scope provided.*'}
+
+## 📍 Vulnerable Point
+\`${data['vulnerable-point'] || 'No vulnerable point identified.'}\`
+
+---
+
+## 📝 What is Tried (Methodology)
+${data.tried || '*No attempts recorded.*'}
+
+## ❌ What Not Worked (Key Failures)
+${data['not-worked'] || '*No failures recorded.*'}
+
+## ✅ What Worked (Success Steps)
+${data.worked || '*No success steps recorded.*'}
+
+---
+
+## 💻 Final Payload
+\`\`\`
+${data['final-payload'] || 'No final payload.'}
+\`\`\`
+
+## 🌐 Final Lab Verification
+\`${data['lab-domain'] || 'No verification path recorded.'}\`
+`;
+            return markdown.trim();
+        }
+
+        /**
+         * Initiates a file download with the given content and filename.
+         * @param {string} content
+         * @param {string} filename
+         * @param {string} mimeType
+         */
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+
+        // --- Custom Category Input Logic ---
+
+        /**
+         * Toggles the visibility of the custom category input based on the selection.
+         */
+        function handleCategoryChange() {
+            const categorySelect = document.getElementById('lab-category');
+            const customInput = document.getElementById('lab-category-custom');
+
+            if (categorySelect.value === 'Other') {
+                customInput.classList.remove('hidden');
+                customInput.focus(); // Give focus to the new input
+            } else {
+                customInput.classList.add('hidden');
+                customInput.value = ''; // Clear custom value if a standard category is selected
+            }
+            // Also call saveToLocalStorage to ensure the correct category is saved/previewed
+            saveToLocalStorage();
+        }
+
+
+        // --- Local Storage & UI Management ---
+
+        /**
+         * Saves all form data to Local Storage.
+         */
+        function saveToLocalStorage() {
+            const data = getFormData();
+            localStorage.setItem('labWriteupData', JSON.stringify(data));
+            updatePreview(data);
+        }
+
+        /**
+         * Loads data from Local Storage and populates the form.
+         */
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('labWriteupData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                FIELDS.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && data[id] !== undefined) {
+                        element.value = data[id];
+                    }
+                });
+                updatePreview(data);
+            } else {
+                // Initialize preview with default values if no data is found
+                updatePreview(getFormData());
+            }
+        }
+
+
+        /**
+         * Gathers all data from the form fields, handling custom category logic.
+         * @returns {Object} An object containing all field data.
+         */
+        function getFormData() {
+            const data = {};
+            FIELDS.forEach(id => {
+                data[id] = document.getElementById(id).value.trim();
+            });
+
+            const categorySelect = document.getElementById('lab-category');
+            const customInput = document.getElementById('lab-category-custom');
+
+            // Logic to use the custom input value if 'Other' is selected
+            if (categorySelect.value === 'Other' && customInput.value) {
+                data['lab-category'] = customInput.value.trim();
+            } else {
+                data['lab-category'] = categorySelect.value.trim();
+            }
+
+            return data;
+        }
+
+
+        /**
+         * Updates the live preview section with the latest data.
+         * @param {Object} data - The writeup data.
+         */
+        function updatePreview(data) {
+            // Helper for setting text/link
+            const setText = (id, value, defaultValue) => {
+                document.getElementById(id).textContent = value || defaultValue;
+            };
+
+            // Basic Fields
+            setText('preview-lab-name', data['lab-name'], 'Lab Writeup Title');
+            setText('preview-lab-category', data['lab-category'], 'N/A');
+            setText('preview-vulnerable-point', data['vulnerable-point'], 'No vulnerable point identified.');
+            setText('preview-lab-domain', data['lab-domain'], 'No verification path recorded.');
+
+            // Textarea Fields (use innerHTML/innerText based on context, here we use textContent for safety)
+            setText('preview-scope', data.scope, 'No scope provided.');
+            setText('preview-tried', data.tried, 'No attempts recorded.');
+            setText('preview-not-worked', data['not-worked'], 'No failures recorded.');
+            setText('preview-worked', data.worked, 'No success steps recorded.');
+            setText('preview-final-payload', data['final-payload'], 'No final payload.');
+
+
+            // Link Field
+            const linkElement = document.getElementById('preview-lab-link');
+            if (data['lab-link']) {
+                linkElement.textContent = data['lab-link'];
+                linkElement.href = data['lab-link'].startsWith('http') ? data['lab-link'] : `https://${data['lab-link']}`;
+            } else {
+                linkElement.textContent = 'N/A';
+                linkElement.href = '#';
+            }
+        }
+
+        // --- Event Handlers ---
+
+        /**
+         * Clears the form and local storage.
+         */
+        function handleClearData() {
+            if (confirm("Are you sure you want to clear all form data and local storage? This cannot be undone.")) {
+                FIELDS.forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+                localStorage.removeItem('labWriteupData');
+                loadFromLocalStorage(); // Reset preview
+            }
+        }
+
+        /**
+         * Exports the writeup as a plain text file.
+         */
+        function handleExportTxt() {
+            const textContent = getPlainTextWriteup();
+            const filename = slugify(document.getElementById('lab-name').value || 'lab-writeup') + '.txt';
+            downloadFile(textContent, filename, 'text/plain');
+        }
+
+        /**
+         * Exports the writeup as a Markdown file.
+         */
+        function handleExportMd() {
+            const markdownContent = getMarkdownWriteup();
+            const filename = slugify(document.getElementById('lab-name').value || 'lab-writeup') + '.md';
+            downloadFile(markdownContent, filename, 'text/markdown');
+        }
+
+        /**
+         * Gets parameters from the URL location search.
+         * @returns {Object} An object containing URL parameters.
+         */
+        function getURLParams() {
+            const params = {};
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Check for 'gh' or 'github' (GitHub) and 'li' or 'linkedin' (LinkedIn) parameters
+            params.github = urlParams.get('gh') || urlParams.get('github') || null;
+            params.linkedin = urlParams.get('li') || urlParams.get('linkedin') || null;
+
+            // Simple check to clean up LinkedIn link if full URL is provided
+            if (params.linkedin && params.linkedin.startsWith('https://')) {
+                const parts = params.linkedin.split('/').filter(p => p.length > 0);
+                // Look for the last segment after 'in/' or 'pub/'
+                const index = parts.findIndex(p => p === 'in' || p === 'pub');
+                if (index !== -1 && index + 1 < parts.length) {
+                    params.linkedin = parts[index + 1];
+                } else if (parts.length > 0) {
+                    // Fallback for simple link extraction
+                    params.linkedin = parts[parts.length - 1];
+                }
+            }
+
+            return params;
+        }
+        /**
+         * Exports the writeup as a PDF file by building content directly with jsPDF.
+         */
+        async function handleExportPdf() {
+            const data = getFormData();
+            const filename = slugify(data['lab-name'] || 'lab-writeup') + '.pdf';
+            const userLinks = getURLParams(); // Get GitHub/LinkedIn usernames
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 15; // mm
+            const contentWidth = pageWidth - 2 * margin;
+
+            let cursorY = margin; // Y-coordinate for placing content, starts from margin
+            const lineHeight = 5;
+
+            // Define colors from your CSS for consistency
+            const bgColor = '#1f2937'; // bg-gray-800 for content container
+            const bodyBgColor = '#111827'; // bg-gray-900 (for full doc bg if we used full bleed, using container bg here)
+            const textColor = '#f3f4f6'; // text-gray-100
+            const accentColor = '#a78bfa'; // text-indigo-300
+            const linkColor = '#60a5fa'; // text-blue-400
+            const separatorColor = '#374151'; // border-gray-700
+            const codeTextColor = '#facc15'; // Yellow text for code (not using code bg)
+
+            // Function to add a new page with background
+            const addNewPage = () => {
+                if (pdf.internal.getNumberOfPages() > 1 || cursorY > margin) {
+                    pdf.addPage();
+                }
+                // Fill the entire page with the background color
+                pdf.setFillColor(bgColor);
+                pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+                cursorY = margin;
+            };
+
+            // --- INITIAL PAGE SETUP ---
+            addNewPage();
+
+
+            // --- 1. TITLE (Centered and Wrapped) ---
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(26);
+            pdf.setTextColor(accentColor);
+
+            const labNameTitle = data['lab-name'] || 'Lab Writeup Title';
+
+            // We will use a dedicated title width that is slightly less than the content width
+            const titleMaxWidth = contentWidth * 0.8; // 80% of content width for centering visual appeal
+            const titleLineHeight = 10; // Adjusted for large font size (30pt)
+
+            // Use jsPDF's splitTextToSize to automatically handle wrapping
+            const titleLines = pdf.splitTextToSize(labNameTitle, titleMaxWidth);
+
+            cursorY += 5; // Initial space buffer
+
+            // Print and center each line of the title
+            for (let i = 0; i < titleLines.length; i++) {
+                const line = titleLines[i];
+
+                // Calculate the X position to center the current line
+                const lineWidth = pdf.getStringUnitWidth(line) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+                const lineX = (pageWidth - lineWidth) / 2;
+
+                pdf.text(line, lineX, cursorY);
+                cursorY += titleLineHeight;
+            }
+
+
+            cursorY += 10;
+            // set right margin to 20
+
+            // --- 2. LAB LINK (Centered, below title, clickable) ---
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(10);
+            pdf.setTextColor(linkColor);
+
+            const labLinkText = `Access Lab - URL`;
+            const url = data['lab-link'] && data['lab-link'].startsWith('http') ? data['lab-link'] : `https://${data['lab-link']}`;
+
+            textWidth = pdf.getStringUnitWidth(labLinkText) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+            textX = (pageWidth - textWidth) / 2;
+
+            pdf.text(labLinkText, textX, cursorY + 3);
+            // Add annotation for clickable link
+            if (data['lab-link']) {
+                pdf.link(textX, cursorY + 3 - 3, textWidth, 5, { url: url });
+            }
+            cursorY += 14;
+
+            // --- 3. CATEGORY (Small break) ---
+            pdf.setFontSize(12);
+            pdf.setTextColor(textColor);
+            pdf.text(`Category: ${data['lab-category'] || 'N/A'}`, margin, cursorY);
+            cursorY += 12;
+
+
+            // Helper to add a section with title and content (handling text wrapping and page breaks)
+            const addSection = (title, content, isCode = false) => {
+                const titleHeight = 8;
+                const sectionLineHeight = lineHeight; // 5mm
+
+                // Check for space for title
+                if (cursorY + titleHeight + sectionLineHeight > pageHeight - margin - 20) { // Keep 20mm margin at bottom for safety
+                    addNewPage();
+                }
+
+                // Add section title
+                pdf.setFont('helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor(accentColor);
+                pdf.text(title, margin, cursorY);
+                cursorY += 2;
+
+                // Draw a separator line
+                pdf.setDrawColor(separatorColor);
+                pdf.setLineWidth(0.5);
+                pdf.line(margin, cursorY, margin + contentWidth, cursorY);
+                cursorY += 5;
+
+                // Add content
+                pdf.setFont('helvetica', 'normal');
+                pdf.setFontSize(10);
+                pdf.setTextColor(isCode ? codeTextColor : textColor); // Set text color based on if it's code
+
+                const splitContent = pdf.splitTextToSize(content || '', contentWidth);
+
+                for (let i = 0; i < splitContent.length; i++) {
+                    // Check for page break before drawing the line of text
+                    if (cursorY + sectionLineHeight > pageHeight - margin - 20) { // Ensure space for footer/link
+                        addNewPage();
+                        pdf.setFont('helvetica', 'normal'); // Reset font after new page
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(isCode ? codeTextColor : textColor);
+                    }
+                    pdf.text(splitContent[i], margin, cursorY);
+                    cursorY += sectionLineHeight;
+                }
+
+                cursorY += 5; // Space after section content
+                pdf.setTextColor(textColor); // Reset to default text color for next section
+            };
+
+
+            // --- 4. BODY SECTIONS ---
+            addSection('Scope & Target', data.scope || 'No scope provided.');
+            addSection('Vulnerable Point', data['vulnerable-point'] || 'No vulnerable point identified.', true); // true for code text color
+            addSection('What is Tried (Methodology)', data.tried || 'No attempts recorded.');
+            addSection('What Not Worked (Key Failures)', data['not-worked'] || 'No failures recorded.');
+            addSection('What Worked (Success Steps)', data.worked || 'No success steps recorded.');
+            addSection('Final Payload', data['final-payload'] || 'No final payload.', true); // true for code text color
+            addSection('Verification', data['lab-domain'] || 'No verification path recorded.');
+
+            // --- 5. FOOTER (Place at bottom of the last page) ---
+            const footerY = pageHeight - margin; // Y position for the bottom margin
+
+            // Check if the cursor is near the bottom, if so, push to new page for clean footer
+            if (cursorY > footerY - 10) {
+                addNewPage();
+            }
+
+            // Footer Separator Line
+            pdf.setDrawColor(separatorColor);
+            pdf.line(margin, footerY - 5, margin + contentWidth, footerY - 5);
+
+            // Footer Content
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(9);
+            pdf.setTextColor(textColor);
+
+            // Build the footer text
+            let footerText = '';
+            const githubLink = userLinks.github ? `GitHub: @${userLinks.github}` : 'GitHub: N/A';
+            const linkedinLink = userLinks.linkedin ? `LinkedIn: in/${userLinks.linkedin}` : 'LinkedIn: N/A';
+
+            footerText = `${githubLink} | ${linkedinLink}`;
+
+            // Center the footer text
+            textWidth = pdf.getStringUnitWidth(footerText) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+            textX = (pageWidth - textWidth) / 2;
+
+            pdf.text(footerText, textX, footerY + 2); // Slightly below the line
+
+            // Add annotations for clickable links in the footer
+            if (userLinks.github) {
+                const githubUrl = `https://github.com/${userLinks.github}`;
+                const githubTextWidth = pdf.getStringUnitWidth(githubLink) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+                pdf.link(textX, footerY + 2 - 3, githubTextWidth, 5, { url: githubUrl });
+            }
+            if (userLinks.linkedin) {
+                const linkedinUrl = `https://linkedin.com/in/${userLinks.linkedin}`;
+                const offset = pdf.getStringUnitWidth(`${githubLink} | `) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+                const linkedinTextWidth = pdf.getStringUnitWidth(linkedinLink) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+                pdf.link(textX + offset, footerY + 2 - 3, linkedinTextWidth, 5, { url: linkedinUrl });
+            }
+
+            pdf.save(filename);
+        }
+
+
+        // --- Initialization ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Load data and set up preview
+            loadFromLocalStorage();
+
+            // **-- New: Custom Category Listener --**
+            document.getElementById('lab-category').addEventListener('change', handleCategoryChange);
+
+            // **-- New: Ensure custom input visibility is correct after loading data --**
+            // This is important because loadFromLocalStorage runs first and just sets the value.
+            // We need to check the value and explicitly show/hide the custom field.
+            handleCategoryChange();
+
+            // 2. Set up event listeners for input changes (saving data)
+            FIELDS.forEach(id => {
+                document.getElementById(id).addEventListener('input', saveToLocalStorage);
+            });
+
+            // 3. Set up event listeners for action buttons
+            document.getElementById('clear-data').addEventListener('click', handleClearData);
+            document.getElementById('export-txt').addEventListener('click', handleExportTxt);
+            document.getElementById('export-md').addEventListener('click', handleExportMd);
+            document.getElementById('export-pdf').addEventListener('click', handleExportPdf);
+        });
+
+    </script>
+</body>
+<footer>
+    <!-- Footer Divider -->
+    <hr class="my-8 border-gray-700">
+    <!-- Footer Content -->
+    <a href="https://github.com/SudoHopeX">
+        <img src="https://sudohopex.github.io/img/made-with-love-by-sudohopex.png" alt="Made with ❤️ by SudoHopeX" style="width:301px; display:block; margin: 0px auto;">
+    </a>
+    <!-- Include made using -->
+    <p class="text-center text-gray-500 text-sm mt-2">Made using HTML, Tailwind CSS, jsPDF & Vanilla JS</p>
+</footer>
+</html>
