@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://sudohopex.github.io/img/e-h4ck3r-with-laptop-ico.png">
     <title>XSS Payload Encodings Resource</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -30,16 +29,20 @@
             border-radius: 0.5rem;
             overflow-x: auto;
         }
+        /* Additional styling for the tool */
+        .tool-container {
+            border-top: 2px solid #e5e7eb; /* Light gray divider */
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
     </style>
 </head>
 <body class="min-h-screen p-4 sm:p-8">
 
     <div class="max-w-4xl mx-auto">
 
-        <!-- Navigation Back Button: Condensed to a single line to prevent parser errors -->
         <a href="/pages/catalogue/" class="inline-flex items-center text-teal-600 hover:text-teal-800 transition-colors mb-8 font-medium"><span class="text-lg mr-1 leading-none">&larr;</span>Back to Resource Index</a>
 
-        <!-- Header Section -->
         <header class="text-center mb-10 py-4 border-b border-gray-200">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
                 XSS Payload Encodings Guide
@@ -49,10 +52,8 @@
             </p>
         </header>
 
-        <!-- Content Sections Grid -->
         <main class="space-y-8">
 
-            <!-- Encoding Type 1: HTML Entity Encoding -->
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                     <span class="text-3xl accent-teal mr-2">&amp;</span> HTML Entity Encoding
@@ -68,9 +69,28 @@
                     <p>// Encoded Version (Hexadecimal)</p>
                     <code class="block whitespace-pre-wrap">&lt;scr&amp;#x69;pt&gt;&amp;#x61;lert(1)&lt;/scr&amp;#x69;pt&gt;</code>
                 </div>
+
+                <div id="html-tool-container" class="tool-container">
+                    <p class="font-semibold text-gray-700 mb-2">Live HTML Entity Converter</p>
+                    <button onclick="toggleTool('html_decimal', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to HTML Decimal
+                    </button>
+                    <button onclick="toggleTool('html_hex', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to HTML Hex
+                    </button>
+                    <button onclick="toggleTool('html', 'decode')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors mb-2">
+                        HTML Decode
+                    </button>
+                    <div id="html-tool" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <label for="html-input" class="block text-sm font-medium text-gray-700 mb-2">Input Text/Payload:</label>
+                        <textarea id="html-input" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="Enter text or encoded payload"></textarea>
+                        <button id="html-execute-btn" onclick="" class="mt-3 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition-colors"></button>
+                        <label for="html-output" class="block text-sm font-medium text-gray-700 mt-4 mb-2">Output:</label>
+                        <textarea id="html-output" rows="3" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></textarea>
+                    </div>
+                </div>
             </div>
 
-            <!-- Encoding Type 2: URL Encoding (Percent Encoding) -->
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                     <span class="text-3xl accent-teal mr-2">%</span> URL Encoding (Percent)
@@ -86,9 +106,31 @@
                     <p>// Double Encoded (useful for testing WAF bypasses)</p>
                     <code class="block whitespace-pre-wrap">%2561%256C%2565%2572%2574%2528%2531%2529</code>
                 </div>
+
+                <div id="url-tool-container" class="tool-container">
+                    <p class="font-semibold text-gray-700 mb-2">Live URL/Double URL Converter</p>
+                    <button onclick="toggleTool('url', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to URL Encode
+                    </button>
+                    <button onclick="toggleTool('double_url', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to Double URL Encode
+                    </button>
+                    <button onclick="toggleTool('url', 'decode')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        URL Decode
+                    </button>
+                    <button onclick="toggleTool('double_url', 'decode')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors mb-2">
+                        Double URL Decode
+                    </button>
+                    <div id="url-tool" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <label for="url-input" class="block text-sm font-medium text-gray-700 mb-2">Input Text/Payload:</label>
+                        <textarea id="url-input" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="Enter text or encoded payload"></textarea>
+                        <button id="url-execute-btn" onclick="" class="mt-3 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition-colors"></button>
+                        <label for="url-output" class="block text-sm font-medium text-gray-700 mt-4 mb-2">Output:</label>
+                        <textarea id="url-output" rows="3" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></textarea>
+                    </div>
+                </div>
             </div>
 
-            <!-- Encoding Type 3: JavaScript String Encoding (Octal/Hex/Unicode) -->
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                     <span class="text-3xl accent-teal mr-2">\</span> JavaScript String Escapes
@@ -105,9 +147,95 @@
                     <p>// Encoded using Octal - Target: `alert(1)`</p>
                     <code class="block whitespace-pre-wrap">\141\154\145\162\164\050\061\051</code>
                 </div>
+
+                <div id="js-tool-container" class="tool-container">
+                    <p class="font-semibold text-gray-700 mb-2">Live JavaScript String Escapes Converter</p>
+                    <button onclick="toggleTool('js_hex', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to \x Hex Escape
+                    </button>
+                    <button onclick="toggleTool('js_unicode', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to \u Unicode Escape
+                    </button>
+                    <div id="js-tool" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <label for="js-input" class="block text-sm font-medium text-gray-700 mb-2">Input Text/Payload:</label>
+                        <textarea id="js-input" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="Enter text or encoded payload"></textarea>
+                        <button id="js-execute-btn" onclick="" class="mt-3 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition-colors"></button>
+                        <label for="js-output" class="block text-sm font-medium text-gray-700 mt-4 mb-2">Output:</label>
+                        <textarea id="js-output" rows="3" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></textarea>
+                    </div>
+                </div>
             </div>
 
-            <!-- Useful Encoding Tools -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 accent-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10M16 4l4 4m0 0l-4 4m4-4H8m8 0a4 4 0 014 4v2" />
+                    </svg>
+                    Base64 Encoding
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    Often used in conjunction with JavaScript functions like `atob()` to decode payloads dynamically, making them invisible to simple string filters.
+                </p>
+                <div class="code-box">
+                    <p>// Original Payload (Alert)</p>
+                    <code class="block whitespace-pre-wrap mb-4">alert(1)</code>
+                    <p>// Encoded Version (For use with `atob()`)</p>
+                    <code class="block whitespace-pre-wrap">YWxlcnQoMSk=</code>
+                </div>
+
+                <div id="base64-tool-container" class="tool-container">
+                    <p class="font-semibold text-gray-700 mb-2">Live Base64 Converter</p>
+                    <button onclick="toggleTool('base64', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to Base64
+                    </button>
+                    <button onclick="toggleTool('base64', 'decode')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors mb-2">
+                        Base64 Decode
+                    </button>
+                    <div id="base64-tool" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <label for="base64-input" class="block text-sm font-medium text-gray-700 mb-2">Input Text/Payload:</label>
+                        <textarea id="base64-input" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="Enter text or encoded payload"></textarea>
+                        <button id="base64-execute-btn" onclick="" class="mt-3 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition-colors"></button>
+                        <label for="base64-output" class="block text-sm font-medium text-gray-700 mt-4 mb-2">Output:</label>
+                        <textarea id="base64-output" rows="3" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 accent-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7 21l3-3 3 3 3-3 3 3M7 3l3 3 3-3 3 3 3-3" />
+                    </svg>
+                    Raw Hex Encoding (e.g., for data streams)
+                </h2>
+                <p class="text-gray-600 mb-4">
+                    Represents each character as its two-digit hexadecimal equivalent without a prefix. This is useful when injecting into non-HTML contexts that might be decoded later, or for use in advanced JS obfuscation with custom decoders.
+                </p>
+                <div class="code-box">
+                    <p>// Original Payload (Alert)</p>
+                    <code class="block whitespace-pre-wrap mb-4">alert(1)</code>
+                    <p>// Encoded Version</p>
+                    <code class="block whitespace-pre-wrap">616c657274283129</code>
+                </div>
+
+                <div id="hex-tool-container" class="tool-container">
+                    <p class="font-semibold text-gray-700 mb-2">Live Raw Hex Converter</p>
+                    <button onclick="toggleTool('hex', 'encode')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded transition-colors mr-2 mb-2">
+                        Convert to Raw Hex
+                    </button>
+                    <button onclick="toggleTool('hex', 'decode')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-colors mb-2">
+                        Raw Hex Decode
+                    </button>
+                    <div id="hex-tool" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <label for="hex-input" class="block text-sm font-medium text-gray-700 mb-2">Input Text/Payload:</label>
+                        <textarea id="hex-input" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500" placeholder="Enter text or encoded payload"></textarea>
+                        <button id="hex-execute-btn" onclick="" class="mt-3 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded transition-colors"></button>
+                        <label for="hex-output" class="block text-sm font-medium text-gray-700 mt-4 mb-2">Output:</label>
+                        <textarea id="hex-output" rows="3" readonly class="w-full p-2 border border-gray-300 rounded-md bg-gray-100"></textarea>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-teal-500">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 accent-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -132,7 +260,6 @@
                 </ul>
             </div>
 
-            <!-- Notes and Caution -->
             <div class="bg-teal-50 p-6 rounded-xl shadow-md border border-teal-200">
                 <h2 class="text-xl font-bold accent-teal mb-3 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -147,5 +274,156 @@
 
         </main>
     </div>
+
+    <script>
+        // --- Encoding/Decoding Functions ---
+        // URL Encoding
+        const url_encode = s => encodeURIComponent(s);
+        const url_decode = s => decodeURIComponent(s);
+        const double_url_encode = s => encodeURIComponent(encodeURIComponent(s));
+        const double_url_decode = s => decodeURIComponent(decodeURIComponent(s));
+
+        // HTML Entity Encoding (Decimal and Hex)
+        const html_decimal_encode = s => s.split('').map(c => `&#${c.charCodeAt(0)};`).join('');
+        const html_hex_encode = s => s.split('').map(c => `&#x${c.charCodeAt(0).toString(16)};`).join('');
+        const html_decode = s => {
+            const div = document.createElement('div');
+            // This method handles both decimal and hex entities
+            div.innerHTML = s;
+            return div.textContent;
+        };
+
+        // Base64 Encoding
+        const base64_encode = s => btoa(unescape(encodeURIComponent(s)));
+        const base64_decode = s => {
+            try {
+                return decodeURIComponent(escape(atob(s)));
+            } catch(e) {
+                return "ERROR: Invalid Base64 input.";
+            }
+        };
+
+        // Raw Hex Encoding
+        const hex_encode = s => s.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+        const hex_decode = s => {
+            try {
+                if (s.length % 2 !== 0) throw new Error("Invalid hex string length");
+                return s.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+            } catch (e) {
+                return `ERROR: Invalid input for Hex Decode.`;
+            }
+        };
+
+        // JavaScript String Escapes (Hex and Unicode)
+        const js_hex_encode = s => s.split('').map(c => {
+            // Encode all non-alphanumeric characters, plus 'a', 'l', 'e', 'r', 't', '(', ')' for payload obfuscation
+            const code = c.charCodeAt(0);
+            if ((code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+                return c;
+            }
+            return `\\x${code.toString(16).padStart(2, '0')}`;
+        }).join('');
+
+        const js_unicode_encode = s => s.split('').map(c => {
+            const code = c.charCodeAt(0);
+            if ((code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+                return c;
+            }
+            return `\\u${code.toString(16).padStart(4, '0')}`;
+        }).join('');
+
+
+        // --- Tool Logic ---
+
+        /**
+         * Toggles the visibility of the specified tool and sets up the correct action.
+         */
+        function toggleTool(type, action) {
+            // Map tool types to their element IDs
+            const toolMap = {
+                'url': { id: 'url-tool', input: 'url-input', output: 'url-output', button: 'url-execute-btn' },
+                'double_url': { id: 'url-tool', input: 'url-input', output: 'url-output', button: 'url-execute-btn' },
+
+                'html_decimal': { id: 'html-tool', input: 'html-input', output: 'html-output', button: 'html-execute-btn' },
+                'html_hex': { id: 'html-tool', input: 'html-input', output: 'html-output', button: 'html-execute-btn' },
+                'html': { id: 'html-tool', input: 'html-input', output: 'html-output', button: 'html-execute-btn' },
+
+                'base64': { id: 'base64-tool', input: 'base64-input', output: 'base64-output', button: 'base64-execute-btn' },
+                'hex': { id: 'hex-tool', input: 'hex-input', output: 'hex-output', button: 'hex-execute-btn' },
+
+                'js_hex': { id: 'js-tool', input: 'js-input', output: 'js-output', button: 'js-execute-btn' },
+                'js_unicode': { id: 'js-tool', input: 'js-input', output: 'js-output', button: 'js-execute-btn' }
+            };
+
+            const config = toolMap[type];
+            const toolDiv = document.getElementById(config.id);
+            const executeBtn = document.getElementById(config.button);
+            const inputField = document.getElementById(config.input);
+
+            // Hide all tool panels initially, except the one for the current tool type
+            ['url-tool', 'html-tool', 'base64-tool', 'hex-tool', 'js-tool'].forEach(id => {
+                if (id !== config.id) {
+                    document.getElementById(id).classList.add('hidden');
+                }
+            });
+
+            // Toggle visibility logic
+            if (toolDiv.getAttribute('data-active-type') === type && toolDiv.getAttribute('data-active-action') === action) {
+                // If clicking the same button, hide the tool
+                toolDiv.classList.add('hidden');
+                toolDiv.removeAttribute('data-active-type');
+                toolDiv.removeAttribute('data-active-action');
+            } else {
+                // Show the tool and configure the button
+                toolDiv.classList.remove('hidden');
+                toolDiv.setAttribute('data-active-type', type);
+                toolDiv.setAttribute('data-active-action', action);
+
+                // Clear and focus input
+                inputField.value = '';
+                document.getElementById(config.output).value = '';
+                inputField.focus();
+
+                // Set button text and onclick function based on type and action
+                let func;
+                let btnText = '';
+
+                // Define which function and text to use
+                switch(`${type}_${action}`) {
+                    case 'html_decimal_encode': func = html_decimal_encode; btnText = 'Convert to HTML Decimal'; break;
+                    case 'html_hex_encode': func = html_hex_encode; btnText = 'Convert to HTML Hex'; break;
+                    case 'html_decode': func = html_decode; btnText = 'HTML Decode'; break;
+
+                    case 'url_encode': func = url_encode; btnText = 'URL Encode'; break;
+                    case 'url_decode': func = url_decode; btnText = 'URL Decode'; break;
+                    case 'double_url_encode': func = double_url_encode; btnText = 'Double URL Encode'; break;
+                    case 'double_url_decode': func = double_url_decode; btnText = 'Double URL Decode'; break;
+
+                    case 'js_hex_encode': func = js_hex_encode; btnText = 'Convert to \\x Hex Escape'; break;
+                    case 'js_unicode_encode': func = js_unicode_encode; btnText = 'Convert to \\u Unicode Escape'; break;
+
+                    case 'base64_encode': func = base64_encode; btnText = 'Base64 Encode'; break;
+                    case 'base64_decode': func = base64_decode; btnText = 'Base64 Decode'; break;
+
+                    case 'hex_encode': func = hex_encode; btnText = 'Raw Hex Encode'; break;
+                    case 'hex_decode': func = hex_decode; btnText = 'Raw Hex Decode'; break;
+
+                    default: return; // Should not happen
+                }
+
+                executeBtn.textContent = btnText;
+                executeBtn.onclick = () => {
+                    const inputValue = document.getElementById(config.input).value;
+                    let result;
+                    try {
+                        result = func(inputValue);
+                    } catch (e) {
+                        result = `ERROR: Failed to perform ${btnText}. Check your input format.`;
+                    }
+                    document.getElementById(config.output).value = result;
+                };
+            }
+        }
+    </script>
 </body>
 </html>
