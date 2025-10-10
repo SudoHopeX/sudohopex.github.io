@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://sudohopex.github.io/img/writeup-doc.webp">
     <title>Easily Document Ethical Hacking Writeups - SudoHopeX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
+
+        /* Define the custom font stack using a CSS variable */
+        :root {
+            --custom-serif: 'Times New Roman', Times, serif;
+        }
+
         /* Custom scrollbar for a sleek look */
         ::-webkit-scrollbar {
             width: 8px;
@@ -54,15 +61,15 @@
 
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4 sm:p-8">
 
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-9xl mx-auto">
         <h1 class="text-4xl font-extrabold text-indigo-400 mb-6 border-b border-indigo-500 pb-2">Easily Document E-Hacking Writeup's</h1>
         <p class="text-gray-400 mb-4">Document your ethical hacking writeup. Data is automatically saved to Browser Local Storage until Cleared.</p>
         <p class="text-green-300 mb-4">Spend more time on Hacking, less on documenting.</p>
         <p class="font-mono text-yellow-300 mb-4">Happy Hacking 😉 ~ SudoHopeX</p>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid Slg:grid-rows-3 gap-8">
 
-            <div id="input-form" class="lg:col-span-2 space-y-6 bg-gray-800 p-6 rounded-xl shadow-2xl">
+            <div id="input-form" class="lg:row-span-2 space-y-6 bg-gray-800 p-6 rounded-xl shadow-2xl">
                 <h2 class="text-2xl font-semibold text-indigo-300">Writeup Details Input</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -101,6 +108,8 @@
 
                 <textarea id="final-payload" placeholder="Final Payload" rows="4" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400 textarea-code"></textarea>
 
+                <textarea id="final-payload-struct-working" placeholder="Explain Payload structure and working" rows="4" class="p-3 w-full bg-gray-700 border border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"></textarea>
+
                 <div class="flex flex-wrap gap-4 pt-4">
                     <button id="clear-data" class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition duration-200 shadow-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
@@ -109,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-1 space-y-6">
+            <div class="lg:col-span-1 space-y-4">
                 <div class="bg-gray-800 p-6 rounded-xl shadow-2xl top-8">
                     <h2 class="text-2xl font-semibold text-indigo-300 mb-4">Export Options</h2>
                     <div class="grid grid-cols-2 gap-4">
@@ -122,39 +131,76 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-800 p-6 rounded-xl shadow-2xl">
-                    <h2 class="text-2xl font-semibold text-indigo-300 mb-4">Live Preview</h2>
-                    <div id="lab-details-container" class="border border-gray-700 rounded-lg">
-                        <h2 id="preview-lab-name" class="text-3xl font-bold text-indigo-300 mb-2">Lab Writeup Title</h2>
-                        <p id="preview-lab-category" class="text-lg text-gray-400 mb-4 font-mono"></p>
+                <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl space-y-6 font-sans">
+                    <h2 class="text-3xl font-bold text-indigo-300 mb-6 border-b border-gray-700 pb-3">Live Document Preview</h2>
 
-                        <div class="mb-4">
-                            <strong class="text-indigo-400">Lab Link:</strong> <a id="preview-lab-link" target="_blank" class="text-blue-400 hover:underline"></a>
+                    <!-- Document Container for Content Preview -->
+                    <div id="lab-details-container" class="space-y-8">
+
+                        <div class="border-b border-indigo-500 pb-3">
+                            <h2 id="preview-lab-name" class="text-4xl font-extrabold text-indigo-200 leading-tight">Lab Writeup Title</h2>
+                            <p id="preview-lab-category" class="text-lg text-gray-400 mt-1 italic font-mono"></p>
                         </div>
 
-                        <h3 class="section-header text-xl font-semibold">Scope & Target</h3>
-                        <p id="preview-scope" class="whitespace-pre-wrap"></p>
+                        <!-- Metadata -->
+                        <div class="text-lg">
+                            <strong class="text-indigo-400">Lab Link:</strong>
+                            <a id="preview-lab-link" target="_blank" class="text-blue-400 hover:underline hover:text-blue-300 transition-colors"></a>
+                        </div>
 
-                        <h3 class="section-header text-xl font-semibold">Vulnerable Point</h3>
-                        <p id="preview-vulnerable-point" class="whitespace-pre-wrap font-mono text-yellow-300"></p>
+                        <!-- Content Sections -->
 
-                        <h3 class="section-header text-xl font-semibold">What is Tried (Methodology)</h3>
-                        <p id="preview-tried" class="whitespace-pre-wrap"></p>
+                        <!-- Scope & Target -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">Scope & Target</h3>
+                            <p id="preview-scope" class="text-2xl text-gray-200 whitespace-pre-wrap leading-relaxed font-normal"></p>
+                        </div>
 
-                        <h3 class="section-header text-xl font-semibold">What Not Worked (Key Failures)</h3>
-                        <p id="preview-not-worked" class="whitespace-pre-wrap"></p>
+                        <!-- Vulnerable Point (Highlighted Code Style) -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">Vulnerable Point</h3>
+                            <p id="preview-vulnerable-point" class="text-2xl bg-gray-900 border border-yellow-500/30 p-4 rounded-lg text-yellow-300 whitespace-pre-wrap font-mono leading-relaxed"></p>
+                        </div>
 
-                        <h3 class="section-header text-xl font-semibold">What Worked (Success Steps)</h3>
-                        <p id="preview-worked" class="whitespace-pre-wrap"></p>
+                        <!-- What is Tried (Methodology) -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">What is Tried (Methodology)</h3>
+                            <p id="preview-tried" class="text-2xl text-gray-200 whitespace-pre-wrap leading-relaxed [font-family:var(--custom-serif)]"></p>
+                        </div>
 
-                        <h3 class="section-header text-xl font-semibold">Final Payload</h3>
-                        <pre id="preview-final-payload" class="text-sm"></pre>
+                        <!-- What Not Worked (Key Failures) -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">What Not Worked (Key Failures)</h3>
+                            <p id="preview-not-worked" class="text-2xl text-gray-200 whitespace-pre-wrap leading-relaxed [font-family:var(--custom-serif)]"></p>
+                        </div>
 
-                        <h3 class="section-header text-xl font-semibold">Scope Verification</h3>
-                        <p id="preview-lab-domain" class="whitespace-pre-wrap font-mono text-green-400"></p>
+                        <!-- What Worked (Success Steps) -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">What Worked (Success Steps)</h3>
+                            <p id="preview-worked" class="text-2xl text-gray-200 whitespace-pre-wrap leading-relaxed [font-family:var(--custom-serif)]"></p>
+                        </div>
+
+                        <!-- Final Payload (Dedicated Code Block) -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">Final Payload</h3>
+                            <pre id="preview-final-payload" class="text-lg font-mono bg-black p-4 rounded-lg overflow-x-auto text-green-300 border border-green-500/30 shadow-inner"></pre>
+                        </div>
+
+                        <!-- Final Payload Structure & Working -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">Final Payload Structure & Working</h3>
+                            <pre id="preview-final-payload-struct-working" class="text-2xl text-gray-400 whitespace-pre-wrap leading-relaxed [font-family:var(--custom-serif)]"></pre>
+                        </div>
+
+                        <!-- Scope Verification (Highlighted Success Style) -->
+                        <div class="content-section">
+                            <h3 class="section-header text-2xl font-bold text-gray-200 border-b border-gray-700 pb-1 mb-2">Scope Verification</h3>
+                            <p id="preview-lab-domain" class="text-2xl bg-gray-900 border border-green-500/30 p-4 rounded-lg text-green-400 whitespace-pre-wrap font-mono leading-relaxed"></p>
+                        </div>
 
                     </div>
                 </div>
+
             </div>
 
         </div>
@@ -165,7 +211,7 @@
         const FIELDS = [
             'lab-name', 'lab-category', 'lab-category-custom', 'lab-link',
             'scope', 'vulnerable-point', 'tried', 'worked', 'not-worked',
-            'final-payload', 'lab-domain'
+            'final-payload','final-payload-struct-working', 'lab-domain'
         ];
 
         // --- Utility Functions ---
@@ -222,6 +268,10 @@ ${data.worked || 'No success steps recorded.'}
 --------------------------------------------------
 ${data['final-payload'] || 'No final payload.'}
 
+[+] Final Payload Structure & Working
+--------------------------------------------------
+${data['final-payload-struct-working'] || 'No final payload Structure and working explained.'}
+
 [+] Final Lab Verification
 --------------------------------------------------
 ${data['lab-domain'] || 'No verification path recorded.'}
@@ -267,6 +317,9 @@ ${data.worked || '*No success steps recorded.*'}
 \`\`\`
 ${data['final-payload'] || 'No final payload.'}
 \`\`\`
+
+## 💻 Final Payload
+${data['final-payload-struct-working'] || 'No final payload Structure and working explained.'}
 
 ## 🌐 Final Lab Verification
 \`${data['lab-domain'] || 'No verification path recorded.'}\`
@@ -392,7 +445,7 @@ ${data['final-payload'] || 'No final payload.'}
             setText('preview-not-worked', data['not-worked'], 'No failures recorded.');
             setText('preview-worked', data.worked, 'No success steps recorded.');
             setText('preview-final-payload', data['final-payload'], 'No final payload.');
-
+            setText('preview-final-payload-struct-working', data['final-payload-struct-working'], 'No final payload Structure and working explained.');
 
             // Link Field
             const linkElement = document.getElementById('preview-lab-link');
@@ -465,207 +518,445 @@ ${data['final-payload'] || 'No final payload.'}
 
             return params;
         }
-        /**
-         * Exports the writeup as a PDF file by building content directly with jsPDF.
-         */
-        async function handleExportPdf() {
-            const data = getFormData();
-            const filename = slugify(data['lab-name'] || 'lab-writeup') + '.pdf';
-            const userLinks = getURLParams(); // Get GitHub/LinkedIn usernames
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const margin = 15; // mm
-            const contentWidth = pageWidth - 2 * margin;
-
-            let cursorY = margin; // Y-coordinate for placing content, starts from margin
-            const lineHeight = 5;
-
-            // Define colors from your CSS for consistency
-            const bgColor = '#1f2937'; // bg-gray-800 for content container
-            const bodyBgColor = '#111827'; // bg-gray-900 (for full doc bg if we used full bleed, using container bg here)
-            const textColor = '#f3f4f6'; // text-gray-100
-            const accentColor = '#a78bfa'; // text-indigo-300
-            const linkColor = '#60a5fa'; // text-blue-400
-            const separatorColor = '#374151'; // border-gray-700
-            const codeTextColor = '#facc15'; // Yellow text for code (not using code bg)
-
-            // Function to add a new page with background
-            const addNewPage = () => {
-                if (pdf.internal.getNumberOfPages() > 1 || cursorY > margin) {
-                    pdf.addPage();
-                }
-                // Fill the entire page with the background color
-                pdf.setFillColor(bgColor);
-                pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-                cursorY = margin;
-            };
-
-            // --- INITIAL PAGE SETUP ---
-            addNewPage();
 
 
-            // --- 1. TITLE (Centered and Wrapped) ---
-            pdf.setFont('helvetica', 'bold');
-            pdf.setFontSize(26);
-            pdf.setTextColor(accentColor);
+/*==============================================================================================================*/
 
-            const labNameTitle = data['lab-name'] || 'Lab Writeup Title';
+/**
+ * Exports the writeup as a PDF file by building content directly with jsPDF.
+ * This version implements a stylized Cover Page, Table of Contents, and a universal footer
+ * for a professional, multi-page document structure with enhanced readability.
+ */
+async function handleExportPdf() {
+    const data = getFormData();
+    const filename = slugify(data['lab-name'] || 'lab-writeup') + '.pdf';
+    const userLinks = getURLParams(); // Get GitHub/LinkedIn usernames
 
-            // We will use a dedicated title width that is slightly less than the content width
-            const titleMaxWidth = contentWidth * 0.8; // 80% of content width for centering visual appeal
-            const titleLineHeight = 10; // Adjusted for large font size (30pt)
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
 
-            // Use jsPDF's splitTextToSize to automatically handle wrapping
-            const titleLines = pdf.splitTextToSize(labNameTitle, titleMaxWidth);
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 15; // mm
+    const contentWidth = pageWidth - 2 * margin;
 
-            cursorY += 5; // Initial space buffer
+    // Array to store TOC entries (Title, Start Page, End Page)
+    const tocEntries = [];
 
-            // Print and center each line of the title
-            for (let i = 0; i < titleLines.length; i++) {
-                const line = titleLines[i];
+    let cursorY = margin; // Y-coordinate for placing content, starts from margin
 
-                // Calculate the X position to center the current line
-                const lineWidth = pdf.getStringUnitWidth(line) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                const lineX = (pageWidth - lineWidth) / 2;
+    // --- TYPOGRAPHY AND COLORS ---
+    const MAIN_FONT = 'times'; // Times for Cover and Body content
+    const ACCENT_FONT = 'helvetica'; // Helvetica for TOC and Footer
 
-                pdf.text(line, lineX, cursorY);
-                cursorY += titleLineHeight;
-            }
+    const COVER_BG_COLOR = '#0056b3'; // Dark blue for Cover Page
+    const COVER_TEXT_COLOR = '#ffffff'; // White text for Cover Page
+    const LINK_COLOR_COVER = '#ffc107'; // Gold/Yellow for link contrast
+    const bodyBgColor = '#ffffff';
+    const ACCENT_COLOR = '#0056b3';
+    const TEXT_COLOR = '#333333';
+    const LINK_COLOR = '#007bff';
+    const SEPARATOR_COLOR = '#cccccc';
 
+    // Code block specific styling
+    const CODE_BG_COLOR = '#f7f7f7';
+    const CODE_TEXT_COLOR = '#5c6773';
+    const CODE_FONT = 'courier';
 
-            cursorY += 10;
-            // set right margin to 20
+    // Increased font sizes and line heights
+    const bodyFontSize = 22; // Increased by +6 for better readability
+    const bodyLineHeight = 12; // Increased for better spacing
+    const bodyCharSpace = 0.2; // Not used due to library limitation
 
-            // --- 2. LAB LINK (Centered, below title, clickable) ---
-            pdf.setFont('helvetica', 'normal');
-            pdf.setFontSize(10);
-            pdf.setTextColor(linkColor);
+    const codeFontSize = 16;
+    const codeLineHeight = 6.5;
 
-            const labLinkText = `Access Lab - URL`;
-            const url = data['lab-link'] && data['lab-link'].startsWith('http') ? data['lab-link'] : `https://${data['lab-link']}`;
-
-            textWidth = pdf.getStringUnitWidth(labLinkText) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-            textX = (pageWidth - textWidth) / 2;
-
-            pdf.text(labLinkText, textX, cursorY + 3);
-            // Add annotation for clickable link
-            if (data['lab-link']) {
-                pdf.link(textX, cursorY + 3 - 3, textWidth, 5, { url: url });
-            }
-            cursorY += 14;
-
-            // --- 3. CATEGORY (Small break) ---
-            pdf.setFontSize(12);
-            pdf.setTextColor(textColor);
-            pdf.text(`Category: ${data['lab-category'] || 'N/A'}`, margin, cursorY);
-            cursorY += 12;
+    const tocFontSize = 22; // Increased by +6 for prominence and tabular look
+    const tocLineHeight = 14; // Increased line spacing for tabular look
 
 
-            // Helper to add a section with title and content (handling text wrapping and page breaks)
-            const addSection = (title, content, isCode = false) => {
-                const titleHeight = 8;
-                const sectionLineHeight = lineHeight; // 5mm
+    // --- UNIVERSAL FOOTER AND PAGE BREAK LOGIC ---
 
-                // Check for space for title
-                if (cursorY + titleHeight + sectionLineHeight > pageHeight - margin - 20) { // Keep 20mm margin at bottom for safety
-                    addNewPage();
-                }
+    // Function to check if a page break is needed and add a new page if so
+    const checkPageBreak = (requiredSpace) => {
+        // -15 to leave reliable space for the universal footer
+        if (cursorY + requiredSpace > pageHeight - margin - 15) {
+            pdf.addPage();
+            // Fill the entire page with the light background color
+            pdf.setFillColor(bodyBgColor);
+            pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+            cursorY = margin;
+            return true;
+        }
+        return false;
+    };
 
-                // Add section title
-                pdf.setFont('helvetica', 'bold');
-                pdf.setFontSize(14);
-                pdf.setTextColor(accentColor);
-                pdf.text(title, margin, cursorY);
-                cursorY += 2;
+    // Function to draw the footer and page numbers on every page
+    const drawFooter = () => {
+        const numPages = pdf.internal.getNumberOfPages();
+        // The total number of pages in the document for the "X of Y" count.
+        const totalPagesInFooter = numPages;
 
-                // Draw a separator line
-                pdf.setDrawColor(separatorColor);
-                pdf.setLineWidth(0.5);
-                pdf.line(margin, cursorY, margin + contentWidth, cursorY);
-                cursorY += 5;
-
-                // Add content
-                pdf.setFont('helvetica', 'normal');
-                pdf.setFontSize(10);
-                pdf.setTextColor(isCode ? codeTextColor : textColor); // Set text color based on if it's code
-
-                const splitContent = pdf.splitTextToSize(content || '', contentWidth);
-
-                for (let i = 0; i < splitContent.length; i++) {
-                    // Check for page break before drawing the line of text
-                    if (cursorY + sectionLineHeight > pageHeight - margin - 20) { // Ensure space for footer/link
-                        addNewPage();
-                        pdf.setFont('helvetica', 'normal'); // Reset font after new page
-                        pdf.setFontSize(10);
-                        pdf.setTextColor(isCode ? codeTextColor : textColor);
-                    }
-                    pdf.text(splitContent[i], margin, cursorY);
-                    cursorY += sectionLineHeight;
-                }
-
-                cursorY += 5; // Space after section content
-                pdf.setTextColor(textColor); // Reset to default text color for next section
-            };
-
-
-            // --- 4. BODY SECTIONS ---
-            addSection('Scope & Target', data.scope || 'No scope provided.');
-            addSection('Vulnerable Point', data['vulnerable-point'] || 'No vulnerable point identified.', true); // true for code text color
-            addSection('What is Tried (Methodology)', data.tried || 'No attempts recorded.');
-            addSection('What Not Worked (Key Failures)', data['not-worked'] || 'No failures recorded.');
-            addSection('What Worked (Success Steps)', data.worked || 'No success steps recorded.');
-            addSection('Final Payload', data['final-payload'] || 'No final payload.', true); // true for code text color
-            addSection('Verification', data['lab-domain'] || 'No verification path recorded.');
-
-            // --- 5. FOOTER (Place at bottom of the last page) ---
-            const footerY = pageHeight - margin; // Y position for the bottom margin
-
-            // Check if the cursor is near the bottom, if so, push to new page for clean footer
-            if (cursorY > footerY - 10) {
-                addNewPage();
-            }
+        for (let i = 1; i <= numPages; i++) {
+            pdf.setPage(i);
+            const footerY = pageHeight - margin + 2; // Position slightly above the bottom margin
 
             // Footer Separator Line
-            pdf.setDrawColor(separatorColor);
-            pdf.line(margin, footerY - 5, margin + contentWidth, footerY - 5);
+            pdf.setDrawColor(SEPARATOR_COLOR);
+            pdf.setLineWidth(0.5);
+            pdf.line(margin, footerY - 7, margin + contentWidth, footerY - 7);
 
-            // Footer Content
-            pdf.setFont('helvetica', 'normal');
+            // Footer Content (Always Helvetica, 9pt)
+            pdf.setFont(ACCENT_FONT, 'normal');
             pdf.setFontSize(9);
-            pdf.setTextColor(textColor);
+            pdf.setTextColor(TEXT_COLOR);
 
-            // Build the footer text
-            let footerText = '';
-            const githubLink = userLinks.github ? `GitHub: @${userLinks.github}` : 'GitHub: N/A';
-            const linkedinLink = userLinks.linkedin ? `LinkedIn: in/${userLinks.linkedin}` : 'LinkedIn: N/A';
+            const githubUser = userLinks.github;
+            const linkedinUser = userLinks.linkedin;
 
-            footerText = `${githubLink} | ${linkedinLink}`;
+            const githubLinkText = githubUser ? `GitHub: @${githubUser}` : 'GitHub: N/A';
+            const linkedinLinkText = linkedinUser ? `LinkedIn: in/${linkedinUser}` : 'LinkedIn: N/A';
+            const separator = ' | ';
 
-            // Center the footer text
-            textWidth = pdf.getStringUnitWidth(footerText) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-            textX = (pageWidth - textWidth) / 2;
+            // 1. Footer Text (Centered)
+            const footerText = `${githubLinkText}${separator}${linkedinLinkText}`;
+            const footerFontSize = pdf.internal.getFontSize();
 
-            pdf.text(footerText, textX, footerY + 2); // Slightly below the line
+            const textWidth = pdf.getStringUnitWidth(footerText) * footerFontSize / pdf.internal.scaleFactor;
+            const textX = (pageWidth - textWidth) / 2;
 
-            // Add annotations for clickable links in the footer
-            if (userLinks.github) {
-                const githubUrl = `https://github.com/${userLinks.github}`;
-                const githubTextWidth = pdf.getStringUnitWidth(githubLink) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                pdf.link(textX, footerY + 2 - 3, githubTextWidth, 5, { url: githubUrl });
+            // Draw the complete footer text
+            pdf.text(footerText, textX, footerY);
+
+            // 2. Add clickable links if usernames exist
+            let currentX = textX;
+            const linkHeight = 5;
+            const linkY = footerY - 3; // Position link box above text baseline
+
+            // GitHub Link Area
+            if (githubUser) {
+                const githubWidth = pdf.getStringUnitWidth(githubLinkText) * footerFontSize / pdf.internal.scaleFactor;
+                const githubUrl = `https://github.com/${githubUser}`;
+                pdf.link(currentX, linkY, githubWidth, linkHeight, { url: githubUrl });
+                currentX += githubWidth;
+            } else {
+                currentX += pdf.getStringUnitWidth(githubLinkText) * footerFontSize / pdf.internal.scaleFactor;
             }
-            if (userLinks.linkedin) {
-                const linkedinUrl = `https://linkedin.com/in/${userLinks.linkedin}`;
-                const offset = pdf.getStringUnitWidth(`${githubLink} | `) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                const linkedinTextWidth = pdf.getStringUnitWidth(linkedinLink) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                pdf.link(textX + offset, footerY + 2 - 3, linkedinTextWidth, 5, { url: linkedinUrl });
+
+            // Separator spacing update
+            const separatorWidth = pdf.getStringUnitWidth(separator) * footerFontSize / pdf.internal.scaleFactor;
+            currentX += separatorWidth;
+
+            // LinkedIn Link Area
+            if (linkedinUser) {
+                const linkedinWidth = pdf.getStringUnitWidth(linkedinLinkText) * footerFontSize / pdf.internal.scaleFactor;
+                const linkedinUrl = `https://linkedin.com/in/${linkedinUser}`;
+                pdf.link(currentX, linkY, linkedinWidth, linkHeight, { url: linkedinUrl });
             }
 
-            pdf.save(filename);
+            // Page Number (Right aligned)
+            // Page 1 (i=1) is the Cover and is unnumbered.
+            // All subsequent pages (i >= 2) start numbering from 2 of X.
+            if (i !== 1) {
+                // Display page number starting from 2 (i) out of the total page count (numPages).
+                const pageNumText = `Page ${i} of ${totalPagesInFooter}`;
+                pdf.text(pageNumText, pageWidth - margin - 8, footerY, { align: 'right' });
+            }
         }
+        // Set back to the last page of content to finish the PDF export flow
+        pdf.setPage(numPages);
+    };
+
+    // Helper to render content, handling embedded <code> tags
+    const renderContent = (content, isFullCodeBlock = false) => {
+        const textParts = content.split(/(<code>.*?<\/code>)/g).filter(p => p.length > 0);
+        let currentX = margin;
+
+        for (const part of textParts) {
+            const isCodeSegment = part.startsWith('<code>') && part.endsWith('</code>') || isFullCodeBlock;
+            const cleanPart = isCodeSegment && !isFullCodeBlock ? part.replace(/^<code>|<\/code>$/g, '') : part;
+            const textToRender = isFullCodeBlock ? content : cleanPart;
+
+            if (isCodeSegment) {
+                // --- Code Block Rendering (IDE look) ---
+                pdf.setFont(CODE_FONT, 'normal');
+                pdf.setFontSize(codeFontSize);
+                pdf.setTextColor(CODE_TEXT_COLOR);
+
+                const padding = 3;
+                const codeContentWidth = contentWidth - 2 * padding;
+                const splitCode = pdf.splitTextToSize(textToRender, codeContentWidth);
+                const blockHeight = splitCode.length * codeLineHeight + 2 * padding;
+
+                checkPageBreak(blockHeight);
+
+                pdf.setFillColor(CODE_BG_COLOR);
+                pdf.rect(margin, cursorY, contentWidth, blockHeight, 'F');
+
+                cursorY += padding;
+
+                for (let i = 0; i < splitCode.length; i++) {
+                    pdf.text(splitCode[i], margin + padding, cursorY);
+                    cursorY += codeLineHeight;
+                }
+
+                cursorY += padding;
+
+                pdf.setFont(MAIN_FONT, 'normal');
+                pdf.setFontSize(bodyFontSize);
+                pdf.setTextColor(TEXT_COLOR);
+                currentX = margin;
+
+                cursorY += 3;
+                if (isFullCodeBlock) return;
+
+            } else {
+                // --- Normal Text Rendering ---
+                pdf.setFont(MAIN_FONT, 'normal');
+                pdf.setFontSize(bodyFontSize);
+                pdf.setTextColor(TEXT_COLOR);
+
+                const remainingWidth = pageWidth - currentX - margin;
+                let splitText = pdf.splitTextToSize(textToRender, remainingWidth);
+
+                for (let i = 0; i < splitText.length; i++) {
+                    const line = splitText[i];
+
+                    checkPageBreak(bodyLineHeight);
+
+                    pdf.text(line, currentX, cursorY);
+                    cursorY += bodyLineHeight;
+                    currentX = margin;
+                }
+
+                cursorY += 3;
+            }
+        }
+    };
+
+
+    // Helper to add a section with title and content
+    const addSection = (title, content, isFullCodeBlock = false) => {
+        const titleHeight = 8;
+
+        // Check for page break BEFORE adding the title/content
+        checkPageBreak(titleHeight + 15);
+
+        // 1. Record the current page number AFTER any potential page break
+        const startPage = pdf.internal.getNumberOfPages();
+        const entryIndex = tocEntries.length;
+
+        // Push initial entry. We will update endPage after content is rendered.
+        // We set endPage to startPage initially.
+        tocEntries.push({ title: title, startPage: startPage, endPage: startPage });
+
+        // Add section title
+        pdf.setFont(MAIN_FONT, 'bold');
+        pdf.setFontSize(20);
+        pdf.setTextColor(ACCENT_COLOR);
+        pdf.text(title, margin, cursorY);
+        cursorY += 2;
+
+        // Draw a separator line
+        pdf.setDrawColor(SEPARATOR_COLOR);
+        pdf.setLineWidth(0.5);
+        pdf.line(margin, cursorY, margin + contentWidth, cursorY);
+        cursorY += 7;
+
+        // Add content, triggering custom rendering
+        renderContent(content || `No ${title.toLowerCase()} provided.`, isFullCodeBlock);
+
+        // 2. Update the end page number after rendering content is complete
+        // This gives the physical page number where the section content ended.
+        tocEntries[entryIndex].endPage = pdf.internal.getNumberOfPages();
+
+        // Add extra space below the section
+        if (title !== 'Verification' && cursorY < pageHeight - margin - 20) {
+            cursorY += 8;
+        }
+    };
+
+    // --- TOC GENERATION FUNCTION ---
+    const generateTOC = () => {
+        // We render directly onto Page 2 which was added as a placeholder.
+        pdf.setPage(2);
+        cursorY = margin;
+
+        pdf.setFont(ACCENT_FONT, 'bold'); // Use Helvetica for TOC
+        pdf.setFontSize(24);
+        pdf.setTextColor(ACCENT_COLOR);
+
+        // Center the TOC Title
+        let titleText = 'Table of Contents';
+        let titleWidth = pdf.getStringUnitWidth(titleText) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+        let titleX = (pageWidth - titleWidth) / 2;
+
+        pdf.text(titleText, titleX, cursorY);
+        cursorY += 15;
+
+        pdf.setDrawColor(SEPARATOR_COLOR);
+        pdf.setLineWidth(0.5);
+        pdf.line(margin, cursorY, margin + contentWidth, cursorY);
+        cursorY += 8;
+
+        pdf.setFont(ACCENT_FONT, 'normal'); // Use Helvetica for TOC entries
+        pdf.setFontSize(tocFontSize); // Now 22pt
+        pdf.setTextColor(TEXT_COLOR);
+
+        tocEntries.forEach(entry => {
+            const title = entry.title;
+            const startPage = entry.startPage;
+            const endPage = entry.endPage;
+
+            // Determine page number text: single page or range (inclusive of end page)
+            const pageNumText = startPage === endPage
+                ? String(startPage)
+                : `${startPage}-${endPage}`;
+
+            const linkTargetPage = startPage; // Link always goes to the start page
+
+            const pageNumWidth = pdf.getStringUnitWidth(pageNumText) * tocFontSize / pdf.internal.scaleFactor;
+
+            // Calculate where the title ends and the leader line starts
+            let currentTitleWidth = pdf.getStringUnitWidth(title) * tocFontSize / pdf.internal.scaleFactor;
+            let leaderStartX = margin + currentTitleWidth + 2;
+
+            // Calculate the total space available for leader dots
+            let leaderEnd = pageWidth - margin - pageNumWidth - 2;
+
+            // Draw Title (linked to the page)
+            pdf.text(title, margin, cursorY);
+
+            // Draw Dotted Leader Line
+            pdf.setDrawColor(SEPARATOR_COLOR);
+            pdf.setLineDash([1, 1], 0); // Dotted line pattern
+            pdf.line(leaderStartX, cursorY - 1, leaderEnd, cursorY - 1);
+
+            // Draw Page Number (Now page range)
+            const linkX = leaderEnd + 2; // Position the number
+            pdf.text(pageNumText, linkX, cursorY);
+
+            // Add link annotation to the page number/range
+            pdf.link(linkX, cursorY - tocLineHeight + 2, pageNumWidth, tocLineHeight, { pageNumber: linkTargetPage });
+
+            cursorY += tocLineHeight;
+
+            // Reset line style
+            pdf.setLineDash([], 0);
+        });
+
+        // Set page back to the current last page of content
+        pdf.setPage(pdf.internal.getNumberOfPages());
+    };
+
+
+    // --- 1. COVER PAGE RENDERING (Page 1) ---
+    pdf.setPage(1);
+    cursorY = margin;
+
+    // Background aesthetic for cover page
+    pdf.setFillColor(COVER_BG_COLOR);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+    pdf.setTextColor(COVER_TEXT_COLOR);
+
+    // NEW: Text Overlays (Watermarks)
+    const payloads = [
+        { text: 'alert(1)', x: pageWidth * 0.3, y: pageHeight * 0.6, size: 30 },
+        { text: "' or 1 = 1;--", x: pageWidth * 0.55, y: pageHeight * 0.5, size: 40 },
+        { text: "DROP TABLE users;", x: pageWidth * 0.2, y: pageHeight * 0.75, size: 50 },
+        { text: "')alert(1,", x: pageWidth * 0.7, y: pageHeight * 0.2, size: 36 },
+        { text: "'OR 1=1;--", x: pageWidth * 0.4, y: pageHeight * 0.9, size: 30 },
+        { text: "<?php phpinfo(); ?>", x: pageWidth * 0.05, y: pageHeight * 0.1, size: 25 },
+        { text: "admin'--", x: pageWidth * 0.8, y: pageHeight * 0.85, size: 45 },
+        { text: "<img src=x onerror=alert(1)>", x: pageWidth * 0.1, y: pageHeight * 0.4, size: 33 },
+    ];
+
+    // Set transparency to 21% (0.21)
+    pdf.setGState(new window.jspdf.GState({ opacity: 0.21 }));
+    pdf.setFont(CODE_FONT, 'bold'); // Use code font for payload aesthetics
+    pdf.setTextColor(COVER_TEXT_COLOR); // White text
+
+    payloads.forEach(p => {
+        pdf.setFontSize(p.size);
+        pdf.text(p.text, p.x, p.y);
+    });
+
+    pdf.setGState(new window.jspdf.GState({ opacity: 1.0 })); // Reset transparency
+    pdf.setFont(MAIN_FONT, 'bold'); // Reset font for cover title
+
+    // 1. TITLE (Left Aligned)
+    pdf.setFont(MAIN_FONT, 'bold');
+    pdf.setFontSize(42); // Increased from 36
+    pdf.setTextColor(COVER_TEXT_COLOR); // Reset to ensure full visibility over transparent text
+
+    const labNameTitle = data['lab-name'] || 'Lab Writeup Title';
+    const titleMaxWidth = contentWidth * 0.75;
+    const titleLineHeight = 15;
+
+    const titleLines = pdf.splitTextToSize(labNameTitle, titleMaxWidth);
+
+    // Position title closer to the top left
+    cursorY = margin + 30;
+
+    for (let i = 0; i < titleLines.length; i++) {
+        pdf.text(titleLines[i], margin, cursorY);
+        cursorY += titleLineHeight;
+    }
+
+
+    cursorY += 20;
+
+    // 2. LAB LINK (Left Aligned, clickable) ---
+    pdf.setFont(MAIN_FONT, 'bold');
+    pdf.setFontSize(18);
+    pdf.setTextColor(LINK_COLOR_COVER); // Gold link color
+
+    const labLinkText = `Access Lab - URL`;
+    const url = data['lab-link'] && data['lab-link'].startsWith('http') ? data['lab-link'] : `https://${data['lab-link']}`;
+
+    let textWidth = pdf.getStringUnitWidth(labLinkText) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+
+    pdf.text(labLinkText, margin, cursorY);
+    if (data['lab-link']) {
+        pdf.link(margin, cursorY - 3, textWidth, 5, { url: url });
+    }
+    cursorY += 12;
+
+    // 3. CATEGORY ---
+    pdf.setFontSize(20);
+    pdf.setTextColor(COVER_TEXT_COLOR);
+    pdf.text(`Category: ${data['lab-category'] || 'N/A'}`, margin, cursorY);
+
+    // --- 2. TRANSITION TO MAIN CONTENT (Page 2 will be TOC, Page 3 will be content) ---
+    // This logic ensures Page 2 is the TOC and content starts correctly on Page 3
+    pdf.addPage(); // Now on Physical Page 2 (TOC placeholder)
+    pdf.addPage(); // Now on Physical Page 3 (Content starts here)
+    cursorY = margin;
+
+    // Set default style for content pages
+    pdf.setFillColor(bodyBgColor);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+    pdf.setTextColor(TEXT_COLOR);
+
+    // --- 3. BODY SECTIONS (Starts on Page 3) ---
+    addSection('Scope & Target', data.scope);
+    addSection('Vulnerable Point', data['vulnerable-point'], true);
+    addSection('What is Tried (Methodology)', data.tried);
+    addSection('What Not Worked (Key Failures)', data['not-worked']);
+    addSection('What Worked (Success Steps)', data.worked);
+    addSection('Final Payload', data['final-payload'], true);
+    // New section added here
+    addSection('Explain Payload structure and working', data['explain-payload-structure']);
+    addSection('Verification', data['lab-domain']);
+
+    // --- 4. GENERATE TOC AND RENDER UNIVERSAL FOOTER ---
+    generateTOC();
+    drawFooter();
+
+    pdf.save(filename);
+}
+
+
 
 
         // --- Initialization ---
@@ -703,7 +994,7 @@ ${data['final-payload'] || 'No final payload.'}
     <a href="https://github.com/SudoHopeX">
         <img src="https://sudohopex.github.io/img/made-with-love-by-sudohopex.png" alt="Made with ❤️ by SudoHopeX" style="width:301px; display:block; margin: 0px auto;">
     </a>
-    <!-- Include made using -->
+    <!-- Include made using HTML, Tailwind css, Js-->
     <p class="text-center text-gray-500 text-sm mt-2">Made using HTML, Tailwind CSS, jsPDF & Vanilla JS</p>
 </footer>
 </html>
