@@ -1,67 +1,268 @@
-// Terminal mode
-const terminalOverlay = document.getElementById('terminal-overlay');
+//# main.js v2.0
+
+// Global variable to temporarily hold the last input for the 'Tab' double-press check
+let lastAutocompleteInput = '';
+
+// Terminal mode elements
 const terminalOutput = document.getElementById('terminal-output');
-const terminalInput = document.getElementById('terminal-input');
 
-const welcomeMessage = `
-Welcome to the Terminal mode Portfolio of Krishna Dwivedi!
-For a list of available Commands, type 'help'
+// Input elements (declared here, assigned in initializeTerminal)
+let terminalInput;
+let activeInputLine;
+let activePromptText;
 
-`;
+// Configuration
+const typingSpeed = 20;        // typing speed for results
+const history = [];            // hold history of commands executed
+let historyIndex = -1;         // Index of the current history index in the array
+const maxHistory = 60;         // specifies max history commands
+let possibleCompletions = [];  // Holds the array of matching commands
+let completionIndex = -1;     // Index of the current suggestion in the array (-1 means LCP/initial state)
+let baseInputForCompletion = ''; // Stores the input when the first Tab was pressed (e.g., 'he')
 
- terminalOverlay.style.display = 'flex';
- terminalInput.focus();
- terminalOutput.textcontent = '';
- terminalOutput.textContent = welcomeMessage;
 
-function printOutput(text, animate = true) {
- if (animate) {
-   typeText(text, terminalOutput);
- } else {
-   asciiArt.style.display = 'none';
-   terminalOutput.textContent += text + '\n';
-   terminalOutput.scrollTop = terminalOutput.scrollHeight;
- }
+// Shell Identity Configuration
+const userName = 'Hope';
+const hostName = 'Krishna';
+let currentDirectory = '~';
+
+// Function for ASCII Art Content
+function getAsciiArt() {
+     return `
+   #       ######                                   #     #
+  # #      #     #   ##   #   #     ####  ######    #     #  ####  #####  ######
+ #   #     #     #  #  #   # #     #    # #         #     # #    # #    # #
+#     #    ######  #    #   #      #    # #####     ####### #    # #    # #####
+#######    #   #   ######   #      #    # #         #     # #    # #####  #
+#     #    #    #  #    #   #      #    # #         #     # #    # #      #
+#     #    #     # #    #   #       ####  #         #     #  ####  #      ######
+================================================================================
+              [[ SudoHopeX Terminal Interface Website ]]\n`;
+}
+
+// Prompt generation (first line only)
+function generatePrompt() {
+    // Structure: ┌──(USER@HOST)-[PATH]
+    //            └─$ //command
+    return `┌──(<span class="cli-prompt-user">${userName}</span>@<span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
+}
+
+// --- Initialization ---
+function initializeTerminal() {
+
+    // 1. Clone input elements from the hidden template and append to output
+    const inputTemplate = document.getElementById('input-template').querySelector('#active-input-line');
+    activeInputLine = inputTemplate.cloneNode(true);
+
+    // Append the active input line to the bottom of the scrollable output area
+    terminalOutput.appendChild(activeInputLine);
+
+    // 2. Re-assign the variables based on the elements now in the DOM
+    activePromptText = activeInputLine.querySelector('#active-prompt-text');
+    terminalInput = activeInputLine.querySelector('#terminal-input');
+
+    // 3. Set initial colored prompt
+    activePromptText.innerHTML = generatePrompt();
+
+    // 4. Insert the ASCII art *before* the active input line
+    const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:10px; margin-bottom:4px;">${getAsciiArt()}</div>`;
+    terminalOutput.insertAdjacentHTML('afterbegin', asciiHtml);
+
+    const welcomeMessage = `
+Welcome to the Terminal mode Portfolio of <span class="cli-prompt-user">${hostName}</span>!.
+
+For a list of available Commands, type '<span class="cli-success">help</span>'
+\n`;
+    // 5. Start typing the welcome message
+    typeText(welcomeMessage, () => {
+        terminalInput.focus();
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    });
+
+    // Re-attach event listeners now that terminalInput is defined
+    setupEventListeners();
 }
 
 // Typing animation function
-function typeText(text, element) {
- let i = 0;
- const typeInterval = setInterval(() => {
-   if (i < text.length) {
-     element.textContent += text.charAt(i);
-     i++;
-     element.scrollTop = element.scrollHeight;
-   } else {
-     element.textContent += '\n';
-     clearInterval(typeInterval);
-   }
- }, 40); // Adjust speed by changing the interval
+function typeText(text, callback = () => {}) {
+    let i = 0;
+    let currentContent = '';
+
+    // Create a temporary element to hold the animated text
+    const tempOutputElement = document.createElement('div');
+    tempOutputElement.style.whiteSpace = 'pre-wrap';
+
+    // Insert the temporary element just before the active input line
+    terminalOutput.insertBefore(tempOutputElement, activeInputLine);
+
+    const typeInterval = setInterval(() => {
+        if (i < text.length) {
+            currentContent += text.charAt(i);
+            tempOutputElement.innerHTML = currentContent;
+            i++;
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        } else {
+            clearInterval(typeInterval);
+            callback();
+        }
+    }, typingSpeed);
 }
 
-// Autocompletion feature
+// Function to print a static line of output
+function printStaticOutput(text) {
+     // Insert the new output just before the active input line
+     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; padding: 0; margin: 0;">${text}</div>\n`);
+     terminalOutput.scrollTop = terminalOutput.scrollHeight;
+}
+
+// Main output function - Ensures the prompt/input is at the end
+function printOutput(command, response, animate = true ) {
+
+    if (['help', 'sudo hope'].includes(command)) {
+        animate = false;
+    }
+
+    // 1. Permanently write the executed command line (PROMPT + COMMAND)
+    const promptPrefix = activePromptText.innerHTML;
+    // Manually add the full prompt for the historical record
+    const staticCommandLine = promptPrefix + '\n└─$ ' + command;
+    printStaticOutput(staticCommandLine);
+
+    // 2. Clear the active input field
+    terminalInput.value = '';
+
+    // 3. Print the response
+    if (response) {
+        if (animate) {
+            typeText(response, () => {
+                terminalInput.focus();
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            });
+        } else {
+            printStaticOutput(response);
+            terminalInput.focus();
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+    } else {
+        terminalInput.focus();
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+
+    // 4. Update the prompt text for the *next* command
+    activePromptText.innerHTML = generatePrompt();
+}
+
+// --- Autocompletion and Commands (omitted for brevity) ---
 let autocompleteAction = true;
 const commandsList = [
- 'help', 'about', 'skills', 'projects','qualification', 'contact', 'clear', 'exit',
- 'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobby', 'quote',
- 'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'resume', 'pwd',
- 'whoami', 'autocomplete-d', 'autocomplete-e', 'home', 'experience', 'openpuffi', 
- 'hashstorm'
+    'help', 'about', 'skills', 'projects','qualification', 'contact', 'clear', 'exit',
+    'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobby', 'quote',
+    'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'resume', 'pwd',
+    'whoami', 'autocomplete-d', 'autocomplete-e', 'home', 'experience', 'openpuffi',
+    'hashstorm', 'keylogger'
 ];
 
+// autocompletion fn
 function autocomplete(input) {
- const matches = commandsList.filter(cmd => cmd.startsWith(input.toLowerCase()));
- if (matches.length > 0 && input !== '') {
-   terminalInput.value = matches[0];
-   terminalInput.setSelectionRange(input.length, matches[0].length);
- }
+    if (!autocompleteAction) return;
+    const trimmedInput = input.trim();
+    const lowerInput = trimmedInput.toLowerCase();
+
+    // --- State Check: Has the user typed something new? ---
+    // If the current input does NOT match the base input for completion,
+    // or if the base input hasn't been set yet, we reset the state.
+    if (!lowerInput.startsWith(baseInputForCompletion) || baseInputForCompletion === '') {
+
+        // 1. New Search: Set the new base input and find fresh matches.
+        baseInputForCompletion = lowerInput;
+        possibleCompletions = commandsList.filter(cmd => cmd.startsWith(lowerInput)).sort();
+
+        // 2. Reset Index: Set to -1. The logic below will immediately move it to 0.
+        completionIndex = -1;
+    }
+
+    if (possibleCompletions.length === 0) {
+        // No matches found, do nothing, keep current input.
+        completionIndex = -1;
+        baseInputForCompletion = ''; // Resetting this here allows a new attempt on the next tab.
+        return;
+    }
+
+    // Handle single match immediately (to skip the list/cycle logic)
+    if (possibleCompletions.length === 1) {
+        const match = possibleCompletions[0];
+        terminalInput.value = match;
+        terminalInput.setSelectionRange(lowerInput.length, match.length);
+        baseInputForCompletion = match.toLowerCase(); // Treat as fully completed
+        return;
+    }
+
+    // --- Cycle Logic ---
+
+    // Move to the next index.
+    completionIndex++;
+
+    // Check for wrap-around (past the last match)
+    if (completionIndex >= possibleCompletions.length) {
+        completionIndex = -1; // -1 is our dedicated state for "Print List"
+    }
+
+    // --- Action Execution ---
+
+    if (completionIndex === -1) {
+        // State -1: Print the list of all matches.
+
+        // 1. Permanently write the current prompt and command line
+        const staticCommandLine = activePromptText.innerHTML + '\n└─$ ' + trimmedInput;
+        printStaticOutput(staticCommandLine);
+
+        // 2. Format and print the list
+        const columns = 4;
+        let output = '';
+        let tempLine = '';
+
+        for (let i = 0; i < possibleCompletions.length; i++) {
+            const rawPadded = possibleCompletions[i].padEnd(20, ' ');
+            tempLine += `<span class="cli-data">${rawPadded}</span>`;
+
+            if ((i + 1) % columns === 0 || i === possibleCompletions.length - 1) {
+                output += tempLine + '\n';
+                tempLine = '';
+            }
+        }
+        printStaticOutput(output.trim());
+
+        // 3. Restore the active prompt and input line, using the base input (e.g., 'he')
+        activePromptText.innerHTML = generatePrompt();
+        terminalInput.value = baseInputForCompletion;
+
+        // CRITICAL: Reset the index to 0 so the NEXT tab press shows the first match.
+        completionIndex = 0;
+
+    } else {
+        // State 0 or greater: Cycle to the next suggested match.
+
+        const nextCompletion = possibleCompletions[completionIndex];
+
+        terminalInput.value = nextCompletion;
+
+        // Select the part that the user hasn't finished typing (from the end of the base input)
+        const selectionStart = baseInputForCompletion.length;
+
+        terminalInput.setSelectionRange(selectionStart, nextCompletion.length);
+    }
+
+    terminalInput.focus();
 }
 
-terminalInput.addEventListener('input', (e) => {
- if (autocompleteAction == true){
-   autocomplete(e.target.value);
- }
-});
+function switch_theme(){
+     document.body.classList.toggle('light-theme');
+     if (document.body.classList.contains('light-theme')) {
+         return '<span class="cli-warning">Theme switched to Light Mode!</span>';
+     } else {
+         return '<span class="cli-success">Theme switched to Dark Mode!</span>';
+     }
+}
 
 const riddles = [
  { question: "I sneak into systems without a key, cracking codes is my specialty. What am I?", answer: "a hacker" },
@@ -113,204 +314,349 @@ const riddles = [
 let currentRiddleIndex = -1;
 let riddleActive = false;
 
+const jokes = [
+     "Why don't skeletons fight each other? They don't have the guts!",
+     "Why did the computer go to school? It wanted to improve its skills!",
+     "Why don't programmers like dark mode? Because they can't see the bugs!",
+     "What do you call a bear with no teeth? A gummy bear!",
+     "Why did the tomato turn red? Because it saw the salad dressing!",
+     "Why don't eggs tell jokes? They'd crack each other up!",
+     "What do you call a computer that sings? A-Dell!",
+     "Why was the math book sad? It had too many problems!",
+     "What do you get when you cross a snowman and a vampire? Frostbite!",
+     "Why did the programmer break up with their partner? They had too many arguments!",
+     "What do you call a dog magician? A labracadabrador!",
+     "Why did the cookie go to the hospital? It felt crummy!",
+     "Why don't some couples go to the gym? Because some relationships don't work out!",
+     "What do you call a factory that makes okay products? A satisfactory!",
+     "Why did the JavaScript developer feel sad? Because they didn't know how to 'null' their feelings!",
+     "What do you call a boomerang that doesn't come back? A stick!",
+     "Why did the scarecrow become a motivational speaker? He was outstanding in his field!",
+     "What do you call cheese that isn't yours? Nacho cheese!",
+     "Why did the database administrator leave their job? They couldn't get a good connection!"
+];
+
 function fetchDetails(command) {
- command = command.toLowerCase().trim();
- switch (command) {
-   case 'help':
-   return '\nCommands and their Descriptions:\n' +
-           'about           -> about me ;)\n' +
-           'autocomplete-d  -> diable command autocomplete\n'+
-           'cc-course       -> Go to CC practice quiz\n' +
-           'clear           -> Clear terminal\n' +
-           'contact         -> Show my contact info\n' +
-           'resume          -> Request 2 Download my resume\n' +
-           'qualification   -> See my educational qualifications\n' +
-           'experience      -> Know Experience\n'+
-           'email           -> Send me an email\n' +
-           'home            -> Leave terminal mode & redirect to home\n' +
-           'game            -> Play a riddle game\n' +
-           'github          -> Redirect to GitHub\n' +
-           'hello           -> Greetings\n' +
-           'help            -> Show this help\n' +
-           'hobby           -> Know my hobby\n' +
-           'i love you      -> Special message\n' +
-           'joke            -> Hear a joke\n' +
-           'linkedin        -> Go to LinkedIn to connect\n' +
-           'location        -> Get owner residing location\n' +
-           'projects        -> List my creative projects\n' +
-           'pwd             -> Print working directory\n' +
-           'skills          -> List skills\n' +
-           'theme           -> Toggle theme\n' +
-           'whoishe         -> See dear\'s info\n' +
-           'whoami          -> Show current username'+
-           '\n\nUtilities:\n'+
-           'ctrl + l      =>  clear terminal\n'+
-           'autocomplete  =>  enabled [default]';
-   case 'sudo hope':
-     return asciiArt + welcomeMessage;
-   case 'autocomplete-d':
-       autocompleteAction = false;
-     return 'autocomplete is diabled, to enable it again type `autocomplete-e`.';
-     case 'autocomplete-e':
-       autocompleteAction = true;
-     return 'autocomplete is enabled, to disable it again type `autocomplete-d`.';
-   case 'about':
-     return 'Krishna is passionate aspiring cybersecurity expert with a focus on information security and ethical hacking.';
-   case 'contact':
-     return 'Email: sud0hope[dot]techie@gmail[at]com\nLinkedIn: linkedin.com/in/dkrishna0124\nGitHub: github.com/SudoHopeX\nCredly: https://www.credly.com/users/krishna-dwivedi.a2ae4587';
-   case 'clear':
-     terminalOutput.textContent = '';
-     return '';
-   case 'experience':
-     return 'Ethical Hacker Internship at Inlighntech pvt. ltd.';
-   case 'qualification':
-     return 'ISC2 Certified in Cybersecurity Cert.\nIBM’s Cyber Security Fundamentals Cert.\nBachelor❜s in Technology with CSE(Computer Science Engineering)\nHarvard❜s Aspire graduate under ALP(Aspire Leadership Program) Cohort 3, 2024';
-   case 'email':
-     window.open('mailto:sud0hope.techie@gmail.com', '_blank');
-     return 'Opened email client in a new tab...'+
-             'or mail at: sud0hope[dot]techie[at]gmail.com';
-   case 'home':
-     window.location.replace('/');
-     return 'Terminal mode exiting. See you dear!';
-   case 'projects':
-     return '[^] HashStorm - An automated Hash identifier & cracker built using python (type `hashstorm` to read documentation).\n'
-            +'[^] OpenPuffi - A bashScript to automate OpenPuff Steganography tool & Wine 32-bit installation to run window based tools on linux like openpuff (type `openpuffi` to redirect there).\n'
-            +'[^] ISC2 CC Practive Quiz - Crafted an FREE ISC2 Certified in Cybersecurity practive quiz to practive 4 cc exam (type `cc-course` to redirect there).\n'
-            +'[^] Keylogger using Python - Coded a Keylogger to capture Keyboard chars and send them to a webserver (type `keylogger` to read writeup).\n';
-   case 'skills':
-     return '- Penetration Testing\n- Ethical Hacking\n- Vulnerability Assessment\n- Python Scripting\n- Cyber Awareness Advocacy';
-   case 'whoishe':
-     return 'A Human being! 😊\nI\'m Krishna Dwivedi, an aspiring cybersecurity expert (Ethical Hacker and InfoSec Analyst) and yours friendly guide in this digital space.';
-   case 'linkedin':
-     window.open('https://www.linkedin.com/in/dkrishna0124', '_blank', 'noopener,noreferrer');
-     return 'Connect with me on LinkedIn opened on new tab';
-   case 'github':
-     window.open('https://github.com/sudohopex', '_blank', 'noopener,noreferrer');
-     return 'Opening GitHub in a new tab...';
-   case 'cc-course':
-     window.open('https://sudohopex.github.io/cc-practice-quiz/', '_blank', 'noopener,noreferrer');
-     return 'Explore my ISC2 certified in cybersecurity practice quiz opened in new tab.';
-  case 'hashstorm':
-      window.open('https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html', '_blank', 'noopener,noreferrer');
-      return 'Redirected to HashStorm Documentation. If not search: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html';
-  case 'openpuffi':
-     window.open('https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html', '_blank', 'noopener,noreferrer');
-     return 'Redirected to OpenPuffi Documentation. If not Visit: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html';
-   case 'keylogger':
-     window.open('https://sudohopex.github.io/pages/comingsoon.html');
-     return 'Redirected to Keylogger. If not search: https://sudohopex.github.io/pages/comingsoon.html';
-   case 'location':
-     return 'I am in Your System, right now..\n Belongs to Uttar Pradesh (aka UP), INDIA.';
-   case 'hobby':
-     return 'In my free time, I enjoy:\n- Coding personal projects\n- Reading cybersecurity blogs\n- Reading Books \n- Watching Hacking Documentaries\n- Exploring new tech gadgets';
-   case 'quote':
-     return 'विचारों का थहर जाना ही आनंद है | विचाराणां स्थैर्यं एव आनन्दः अस्ति | The stillness of thoughts is bliss.';
-   case 'status':
-     return 'Current Status: Actively seeking cybersecurity opportunities and exploring something new almost daily!';
-   case 'theme':
-     document.body.classList.toggle('light-theme');
-     const terminalOverlay = document.getElementById('terminal-overlay');
-     if (document.body.classList.contains('light-theme')) {
-         if (terminalOverlay) {
-             terminalOverlay.style.background = 'rgba(240, 240, 245, 0.95)';
-             terminalOverlay.style.color = '#2c3e50';
+    command = command.toLowerCase().trim();
+    let response = '';
+
+    const getLinkResponse = (cmd) => {
+        switch (cmd) {
+            case 'linkedin': return `Redirected to <span class="cli-link">LinkedIn</span> in a new tab... [URL: https://www.linkedin.com/in/dkrishna0124]`;
+            case 'github': return `Redirected to <span class="cli-link">GitHub</span> in a new tab... [URL: https://github.com/sudohopex]`;
+            case 'credly': return `Redirected to <span class="cli-link">Credly</span> in a new tab... [URL: https://www.credly.com/users/krishna-dwivedi.a2ae4587]`;
+            case 'cc-course': return `Exploring <span class="cli-link">ISC2 CC Practice Quiz</span>... [URL: https://sudohopex.github.io/cc-practice-quiz/]`;
+            case 'kaligpt': return `Opening <span class="cli-link">KaliGPT Documentation</span>... [URL: https://sudohopex.github.io/pages/project-docs/kaligpt.kjiodjfianjfkjnsifoifsidfh.html]`;
+            case 'hashstorm': return `Opening <span class="cli-link">HashStorm Documentation</span>... [URL: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html]`;
+            case 'openpuffi': return `Opening <span class="cli-link">OpenPuffi Documentation</span>... [URL: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html]`;
+            case 'keylogger': return `Opening <span class="cli-link">Keylogger Writeup</span>... [URL: https://sudohopex.github.io/pages/comingsoon.html]`;
+            default: return '';
+        }
+    };
+
+    if (['linkedin', 'github', 'cc-course', 'hashstorm', 'openpuffi', 'keylogger', 'credly', 'kaligpt'].includes(command)) {
+        response = getLinkResponse(command);
+        const urlMatch = response.match(/https?:\/\/[^\s\[\]]+/);
+        if (urlMatch) {
+            window.open(urlMatch[0], '_blank', 'noopener,noreferrer');
+        }
+        return response;
+    }
+
+    switch (command) {
+        case 'help':
+           response = `<span class="cli-warning">Commands and their Descriptions:</span>\n\n` +
+
+                        `<span class="cli-warning">--- Core Portfolio Commands ---</span>\n` +
+                        `<span class="cli-data">about</span>           -> About me (your elevator pitch)\n` +
+                        `<span class="cli-data">skills</span>          -> List technical skills\n` +
+                        `<span class="cli-data">experience</span>      -> Know professional experience\n`+
+                        `<span class="cli-data">projects</span>        -> List my creative projects\n` +
+                        `<span class="cli-data">qualification</span>   -> See my educational qualifications\n` +
+                        `<span class="cli-data">resume</span>          -> Request 2 Download my resume\n\n` +
+
+                        `<span class="cli-warning">--- Contacts ---</span>\n` +
+                        `<span class="cli-data">contact</span>         -> Show my contact info (Email, LinkedIn, GitHub)\n` +
+                        `<span class="cli-data">email</span>           -> Send me an email (Opens mail client)\n` +
+                        `<span class="cli-data">linkedin</span>        -> Go to LinkedIn to connect\n` +
+                        `<span class="cli-data">github</span>          -> Redirect to GitHub\n` +
+                        `<span class="cli-data">location</span>        -> Get owner residing location\n\n` +
+
+                        `<span class="cli-warning">--- Terminal & Navigation ---</span>\n` +
+                        `<span class="cli-data">clear</span>           -> Clear the terminal screen\n` +
+                        `<span class="cli-data">home/exit</span>       -> Leave terminal mode & redirect to GUI home\n` +
+                        `<span class="cli-data">pwd</span>             -> Print working directory (Shows current path)\n` +
+                        `<span class="cli-data">whoami</span>          -> Show current username\n\n`+
+
+                        `<span class="cli-warning">--- Fun & Engagement ---</span>\n` +
+                        `<span class="cli-data">hello</span>           -> Greetings\n` +
+                        `<span class="cli-data">hobby</span>           -> Know my hobby\n` +
+                        `<span class="cli-data">joke</span>            -> Hear a joke\n` +
+                        `<span class="cli-data">game</span>            -> Play a riddle game\n` +
+                        `<span class="cli-data">whoishe</span>         -> See dear's info (A fun personal touch)\n` +
+                        `<span class="cli-data">i love you</span>      -> Special message (The least important, but fun!)\n\n`+
+
+                        `<span class="cli-warning">--- Utilities ---</span>\n`+
+                        `<span class="cli-data">theme</span>         =>  Toggle terminal theme (dark/light)\n` +
+                        `<span class="cli-data">ctrl + l</span>      =>  clear terminal\n`+
+                        `<span class="cli-data">TAB</span>           =>  use autocompletion (switch b/w possible completion)\n`+
+                        `<span class="cli-data">autocomplete</span>  =>  ` + (autocompleteAction ? '<span class="cli-success">enabled</span> (to disable autocomplete-d)' : '<span class="cli-error">disabled</span> (to enable autocomplete-e)');
+           break;
+
+        case 'clear':
+            terminalOutput.innerHTML = '';
+
+            // Re-insert the active input line container at the bottom
+            terminalOutput.appendChild(activeInputLine);
+            activePromptText.innerHTML = generatePrompt();
+
+            terminalInput.focus();
+            break;
+
+        case 'pwd':
+            currentDirectory = '~';
+            response = `/home/<span class="cli-prompt-user">${userName}</span>/<span class="cli-warning">${currentDirectory}</span>`;
+            break;
+
+       case 'whoami':
+            response = `<span class="cli-prompt-user">${userName}</span>`;
+            break;
+
+       case 'theme':
+             response = switch_theme();
+             break;
+
+       case 'sudo hope':
+             response = getAsciiArt() + "\n" +
+                        "Welcome to the Terminal mode Portfolio of <span class=\"cli-host-host\">Krishna (SudoHopeX)</span>!\n\n" +
+                        "For a list of available Commands, type '<span class=\"cli-success\">help</span>'";
+             break;
+
+       case 'autocomplete-d':
+             autocompleteAction = false;
+             response = '<span class="cli-error">autocomplete is disabled</span>, to enable it again type <span class="cli-success">`autocomplete-e`</span>.';
+             break;
+
+       case 'autocomplete-e':
+           autocompleteAction = true;
+           response = '<span class="cli-success">autocomplete is enabled</span>, to disable it again type <span class="cli-error">`autocomplete-d`</span>.';
+           break;
+
+       case 'about':
+         response = '<span class="cli-success">Krishna is passionate aspiring cybersecurity expert with a focus on information security and ethical hacking.</span>';
+         break;
+
+       case 'contact':
+         response = `[+] Email: <span class="cli-link">sud0hope[dot]techie[at]gmail[dot]com</span> (type 'email' to send me an email)\n`
+                  + `[+] LinkedIn: <span class="cli-link">in/dkrishna0124</span> (type 'linkedin' to see profile)\n`
+                  + `[+] GitHub: <span class="cli-link">github.com/SudoHopeX</span> (type 'github' to see profile)\n`
+                  + `[+] Credly: <span class="cli-link">users/krishna-dwivedi.a2ae4587</span> (type 'credly' to see profile)`;
+         break;
+
+       case 'experience':
+         response = 'Ethical Hacker Internship at <span class="cli-data">Inlighntech pvt. ltd.</span>';
+         break;
+
+       case 'qualification':
+         response = `[+] <span class="cli-data">ISC2 Certified in Cybersecurity Cert.</span>\n`
+                   + `[+] <span class="cli-data">IBM’s Cyber Security Fundamentals Cert.</span>\n`
+                   + `[+] Bachelor❜s in Technology with <span class="cli-data">CSE(Computer Science Engineering)</span>\n`
+                   + `[+] Harvard❜s Aspire graduate under <span class="cli-data">ALP(Aspire Leadership Program) Cohort 3, 2024</span>`;
+         break;
+
+       case 'email':
+         const dot = '.';
+         const at = "@";
+         const e = `mailto:sud0hope${dot}techie${at}gmail.com`;
+         window.open(e, '_blank');
+         response = 'Opened email client in a new tab... or mail at: <span class="cli-link">sud0hope[dot]techie[at]gmail[dot]com</span>';
+         break;
+
+       case 'home':
+       case 'exit':
+         window.location.replace('/');
+         response = '<span class="cli-warning">Terminal mode exiting. See you dear!</span>';
+         break;
+
+       case 'projects':
+         response = `[+] <span class="cli-data">Website: for blogs, writeups, tool docs etc. </span> (type <span class="cli-warning">home</span>) [URL: https://sudohopex.github.io/]\n\n`
+                + `[+] <span class="cli-data">KaliGPT: An AI assistance built next into your Linux terminal</span> (type <span class="cli-warning">kaligpt</span>) [URL: https://sudohopex.github.io/pages/project-docs/kaligpt.kjiodjfianjfkjnsifoifsidfh.html]\n\n`
+                + `[+] <span class="cli-data">HashStorm: An Hash Identifier & Cracker</span> (type <span class="cli-warning">hashstorm</span>) [URL: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html]\n\n`
+                + `[+] <span class="cli-data">OpenPuffi: Install OpenPuff an steganography tool</span> (type <span class="cli-warning">openpuffi</span>) [URL: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html]\n\n`
+                + `[+] <span class="cli-data">ISC2 CC Practive Quiz</span> (type <span class="cli-warning">cc-course</span>) [URL: https://sudohopex.github.io/cc-practice-quiz/]\n\n`
+                + `[+] <span class="cli-data">Keylogger with server using Python</span> (type <span class="cli-warning">keylogger</span>) [URL: https://sudohopex.github.io/pages/comingsoon.html]\n`;
+         break;
+
+       case 'skills':
+         response = ` <span class="cli-warning">Primary Skills:</span>\n`
+                  + `- <span class="cli-data">Penetration Testing</span>\n`
+                  + `- <span class="cli-data">Ethical Hacking</span>\n`
+                  + `- <span class="cli-data">Vulnerability Assessment</span>\n`
+                  + `- <span class="cli-data">Python Scripting</span>\n`
+                  + `- <span class="cli-data">Cyber Awareness Advocacy</span>`;
+         break;
+
+       case 'whoishe':
+         response = 'A Human being! 😊\nI\'m <span class="cli-prompt-host">Krishna Dwivedi</span>, an aspiring cybersecurity expert (Ethical Hacker and InfoSec Analyst) and yours friendly guide in this digital space.';
+         break;
+
+       case 'location':
+         response = 'I am in Your System, right now..\n Belongs to <span class="cli-warning">Uttar Pradesh (aka UP), INDIA.</span>';
+         break;
+
+       case 'hobby':
+         response = 'In my free time, I enjoy:\n- Coding personal projects\n- Reading cybersecurity blogs\n- Reading Books \n- Watching Hacking Documentaries\n- Exploring new tech gadgets';
+         break;
+
+       case 'joke':
+         response = jokes[Math.floor(Math.random() * jokes.length)];
+         break;
+
+
+       case 'resume':
+           response = `<span class="cli-error">Breach Failure!</span> Resume download not allowed due to privacy. You can request on <span class="cli-link">https://sudohopex.github.io/message-popup.html</span> or mail at <span class="cli-link">sud0hope[dot]techie[at]gmail[dot]com</span>`;
+           break;
+
+       case 'game':
+         if (!riddleActive) {
+           riddleActive = true;
+           currentRiddleIndex = Math.floor(Math.random() * riddles.length);
+           response = `<span class="cli-warning">Let's play a riddle game!</span> Here's your riddle:\n<span class="cli-data">${riddles[currentRiddleIndex].question}</span>\nType your answer or "<span class="cli-success">skip</span>" to move to another riddle.`;
+         } else {
+           response = 'You are already in a game. Answer the current riddle or type "<span class="cli-success">skip</span>" to get a new one.';
          }
-         return 'Theme switched to Light Mode!';
-     } else {
-         if (terminalOverlay) {
-             terminalOverlay.style.background = 'rgba(10, 15, 26, 0.95)';
-             terminalOverlay.style.color = '#7f5af0';
-         }
-         return 'Theme switched to Dark Mode!';
-     }
-   case 'i love you':
-     return '💻 BUT ! L0V3 HACKING too much 😁 💻\n' +
-            'H - Hack the planet!\n' +
-            'A - Always learning!\n' +
-            'C - Code is power!\n' +
-            'K - Keep exploring!\n' +
-            'I - Innovate daily!\n' +
-            'N - Never stop!\n' +
-            'G - Grow through challenges!\n' +
-            '*************************';
-   case 'hello':
-     return 'Namaste! How can I serve you ?\n'+
-            'For a list of available Commands, type `help`';
-   case 'joke':
-       const jokes = [
-         "Why don't skeletons fight each other? They don't have the guts!",
-         "Why did the computer go to school? It wanted to improve its skills!",
-         "Why don't programmers like dark mode? Because they can't see the bugs!",
-         "What do you call a bear with no teeth? A gummy bear!",
-         "Why did the tomato turn red? Because it saw the salad dressing!",
-         "Why don't eggs tell jokes? They'd crack each other up!",
-         "What do you call a computer that sings? A-Dell!",
-         "Why was the math book sad? It had too many problems!",
-         "What do you get when you cross a snowman and a vampire? Frostbite!",
-         "Why did the programmer break up with their partner? They had too many arguments!",
-         "What do you call a dog magician? A labracadabrador!",
-         "Why did the cookie go to the hospital? It felt crummy!",
-         "Why don't some couples go to the gym? Because some relationships don't work out!",
-         "What do you call a factory that makes okay products? A satisfactory!",
-         "Why did the JavaScript developer feel sad? Because they didn't know how to 'null' their feelings!",
-         "What do you call a boomerang that doesn't come back? A stick!",
-         "Why did the scarecrow become a motivational speaker? He was outstanding in his field!",
-         "What do you call cheese that isn't yours? Nacho cheese!",
-         "Why did the database administrator leave their job? They couldn't get a good connection!"
-       ];
-     return jokes[Math.floor(Math.random() * jokes.length)];
-   case 'game':
-     if (!riddleActive) {
-       riddleActive = true;
-       currentRiddleIndex = Math.floor(Math.random() * riddles.length);
-       return 'Let\'s play a riddle game! Here\'s your riddle:\n' + riddles[currentRiddleIndex].question + '\nType your answer or "skip" to move to another riddle.';
-     } else {
-       return 'You are already in a game. Answer the current riddle or type "skip" to get a new one.';
-     }
-   case 'resume':  terminalOutput.textcontent = '';
-       return 'Breach Failure! Resume download not allowed due to privacy, You can request on `https://sudohopex.github.io/message-popup.html` or mail at `sud0hope[dot]techie[at]gmail.com`';
-   case 'pwd':
-     return 'home/^_~';
-   case 'whoami':
-     return 'Hope';
-   default:
-     if (riddleActive) {
-       if (command === 'skip') {
-         currentRiddleIndex = Math.floor(Math.random() * riddles.length);
-         return 'Skipping to a new riddle:\n' + riddles[currentRiddleIndex].question + '\nType your answer or "skip" again.';
-       } else if (command === riddles[currentRiddleIndex].answer.toLowerCase()) {
-         riddleActive = false;
-         return 'Hacked! You breached the Riddle! Type "game" to play again.';
-       } else {
-         return 'Breach failure! Try again or type "skip" for a new riddle.';
-       }
-     }
-     return 'Breach failure! Type "help" for a list of available commands.';
- }
+         break;
+
+       case 'i love you':
+             response = '💻 BUT <span class="cli-data">! L0V3 HACKING</span> too much 😁 💻\n' +
+                        '<span class="cli-warning">H</span> - Hack the planet!\n' +
+                        '<span class="cli-warning">A</span> - Always learning!\n' +
+                        '<span class="cli-warning">C</span> - Code is power!\n' +
+                        '<span class="cli-warning">K</span> - Keep exploring!\n' +
+                        '<span class="cli-warning">I</span> - Innovate daily!\n' +
+                        '<span class="cli-warning">N</span> - Never stop!\n' +
+                        '<span class="cli-warning">G</span> - Grow through challenges!\n\n';
+             break;
+
+        case 'hello':
+             response = 'Namaste! How can I serve you ?\n'+
+                    'For a list of available Commands, type <span class="cli-success">`help`</span>';
+             break;
+
+        case 'quote':
+            response = 'विचारों का थहर जाना ही आनंद है | विचाराणां स्थैर्यं एव आनन्दः अस्ति | The stillness of thoughts is bliss.';
+            break;
+
+        case 'status':
+            response = 'Current Status: Actively seeking cybersecurity opportunities and exploring something new almost daily!';
+            break;
+
+       default:
+            if (riddleActive) {
+                   if (command === 'skip') {
+                     currentRiddleIndex = Math.floor(Math.random() * riddles.length);
+                     response = `Skipping to a new riddle:\n<span class="cli-data">${riddles[currentRiddleIndex].question}</span>\nType your answer or "<span class="cli-success">skip</span>" again.`;
+                   } else if (command === riddles[currentRiddleIndex].answer.toLowerCase()) {
+                     riddleActive = false;
+                     response = '<span class="cli-success">Hacked! You breached the Riddle!</span> Type "<span class="cli-success">game</span>" to play again.';
+                   } else {
+                     response = '<span class="cli-error">Breach failure!</span> Try again or type "<span class="cli-success">skip</span>" for a new riddle.';
+                   }
+            } else {
+                 response = `<span class="cli-error">Breach failure!</span> Command <span class="cli-data">'${command}'</span> not found. Type "<span class="cli-success">help</span>" for a list of available commands.`;
+            }
+            break;
+    }
+
+    return response;
 }
 
-document.addEventListener('keydown', function(event) {
-if (event.ctrlKey && (event.key === 'l' || event.key === 'L')) {
-   event.preventDefault();
-   asciiArt.style.display = 'none';
-   terminalOutput.textContent = '';
+// --- Event Listeners and Execution Flow ---
+
+function setupEventListeners() {
+    // History Navigation (UP/DOWN Arrow Keys) and Tab Completion
+    terminalInput.addEventListener('keydown', (e) => {
+        // History
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (history.length > 0) {
+                historyIndex = Math.min(historyIndex + 1, history.length - 1);
+                terminalInput.value = history[history.length - 1 - historyIndex];
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                terminalInput.value = history[history.length - 1 - historyIndex];
+            } else if (historyIndex === 0) {
+                historyIndex = -1;
+                terminalInput.value = '';
+            }
+        }
+
+        // Tab Completion
+        else if (e.key === 'Tab') {
+            e.preventDefault();
+            autocomplete(terminalInput.value);
+        }
+    });
+
+
+    terminalInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const cmd = terminalInput.value.trim();
+
+            // 1. Handle Empty Command
+            if (cmd === '') {
+                 // Print the prompt with the second line manually added for history
+                printStaticOutput(activePromptText.innerHTML + '\n└─$ ');
+                terminalInput.value = '';
+                terminalInput.focus();
+                return;
+            }
+
+            // 2. Add to History
+            if (cmd !== history[history.length - 1]) {
+                history.push(cmd);
+                if (history.length > maxHistory) {
+                    history.shift();
+                }
+            }
+            historyIndex = -1;
+            lastAutocompleteInput = '';
+
+            // 3. Process Command
+            const response = fetchDetails(cmd);
+
+            // 4. Output Response
+            printOutput(cmd, response, animate = true);
+
+            // 5. Manage ASCII art visibility
+            const asciiElement = terminalOutput.querySelector('#asciiArt');
+            if (cmd.toLowerCase() === 'sudo hope') {
+                 // Sudo hope command will regenerate the ASCII art as part of the response output
+            } else {
+                 // Hide it for all other commands
+                 if (asciiElement) asciiElement.style.display = 'none';
+            }
+        }
+    });
+
+    // Ctrl+L to clear terminal
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && (event.key === 'l' || event.key === 'L')) {
+            event.preventDefault();
+            terminalOutput.innerHTML = '';
+
+            // Re-insert the active input line container at the bottom
+            terminalOutput.appendChild(activeInputLine);
+            activePromptText.innerHTML = generatePrompt();
+
+            terminalInput.focus();
+        }
+    });
 }
 
-});
-
-terminalInput.addEventListener('keydown', (e) => {
- if (e.key === 'Enter') {
-   const cmd = terminalInput.value;
-   printOutput('\n┌──(Hope㉿Krishna)-[^_~]\n└─$ ' + cmd, false);
-   const response = fetchDetails(cmd);
-  
-  if (cmd.toLowerCase().trim() == 'help' || cmd.toLowerCase().trim() == 'sudo hope') {
-     animate = false;
-  } else {
-     animate = true;
-  }
-   if (response) printOutput(response, animate);
-   asciiArt.style.display = 'none';
-   terminalInput.value = '';
- }
-});
+// Run initialization when the DOM is ready
+document.addEventListener('DOMContentLoaded', initializeTerminal);
