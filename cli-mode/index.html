@@ -1,30 +1,36 @@
+<!-- Version 2.0 of CLI Mode Portfolio by SudoHopeX -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1" />
    <title> CLI | Krishna Dwivedi 🥷🚩</title>
-   <link rel="icon" type="png|image" href="/K-ICON2.png">
+   <link rel="icon" type="image/png" href="../img/K-ICON2.png">
    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+
    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 <main>
 </main>
    <div id="terminal-overlay">
-      <a href="/" style="text-decoration: none; text-align: right;">GUI Home</a>
-      <pre id="asciiArt" class="responsive-art">
-   #       ######                                   #     #                      
-  # #      #     #   ##   #   #     ####  ######    #     #  ####  #####  ###### 
- #   #     #     #  #  #   # #     #    # #         #     # #    # #    # #      
-#     #    ######  #    #   #      #    # #####     ####### #    # #    # #####  
-#######    #   #   ######   #      #    # #         #     # #    # #####  #      
-#     #    #    #  #    #   #      #    # #         #     # #    # #      #      
-#     #    #     # #    #   #       ####  #         #     #  ####  #      ######                                                                             
-================================================================================                             
-      </pre>
-      <div id="terminal-output"></div>
-      <input type="text" id="terminal-input" placeholder="Type command and press Enter..." autocomplete="on" />
+      <a href="/" id="gui-home-link">GUI Home</a>
+
+      <div id="terminal-output">
+      </div>
+
+   </div>
+
+   <div id="input-template" style="display:none;">
+       <div id="active-input-line" class="input-line">
+            <span id="active-prompt-text" style="margin-left: -86px;">┌──(<span class="cli-prompt-user">Hope</span>@<span class="cli-prompt-host">Krishna</span>)-[<span class="cli-warning">~</span>]</span>
+            <div style="display: flex; flex: column">
+               <label for="terminal-input" style="margin-left: -14px;">└─$ </label>
+               <input type="text" id="terminal-input" placeholder="" autocomplete="off" autocapitalize="none" spellcheck="false" />
+            </div>
+       </div>
    </div>
 </body>
 <script src="js/main.js"></script>
