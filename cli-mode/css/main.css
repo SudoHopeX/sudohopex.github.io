@@ -1,67 +1,107 @@
- * {
-   box-sizing: border-box;
-   margin: 0;
-   padding: 0;
- }
+/** Version 2.0 of main.css for SudoHopeX Portfolio **/ 
 
- :root {
-   --bg-color: #0a0f1a;
-   --text-color: #e6e8f0;
-   --accent-color: #7f5af0;
-   --accent-color-light: #a18aff;
- }
 
-  body, html {
-   font-family: 'Inter', sans-serif;
-   background: var(--bg-color, #0a0f1a);
-   color: var(--text-color, #e6e8f0);
-   overflow-x: hidden;
-   transition: background 0.5s, color 0.5s;
- }
- 
- /* Terminal overlay */
- #terminal-overlay {
-   position: fixed;
-   top: 0; left: 0; right: 0; bottom: 0;
-   background: rgba(10, 15, 26, 0.95);
-   color: #7f5af0;
-   font-family: 'Courier New', Courier, monospace;
-   font-size: 1rem;
-   display: flex;
-   flex-direction: column;
-   padding: 1rem;
-   z-index: 12000;
- }
- #terminal-output {
-   flex-grow: 1;
-   overflow-y: auto;
-   white-space: pre-wrap;
-   margin-bottom: 0.5rem;
- }
- #terminal-input {
-   background: transparent;
-   border: none;
-   border-top: 1px solid var(--accent-color);
-   color: var(--accent-color);
-   font-family: 'Courier New', Courier, monospace;
-   font-size: 1rem;
-   padding: 0.5rem;
-   outline: none;
-   width: 100%;
- }
-.a {
-   position: absolute;
-   top: 0.5rem;
-   right: 1rem;
-   cursor: pointer;
-   font-size: 1.5rem;
-   color: var(--accent-color);
- }
+body {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Ubuntu Mono', 'Consolas', monospace;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+    overflow: hidden;
+}
 
-.responsive-art {
-    font-family: monospace;
-    white-space: pre; /* Preserve ASCII formatting */
-    overflow-wrap: normal; /* Prevent wrapping unless necessary */
-    font-size: clamp(8px, 1vw, 16px); /* Scales between 8px minimum and 16px maximum, based on 1% of viewport width */
-    line-height: 1; /* Tighten lines for single-line appearance on small screens */
+/* Light Theme Styles */
+body.light-theme {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Terminal Overlay */
+#terminal-overlay {
+    width: 99%;
+    height: 99%;
+    background-color: #000000;
+    border-radius: 9px;
+    box-shadow: 0 0 14px rgb(196 123 44 / 68%);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+body.light-theme #terminal-overlay {
+    background-color: #f0f0f0;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Main Output Area - THE SCROLLING CONTAINER */
+#terminal-output {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+
+    /* Keep white-space: pre-wrap for animation/output formatting */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.1;
+}
+
+/* The Active Input Line Container: The parent of the prompt and input field */
+#active-input-line {
+    align-items: center;
+    width: 100%;
+    padding: 0 15px 15px 15px; /* Reapply bottom padding to the input area */
+    box-sizing: border-box;
+    line-height: 0.8;
+}
+
+
+/* The actual Input Field */
+#terminal-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #d4d4d4;
+    font-family: inherit;
+    font-size: inherit;
+
+    /* CRITICAL: Takes up the remaining horizontal space in the flex container */
+    flex-grow: 1;
+
+    padding: 0;
+    margin: 0;
+    caret-color: #00ff00;
+    line-height: normal;
+}
+
+/* ... (Rest of the CSS styles like colors, ASCII art, and GUI link remain the same) ... */
+.cli-prompt-user { color: #f92672; }
+.cli-prompt-host { color: #66d9ef; }
+.cli-warning { color: #fd971f; }
+.cli-success { color: #a6e22e; }
+.cli-error { color: #ff0000; }
+.cli-data { color: #e6db74; }
+.cli-link { color: #ae81ff; }
+
+#asciiArt {
+    white-space: pre-wrap;
+    font-size: 10px;
+    margin-bottom: 10px;
+    color: #00ff00;
+    padding: 0;
+    margin-top: 0;
+}
+
+#gui-home-link {
+    position: absolute;
+    top: 5px;
+    right: 26px;
+    color: #a6e22e;
+    text-decoration: none;
+    font-size: 12px;
+    z-index: 10;
 }
