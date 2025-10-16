@@ -44,7 +44,7 @@ function getAsciiArt() {
 function generatePrompt() {
     // Structure: ┌──(USER@HOST)-[PATH]
     //            └─$ //command
-    return `┌──(<span class="cli-prompt-user">${userName}</span>@<span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
+    return `┌──(<span class="cli-prompt-user">${userName}</span> ㉿ <span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
 }
 
 // --- Initialization ---
@@ -660,3 +660,4 @@ function setupEventListeners() {
 
 // Run initialization when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeTerminal);
+
