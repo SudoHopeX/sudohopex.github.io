@@ -39,6 +39,21 @@ function typeText(text, element) {
  }, 40); // Adjust speed by changing the interval
 }
 
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/[&<>"'`/]/g, function (s) {
+    return ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '`': '&#96;',
+      '/': '&#47;'
+    })[s];
+  });
+}
+
 // Autocompletion feature
 let autocompleteAction = true;
 const commandsList = [
@@ -301,7 +316,7 @@ if (event.ctrlKey && (event.key === 'l' || event.key === 'L')) {
 terminalInput.addEventListener('keydown', (e) => {
  if (e.key === 'Enter') {
    const cmd = terminalInput.value;
-   printOutput('\n┌──(Hope㉿Krishna)-[^_~]\n└─$ ' + cmd, false);
+   printOutput('\n┌──(Hope㉿Krishna)-[^_~]\n└─$ ' + escapeHtml(cmd), false);
    const response = fetchDetails(cmd);
   
   if (cmd.toLowerCase().trim() == 'help' || cmd.toLowerCase().trim() == 'sudo hope') {
