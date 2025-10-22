@@ -1,4 +1,4 @@
-//# main.js v2.0
+// #main.js
 
 // Global variable to temporarily hold the last input for the 'Tab' double-press check
 let lastAutocompleteInput = '';
@@ -44,7 +44,7 @@ function getAsciiArt() {
 function generatePrompt() {
     // Structure: ┌──(USER@HOST)-[PATH]
     //            └─$ //command
-    return `┌──(<span class="cli-prompt-user">${userName}</span> ㉿ <span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
+    return `┌──(<span class="cli-prompt-user">${userName}</span>@<span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
 }
 
 // --- Initialization ---
@@ -262,6 +262,21 @@ function switch_theme(){
      } else {
          return '<span class="cli-success">Theme switched to Dark Mode!</span>';
      }
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/[&<>"'`/]/g, function (s) {
+    return ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '`': '&#96;',
+      '/': '&#47;'
+    })[s];
+  });
 }
 
 const riddles = [
@@ -563,7 +578,8 @@ function fetchDetails(command) {
                      response = '<span class="cli-error">Breach failure!</span> Try again or type "<span class="cli-success">skip</span>" for a new riddle.';
                    }
             } else {
-                 response = `<span class="cli-error">Breach failure!</span> Command <span class="cli-data">'${command}'</span> not found. Type "<span class="cli-success">help</span>" for a list of available commands.`;
+                 const safeCommand = escapeHtml(command);
+                 response = `<span class="cli-error">Breach failure!</span> Command <span class="cli-data">'${safeCommand}'</span> not found. Type "<span class="cli-success">help</span>" for a list of available commands.`;
             }
             break;
     }
@@ -630,7 +646,7 @@ function setupEventListeners() {
             const response = fetchDetails(cmd);
 
             // 4. Output Response
-            printOutput(cmd, response, animate = true);
+            printOutput(escapeHtml(cmd), response, animate = true);
 
             // 5. Manage ASCII art visibility
             const asciiElement = terminalOutput.querySelector('#asciiArt');
@@ -660,4 +676,3 @@ function setupEventListeners() {
 
 // Run initialization when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeTerminal);
-
