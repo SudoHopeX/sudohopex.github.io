@@ -1,4 +1,4 @@
-//# main.js v2.0
+// #main.js
 
 // Global variable to temporarily hold the last input for the 'Tab' double-press check
 let lastAutocompleteInput = '';
@@ -40,11 +40,48 @@ function getAsciiArt() {
               [[ SudoHopeX Terminal Interface Website ]]\n`;
 }
 
+function getDateTime() {
+    const date = new Date();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${month} ${day}, ${year} ${hours}:${minutes}:${seconds}`;
+}
+
+function updateDateTime() {
+
+    formattedDate = getDateTime()
+    const element = document.getElementById('active-prompt-text');
+    if (element) {
+        const datetimeSpan = element.querySelector('.current-datetime');
+        if (datetimeSpan) {
+            datetimeSpan.textContent = formattedDate;
+        }
+    }
+}
+
+// Accurate update using self-adjusting interval
+let expected = Date.now() + 1000;
+function step() {
+    const drift = Date.now() - expected;
+    updateDateTime();
+    expected += 1000;
+    setTimeout(step, Math.max(0, 1000 - drift));
+}
+
+updateDateTime(); // Immediate first call
+setTimeout(step, 1000);
+
+
 // Prompt generation (first line only)
 function generatePrompt() {
-    // Structure: ┌──(Curent Datetime)-(USER@HOST)-[PATH]
+    // Structure: ┌──(Month Date,Year HH:MM:SS)-(USER ㉿ HOST)-[PATH]
     //            └─$ //command
-    return `┌──()-(<span class="cli-prompt-user">${userName}</span> ㉿ <span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
+    return `┌──(<span class="current-datetime">${getDateTime()}</span>)-(<span class="cli-prompt-user">${userName}</span>㉿<span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
 }
 
 // --- Initialization ---
@@ -111,7 +148,7 @@ function typeText(text, callback = () => {}) {
 // Function to print a static line of output
 function printStaticOutput(text) {
      // Insert the new output just before the active input line
-     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; padding: 0; margin: 0;">${text}</div>\n`);
+     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; line-height: 1.5;">${text}</div>   \n`);
      terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
 
