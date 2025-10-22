@@ -1,4 +1,4 @@
-// #main.js
+//# main.js v2.0
 
 // Global variable to temporarily hold the last input for the 'Tab' double-press check
 let lastAutocompleteInput = '';
@@ -42,9 +42,9 @@ function getAsciiArt() {
 
 // Prompt generation (first line only)
 function generatePrompt() {
-    // Structure: ┌──(USER@HOST)-[PATH]
+    // Structure: ┌──(Curent Datetime)-(USER@HOST)-[PATH]
     //            └─$ //command
-    return `┌──(<span class="cli-prompt-user">${userName}</span>@<span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
+    return `┌──()-(<span class="cli-prompt-user">${userName}</span> ㉿ <span class="cli-prompt-host">${hostName}</span>)-[<span class="cli-warning">${currentDirectory}</span>]`;
 }
 
 // --- Initialization ---
