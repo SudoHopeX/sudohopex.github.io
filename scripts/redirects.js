@@ -2,13 +2,13 @@
   // ===== Configuration =====
   const allowedDomain = "hope.is-a.dev";
 
-  function sendE() {
+  function getE() {
       const a = "sud0hope";
       const h = "techie";
       const at = "@";
       const m = "gmail.com";
 
-      window.location.href = `mailto:${a}.${h}${at}${m}`;
+      return `mailto:${a}.${h}${at}${m}`;
   }
 
   // Internal shortcuts
@@ -50,7 +50,7 @@
     credly: "https://www.credly.com/users/krishna-dwivedi.a2ae4587",
     youtube: "https://www.youtube.com/@SudoHopeX",
     medium: "https://sudohopex.medium.com/",
-    email: sendE(),
+    email: getE(),
     discord: "https://discord.com/users/1239239011214688437",
 
     // Tools GitHub repo's path
