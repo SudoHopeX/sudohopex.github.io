@@ -148,7 +148,7 @@ function typeText(text, callback = () => {}) {
 // Function to print a static line of output
 function printStaticOutput(text) {
      // Insert the new output just before the active input line
-     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; line-height: 1.5;">${text}</div>   \n`);
+     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; line-height: 1.5; margin-top: 11px;">${text}</div>   \n`);
      terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
 
@@ -713,3 +713,4 @@ function setupEventListeners() {
 
 // Run initialization when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeTerminal);
+
