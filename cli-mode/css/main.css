@@ -45,7 +45,7 @@ body.light-theme #terminal-overlay {
     overflow-y: auto;
 
     /* Keep white-space: pre-wrap for animation/output formatting */
-    white-space: pre-wrap;
+    /* white-space: pre-wrap; */
     word-wrap: break-word;
     line-height: 1.1;
 }
@@ -54,7 +54,7 @@ body.light-theme #terminal-overlay {
 #active-input-line {
     align-items: center;
     width: 100%;
-    padding: 0 15px 15px 15px; /* Reapply bottom padding to the input area */
+    padding: 0 15px 15px 0; /* Reapply bottom padding to the input area */
     box-sizing: border-box;
     line-height: 0.8;
 }
@@ -105,3 +105,4 @@ body.light-theme #terminal-overlay {
     font-size: 12px;
     z-index: 10;
 }
+
