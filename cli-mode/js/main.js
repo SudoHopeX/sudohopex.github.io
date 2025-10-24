@@ -40,6 +40,12 @@ function getAsciiArt() {
               [[ SudoHopeX Terminal Interface Website ]]\n`;
 }
 
+const welcomeMessage = `
+Welcome to the Terminal mode Portfolio of <span class="cli-prompt-user">${hostName}</span> (<span class="cli-prompt-host">SudoHopeX</span>)!.
+
+For a list of available Commands, type '<span class="cli-success">help</span>'
+\n`;
+
 function getDateTime() {
     const date = new Date();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -102,14 +108,9 @@ function initializeTerminal() {
     activePromptText.innerHTML = generatePrompt();
 
     // 4. Insert the ASCII art *before* the active input line
-    const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:10px; margin-bottom:4px;">${getAsciiArt()}</div>`;
+    const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:16px; margin-bottom:4px;">${getAsciiArt()}</div>`;
     terminalOutput.insertAdjacentHTML('afterbegin', asciiHtml);
 
-    const welcomeMessage = `
-Welcome to the Terminal mode Portfolio of <span class="cli-prompt-user">${hostName}</span>!.
-
-For a list of available Commands, type '<span class="cli-success">help</span>'
-\n`;
     // 5. Start typing the welcome message
     typeText(welcomeMessage, () => {
         terminalInput.focus();
@@ -479,9 +480,8 @@ function fetchDetails(command) {
              break;
 
        case 'sudo hope':
-             response = getAsciiArt() + "\n" +
-                        "Welcome to the Terminal mode Portfolio of <span class=\"cli-host-host\">Krishna (SudoHopeX)</span>!\n\n" +
-                        "For a list of available Commands, type '<span class=\"cli-success\">help</span>'";
+             const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:16px; margin-bottom:4px;">${getAsciiArt()}</div>`;
+             response = asciiHtml + "\n\n" + welcomeMessage;
              break;
 
        case 'autocomplete-d':
@@ -713,4 +713,5 @@ function setupEventListeners() {
 
 // Run initialization when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeTerminal);
+
 
