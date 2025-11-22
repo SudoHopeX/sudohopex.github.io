@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SudoHopeX | Network Access Terminal</title>
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Primary SEO Meta Tags -->
+    <meta name="description" content="SudoHopeX Network Access Terminal: A portfolio hub showcasing technical projects, cybersecurity certifications, and development skills of Krishna Dwivedi.">
+    <meta name="keywords" content="SudoHopeX, Krishna Dwivedi, portfolio, cybersecurity, developer, ISC2 CC, GitHub, network terminal, web development">
+    <meta name="author" content="Krishna Dwivedi (SudoHopeX)">
+
+    <!-- Open Graph / Social Media Tags (Used by Facebook, LinkedIn, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hope.is-a.dev/Link-tree">
+    <meta property="og:title" content="SudoHopeX | Network Access Terminal [Root Access]">
+    <meta property="og:description" content="A hacker-themed portfolio hub showcasing technical projects, development skills, and cybersecurity certifications.">
+    <meta property="og:image" content="[https://placehold.co/1200x630/0A0A0A/00FF7F?text=SUDOHOPEX+NETWORK+ACCESS](https://placehold.co/1200x630/0A0A0A/00FF7F?text=SUDOHOPEX+NETWORK+ACCESS)">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://hope.is-a.dev/Link-tree">
+    <meta name="twitter:title" content="SudoHopeX | Network Access Terminal [Root Access]">
+    <meta name="twitter:description" content="Explore a hacker-themed portfolio hub for Krishna Dwivedi, featuring a live network map and essential links for projects and certifications.">
+    <meta name="twitter:image" content="[https://placehold.co/1200x630/0A0A0A/00FF7F?text=SUDOHOPEX+NETWORK+ACCESS](https://placehold.co/1200x630/0A0A0A/00FF7F?text=SUDOHOPEX+NETWORK+ACCESS)">
+
+    <!-- Canonical Tag (Important for preventing duplicate content issues) -->
+    <link rel="canonical" href="https://hope.is-a.dev/Link-tree">
+
+    <!-- === JSON-LD Structured Data (JS SEO) === -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Krishna Dwivedi",
+        "alternateName": "SudoHopeX",
+        "url": "https://hope.is-a.dev/Link-tree",
+        "image": "https://placehold.co/100x100/00FF7F/0A0A0A?text=K",
+        "jobTitle": "Developer | Cybersecurity Enthusiast",
+        "sameAs": [
+          "https://github.com/SudoHopeX",
+          "https://www.linkedin.com/in/dkrishna0124",
+          "https://sudohopex.github.io/cc-practice-quiz/",
+          "https://www.credly.com/users/krishna-dwivedi.a2ae4587"
+        ]
+      },
+      "description": "A hacker-themed link-tree and portfolio hub for Krishna Dwivedi, showcasing technical projects and professional links."
+    }
+    </script>
+
+    <style>
+        /* Custom styles for the hacker aesthetic */
+        :root {
+            --neon-green: #00FF7F;
+            --dark-bg: #0A0A0A;
+            --glow-color: rgba(0, 255, 127, 0.4);
+            --scanline-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Enforce Consolas/Monospace font for terminal look */
+        body {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: var(--dark-bg);
+            /* Slightly more defined background grid */
+            background-image: radial-gradient(var(--glow-color) 0.7px, transparent 0.7px);
+            background-size: 35px 35px;
+            overflow: hidden;
+            /* Custom Neon Crosshair Cursor */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="5" fill="%2300FF7F" stroke="%2300FF7F" stroke-width="2" opacity="0.8"/></svg>') 15 15, crosshair;
+        }
+
+        /* Ensure the canvas covers the whole container */
+        #network-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5; /* Behind the HTML content */
+        }
+
+        /* Scanline Overlay for CRT Effect */
+        #scanline-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            background:
+                linear-gradient(rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.5) 50%),
+                repeating-linear-gradient(
+                    0deg,
+                    var(--scanline-color) 0px,
+                    var(--scanline-color) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+            background-size: 100% 4px;
+            opacity: 0.15;
+        }
+
+        /* Styles for the HTML links, which act as hitboxes/labels */
+        .link-node-ui {
+            background-color: rgba(0, 255, 127, 0.08); /* Slightly more vibrant */
+            border: 1px solid rgba(0, 255, 127, 0.3);
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 5px rgba(0, 255, 127, 0.1);
+            overflow: hidden; /* Important for glitch effect */
+        }
+
+        .link-node-ui:hover {
+            border-color: var(--neon-green);
+            background-color: rgba(0, 255, 127, 0.2); /* Brighter on hover */
+            box-shadow: 0 0 20px var(--neon-green); /* More intense glow */
+            transform: scale(1.05);
+        }
+
+        /* Glitch Effect on Hover for text */
+        .link-node-ui:hover .link-text {
+            /* Glitch effect parameters */
+            animation: text-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite alternate;
+        }
+
+        @keyframes text-glitch {
+            0% {
+                transform: translate(1px, 1px) skewX(0);
+                text-shadow: 0 0 1px rgba(255, 0, 0, 0.5), 0 0 10px rgba(0, 255, 255, 0.5);
+            }
+            20% {
+                transform: translate(-1px, -1px) skewX(-5deg);
+                text-shadow: 0 0 1px rgba(0, 255, 0, 0.5), 0 0 5px rgba(255, 0, 255, 0.5);
+            }
+            40% {
+                transform: translate(2px, 2px) skewX(5deg);
+                text-shadow: 0 0 1px rgba(0, 0, 255, 0.5), 0 0 10px rgba(255, 255, 0, 0.5);
+            }
+            60% {
+                transform: translate(-2px, 0) skewX(-2deg);
+            }
+            80% {
+                transform: translate(1px, -2px) skewX(2deg);
+            }
+            100% {
+                transform: translate(0, 0) skewX(0);
+                text-shadow: none;
+            }
+        }
+
+        /* Console Output Box */
+        #console-output {
+            min-height: 40px;
+            border: 1px dashed var(--neon-green);
+            animation: flicker 4s linear infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 100% { box-shadow: 0 0 5px var(--glow-color); opacity: 0.95; }
+            50% { box-shadow: 0 0 15px var(--neon-green); opacity: 1; } /* Increased flicker intensity */
+        }
+
+        /* The main container should look like a terminal window */
+        .terminal-container {
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            background-color: rgba(10, 10, 10, 0.9); /* Slightly more opaque */
+            box-shadow: 0 0 60px rgba(0, 255, 127, 0.6); /* Larger, stronger shadow */
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4 text-white">
+    <div id="scanline-overlay"></div>
+    <canvas id="network-canvas"></canvas>
+
+    <div id="app-container" class="terminal-container w-full max-w-lg mx-auto p-6 md:p-8 rounded-xl border-2 border-green-500">
+
+        <!-- Profile Node (Center Point) -->
+        <div id="profile-node" class="flex flex-col items-center mb-6">
+            <img id="profile-img" src="https://placehold.co/100x100/00FF7F/0A0A0A?text=K" alt="Profile Node"
+                 class="w-24 h-24 rounded-full border-4 border-green-400 shadow-xl"
+                 style="box-shadow: 0 0 30px var(--neon-green);">
+            <h1 class="text-xl md:text-2xl mt-3 font-bold text-green-400 animate-pulse tracking-wider">
+                SUDOHOPEX [ROOT]
+            </h1>
+            <p class="text-xs text-green-600">
+               System Status: Online | Session: Krishna Dwivedi
+            </p>
+        </div>
+
+        <!-- Dynamic Console Output -->
+        <div id="console-output" class="mb-6 p-3 text-sm text-green-300 font-mono rounded-lg transition duration-300">
+            <span class="text-green-500">> PING Status: Awaiting Connection...</span>
+        </div>
+
+        <!-- Link Nodes (Interaction Points) -->
+        <div id="link-container" class="space-y-4">
+            <!-- Links will be injected hsere by JS, which also manages the canvas positions -->
+        </div>
+    </div>
+
+    <footer class="absolute bottom-4 text-xs text-green-700 z-20">
+        <p>HackTree V0.2 | &copy; SudoHopeX</p>
+    </footer>
+
+    <script>
+        // Global Constants and Setup
+        const CANVAS = document.getElementById('network-canvas');
+        const CTX = CANVAS.getContext('2d');
+        const APP_CONTAINER = document.getElementById('app-container');
+        const LINK_CONTAINER = document.getElementById('link-container');
+        const CONSOLE_OUTPUT = document.getElementById('console-output');
+        const PROFILE_NODE_UI = document.getElementById('profile-node');
+
+        const NEON_GREEN = '#00FF7F';
+        const LINK_DATA = [
+            { id: 'link-website', name: "Portfolio Website", url: "https://sudohopex.github.io/", icon: "fas fa-globe" },
+            { id: 'link-github', name: "GitHub Repository", url: "https://github.com/SudoHopeX", icon: "fab fa-github" },
+            { id: 'link-quiz', name: "ISC2 CC Practice Quiz", url: "https://sudohopex.github.io/cc-practice-quiz/", icon: "fa fa-puzzle-piece" },
+            { id: 'link-credly', name: "Certifications | Credly", url: "https://www.credly.com/users/krishna-dwivedi.a2ae4587", icon: "fas fa-certificate" },
+            { id: 'link-linkedin', name: "Connect on LinkedIn", url: "https://www.linkedin.com/in/dkrishna0124", icon: "fab fa-linkedin" },
+            { id: 'link-email', name: "Send Encrypted Email", onClick: sendE, icon: "fas fa-envelope-square" }
+        ];
+
+        let nodes = [];
+        let particles = [];
+        const NUM_PARTICLES = 50;
+        let animationFrameId;
+        let time = 0;
+        let activeLinkId = null;
+        let centralHubY = 0;
+
+        // Utility function for email (unchanged from original)
+        function sendE(){
+            const u = "sud0hope.techie";
+            const d = "gmail.com";
+            const e = `${u}@${d}`;
+            window.location.href = `mailto:${e}`;
+        }
+
+        // --- Particle Class for Background Data Flow ---
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * CANVAS.width;
+                this.y = Math.random() * CANVAS.height;
+                this.radius = Math.random() * 1.5 + 0.5;
+                this.velocity = {
+                    x: Math.random() * 0.5 - 0.25,
+                    y: Math.random() * 0.5 + 0.1
+                };
+                this.opacity = Math.random() * 0.3;
+            }
+
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+
+                // Reset particle if it moves off the bottom edge
+                if (this.y > CANVAS.height) {
+                    this.y = 0; // Starts from the top
+                    this.x = Math.random() * CANVAS.width; // Random X position
+                }
+            }
+
+            draw() {
+                CTX.beginPath();
+                CTX.fillStyle = `rgba(0, 255, 127, ${this.opacity})`;
+                CTX.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                CTX.fill();
+            }
+        }
+
+        // --- Node Class for Canvas Drawing ---
+        class Node {
+            constructor(element, label, isCentral = false) {
+                this.element = element;
+                this.label = label;
+                this.isCentral = isCentral;
+                this.x = 0;
+                this.y = 0;
+                this.radius = isCentral ? 15 : 10;
+                this.isHovered = false;
+                this.updatePosition();
+            }
+
+            // Get position of the HTML element relative to the canvas
+            updatePosition() {
+                const rect = this.element.getBoundingClientRect();
+
+                // Calculate position relative to the center of the element, within the canvas global coordinates
+                this.x = rect.left + rect.width / 2;
+                this.y = rect.top + rect.height / 2;
+
+                // If it's the central node, adjust position to align with the profile image center
+                if (this.isCentral) {
+                    const profileImg = document.getElementById('profile-img');
+                    const imgRect = profileImg.getBoundingClientRect();
+                    this.x = imgRect.left + imgRect.width / 2;
+                    this.y = imgRect.top + imgRect.height / 2;
+                    this.radius = imgRect.width / 2;
+                }
+            }
+
+            draw() {
+                // Draw the node's glow and circle on the canvas
+
+                // Pulse Effect (for connection)
+                const pulse = Math.sin(time * 0.05) * 0.5 + 0.5;
+                const baseOpacity = this.isHovered ? 0.9 : 0.5; // Stronger opacity
+                const glowSize = this.isHovered ? 25 : 15; // Stronger glow
+
+                CTX.beginPath();
+                // Outer Glow
+                CTX.shadowBlur = glowSize + (this.isHovered ? 8 * pulse : 0);
+                CTX.shadowColor = NEON_GREEN;
+                CTX.fillStyle = `rgba(0, 255, 127, ${baseOpacity})`;
+                CTX.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                CTX.fill();
+
+                // Clear shadow for next draw
+                CTX.shadowBlur = 0;
+            }
+        }
+
+        // --- Core Functions ---
+
+        function drawNoise(w, h) {
+            // Simple visual noise (fast performance)
+            if (Math.random() < 0.05) { // 5% chance to glitch
+                CTX.fillStyle = 'rgba(0, 255, 127, 0.15)'; // Brighter glitch flicker
+
+                // Draw a few random flickering horizontal rectangles
+                for(let i = 0; i < 3; i++) {
+                    const y = Math.random() * h;
+                    const h_rand = Math.random() * 5 + 1; // 1 to 6 px height
+                    CTX.fillRect(0, y, w, h_rand);
+                }
+            }
+        }
+
+        function initializeParticles() {
+            for (let i = 0; i < NUM_PARTICLES; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+        }
+
+        function initializeUI() {
+            LINK_DATA.forEach(link => {
+                const a = document.createElement('a');
+                a.id = link.id;
+                a.className = 'link-node-ui flex items-center justify-start p-3 rounded-lg cursor-pointer text-sm md:text-base';
+                // Wrap link name in span for the CSS glitch animation
+                a.innerHTML = `<i class="${link.icon} w-6 text-center text-green-400"></i><span class="ml-4 link-text">${link.name}</span>`;
+
+                // Set hover and click handlers
+                a.onmouseover = () => handleLinkHover(link.id, link.name, link.url || 'MAILTO');
+                a.onmouseout = () => handleLinkHover(null, null, null);
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    if (link.onClick) {
+                        link.onClick();
+                    } else {
+                        // Simulate data transfer before navigation
+                        CONSOLE_OUTPUT.innerHTML = `> TRANSFER: Routing request to <span class="text-green-400">${link.url}</span>...`;
+                        setTimeout(() => window.open(link.url, '_blank'), 500);
+                    }
+                };
+
+                LINK_CONTAINER.appendChild(a);
+            });
+
+            // Initializing nodes after HTML elements are in place
+            nodes.push(new Node(PROFILE_NODE_UI, 'ROOT', true));
+            LINK_DATA.forEach(link => {
+                const element = document.getElementById(link.id);
+                if (element) {
+                    nodes.push(new Node(element, link.name, false));
+                }
+            });
+
+            // Initialize particles
+            initializeParticles();
+
+            // Initial resize and start animation
+            resizeCanvas();
+            animate();
+        }
+
+        function handleLinkHover(id, name, url) {
+            activeLinkId = id;
+            if (id) {
+                 CONSOLE_OUTPUT.innerHTML = `> <b>CONNECTION ESTABLISHED:</b><br> Target: <span class="text-green-400">${name}</span> <br> Route: <span class="text-yellow-400">${url}</span>`;
+            } else {
+                 CONSOLE_OUTPUT.innerHTML = `> PING Status: Awaiting Connection...`;
+            }
+        }
+
+        function resizeCanvas() {
+            // Set canvas size to cover the entire viewport
+            CANVAS.width = window.innerWidth;
+            CANVAS.height = window.innerHeight;
+
+            // Update all node positions after resizing
+            nodes.forEach(node => node.updatePosition());
+
+            // Define the Y coordinate for the central branching hub (20px below console output)
+            const consoleRect = CONSOLE_OUTPUT.getBoundingClientRect();
+            centralHubY = consoleRect.bottom + 20;
+
+        }
+
+        function drawConnectingLines() {
+            if (nodes.length < 2) return;
+
+            const centralNode = nodes[0];
+            const linkNodes = nodes.slice(1);
+
+            // The central Hub X is always aligned with the root node
+            const centralHubX = centralNode.x;
+
+            // 1. Draw the main vertical trunk line (Root Node to Central Hub)
+            CTX.strokeStyle = NEON_GREEN;
+            CTX.lineWidth = 2;
+            CTX.globalAlpha = 0.8;
+            CTX.shadowBlur = 15; // Increased glow
+            CTX.shadowColor = NEON_GREEN;
+
+            CTX.beginPath();
+            CTX.moveTo(centralNode.x, centralNode.y);
+            CTX.lineTo(centralHubX, centralHubY);
+            CTX.stroke();
+
+            // Draw a small hub indicator with a pulse
+            const hubPulse = Math.sin(time * 0.1) * 2 + 6;
+            CTX.beginPath();
+            CTX.fillStyle = NEON_GREEN;
+            CTX.shadowBlur = 20;
+            CTX.arc(centralHubX, centralHubY, hubPulse, 0, Math.PI * 2);
+            CTX.fill();
+
+
+            // 2. Draw connections from the Central Hub to each Link Node
+            linkNodes.forEach((linkNode, index) => {
+                // Update hover state
+                linkNode.isHovered = (activeLinkId === linkNode.element.id);
+
+                // Line Style based on hover
+                const linePulse = Math.sin(time * 0.2 + index) * 0.5 + 0.5;
+                CTX.strokeStyle = NEON_GREEN;
+                CTX.lineWidth = linkNode.isHovered ? 4 : 1 + linePulse; // Dynamic thickness
+
+                // Pulse effect on line opacity
+                CTX.globalAlpha = linkNode.isHovered ? 1.0 : 0.5 * linePulse;
+
+                // Line Glow
+                CTX.shadowBlur = linkNode.isHovered ? 20 : 10;
+                CTX.shadowColor = NEON_GREEN;
+
+                // Determine the branching point X (staggered effect)
+                // We alternate the branch X slightly to the left or right of the link node's center line
+                const branchXOffset = (index % 2 === 0) ? -40 : 40; // Increased offset for better visual staggering
+                const branchX = centralHubX + branchXOffset;
+
+                // --- Draw the branched path: Hub -> Branch Point -> Link Node ---
+                CTX.beginPath();
+
+                // a) From Central Hub to a horizontal branch point (staggered)
+                CTX.moveTo(centralHubX, centralHubY);
+                CTX.lineTo(branchX, centralHubY);
+
+                // b) From Branch Point down to the Link Node's Y
+                CTX.lineTo(branchX, linkNode.y);
+
+                // c) From Link Node's Y horizontally to the Link Node's center
+                CTX.lineTo(linkNode.x, linkNode.y);
+
+                CTX.stroke();
+
+                // Draw data transfer animation along the final segment of the line
+                if (linkNode.isHovered) {
+                    const speed = 0.1; // Faster data burst
+                    const position = (time * speed) % 1; // 0 to 1 progress
+
+                    // The packet travels along the final horizontal segment towards the node
+                    const finalSegmentStart = branchX;
+                    const finalSegmentEnd = linkNode.x;
+
+                    // Interpolate X position
+                    const packetX = finalSegmentStart + (finalSegmentEnd - finalSegmentStart) * position;
+                    const packetY = linkNode.y;
+
+                    CTX.shadowBlur = 15;
+                    CTX.fillStyle = 'yellow';
+                    CTX.beginPath();
+                    CTX.arc(packetX, packetY, 4, 0, Math.PI * 2);
+                    CTX.fill();
+                }
+            });
+
+            CTX.globalAlpha = 1; // Reset opacity
+            CTX.shadowBlur = 0; // Reset shadow
+        }
+
+        function animate() {
+            // Clear the canvas with a very dark, slightly transparent overlay to maintain subtle trails/flicker
+            CTX.fillStyle = 'rgba(10, 10, 10, 0.4)';
+            CTX.fillRect(0, 0, CANVAS.width, CANVAS.height);
+
+            // 1. Draw drifting background data particles
+            drawParticles();
+
+            // 2. Add subtle Canvas Glitch/Noise
+            drawNoise(CANVAS.width, CANVAS.height);
+
+            // 3. Draw all connections (Hub-based branching)
+            drawConnectingLines();
+
+            // 4. Draw all nodes (dots at the center of the profile/links)
+            nodes.forEach(node => node.draw());
+
+            time++;
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // --- Initialization and Event Listeners ---
+        window.addEventListener('resize', resizeCanvas);
+
+        // Use DOMContentLoaded to ensure elements are ready before we get their positions
+        document.addEventListener('DOMContentLoaded', initializeUI);
+
+        // Fallback for immediate execution if DOMContentLoaded already fired
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+             initializeUI();
+        }
+
+    </script>
+</body>
+</html>
