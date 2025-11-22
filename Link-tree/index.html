@@ -224,7 +224,7 @@
 
         const NEON_GREEN = '#00FF7F';
         const LINK_DATA = [
-            { id: 'link-website', name: "Portfolio Website", url: "https://sudohopex.github.io/", icon: "fas fa-globe" },
+            { id: 'link-website', name: "Portfolio Website", url: "https://hope.is-a.dev/", icon: "fas fa-globe" },
             { id: 'link-github', name: "GitHub Repository", url: "https://github.com/SudoHopeX", icon: "fab fa-github" },
             { id: 'link-quiz', name: "ISC2 CC Practice Quiz", url: "https://sudohopex.github.io/cc-practice-quiz/", icon: "fa fa-puzzle-piece" },
             { id: 'link-credly', name: "Certifications | Credly", url: "https://www.credly.com/users/krishna-dwivedi.a2ae4587", icon: "fas fa-certificate" },
@@ -242,10 +242,7 @@
 
         // Utility function for email (unchanged from original)
         function sendE(){
-            const u = "sud0hope.techie";
-            const d = "gmail.com";
-            const e = `${u}@${d}`;
-            window.location.href = `mailto:${e}`;
+           window.location.href="/send-encrypted-email/";
         }
 
         // --- Particle Class for Background Data Flow ---
