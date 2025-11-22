@@ -1,0 +1,201 @@
+<!--  Send Ecnrypted Email to SudoHopeX -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SudoHopeX Encrypted PGP Mailer Gen</title>
+
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --primary-color: #007aff;
+      --border-color: #333333;
+      --card-bg: #1e1e1e;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-size: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      margin: 20px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.8em;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      margin-bottom: 30px;
+      color: var(--primary-color);
+    }
+
+    label {
+      display: block;
+      font-size: 0.85em;
+      font-weight: 400;
+      color: var(--text-color);
+      margin-bottom: 6px;
+      opacity: 0.8;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 25px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1em;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 1px var(--primary-color);
+    }
+
+    textarea {
+      height: 150px;
+      resize: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1.05em;
+      font-weight: 600;
+      transition: background-color 0.2s, opacity 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #0066cc;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.75em;
+      margin-top: 30px;
+      color: var(--border-color);
+    }
+  </style>
+</head>
+<body>
+ <div class="container">
+    <h2>🔒 PGP Encrypted Mail for SudoHopeX</h2>
+    <form id="encryptForm">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" required placeholder="Your Name" />
+
+      <label for="email">Your Email Address</label>
+      <input type="email" id="email" required placeholder="your.email@example.com" />
+
+      <label for="message">Message Content</label>
+      <textarea id="message" placeholder="Type your confidential message here..." required></textarea>
+
+      <button type="submit">Encrypt & Send</button>
+
+      <p class="footer-note">
+        This message is <b>client-side encrypted</b> using PGP before opening your default mail application.
+      </p>
+    </form>
+  </div>
+
+  <script>
+    // ⚠️ IMPORTANT: REPLACE 'YOUR-VERCEL-DOMAIN' with your actual deployed Vercel URL
+    const API_ENDPOINT = 'https://pgp-mail-encrypt.vercel.app/api';
+
+    document.getElementById("encryptForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const form = e.currentTarget;
+      const submitButton = form.querySelector('button[type="submit"]');
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Encrypting (Server)...";
+
+      const a = "WhoAm";
+      const x = "proton";
+      const recipient = "${a}I0100@${x}.me";
+      const subjectLine = "[PGP] Secure Message for SudoHopeX";
+
+      const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value,
+        recipient: recipient,
+        subjectLine: subjectLine
+      };
+
+      try {
+        // Send data to the Vercel API
+        const response = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || result.details || 'Unknown server error.');
+        }
+
+        // Open email client using the mailto URL returned by the server
+        window.location.href = result.mailtoUrl;
+
+        // Brief delay to reset
+        setTimeout(() => {
+            submitButton.textContent = "Sent (Check Mail Client)";
+            submitButton.disabled = false;
+            form.reset();
+        }, 1000);
+
+      } catch (err) {
+        alert("Encryption failed: " + err.message);
+        console.error("Encryption Error:", err);
+        submitButton.textContent = "Encrypt & Send";
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
