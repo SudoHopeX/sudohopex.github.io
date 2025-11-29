@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Password Checker (Direct HIBP Fetch)</title>
+    <style>
+        /* Simple CSS styling for readability */
+        body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #333; margin-bottom: 20px; }
+        input[type="password"] { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        .result-box { padding: 15px; border-radius: 6px; margin-top: 10px; font-weight: bold; border: 1px solid #ddd; }
+        .status-default { background-color: #eee; color: #555; }
+        .status-strong { background-color: #e6ffe6; color: #1e7e34; border-color: #4CAF50; }
+        .status-moderate { background-color: #fffde7; color: #856404; border-color: #ffc107; }
+        .status-weak { background-color: #f8d7da; color: #721c24; border-color: #dc3545; }
+        .pwned-fail { background-color: #ffeaea; color: #d32f2f; border-color: #f44336; }
+        .pwned-info { background-color: #e0f7fa; color: #007bff; border-color: #00bcd4; }
+        ul { list-style: none; padding-left: 0; margin-top: 15px; }
+        ul li { margin-bottom: 8px; display: flex; align-items: center; }
+        .icon { width: 20px; text-align: center; margin-right: 8px; }
+        .li-pass { color: #1e7e34; }
+        .li-fail { color: #d32f2f; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔐 Advanced Password Analyzer</h1>
+        <p style="font-size: 12px; color: #d32f2f; font-weight: bold; text-align: center;">
+            ⚠️ **Running over HTTPS fixes the CRYPTO error.** However, the HIBP check below will still fail due to **CORS**.
+        </p>
+
+        <input type="password" id="password" placeholder="Enter password..." oninput="checkPassword()">
+
+        <div id="strength-result" class="result-box status-default">
+            Type a password to begin analysis.
+        </div>
+
+        <div id="pwned-result" class="result-box pwned-info">
+            Pwned Check Status: Waiting for input.
+        </div>
+
+        <ul>
+            <li id="cond-12" class="li-pending">
+                <span class="icon">⚫</span> Min 12 chars (Small + Caps + Numbers + Symbols)
+            </li>
+            <li id="cond-16" class="li-pending">
+                <span class="icon">⚫</span> Min 16 chars (Small + Caps + Numbers only)
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const PWD_INPUT = document.getElementById('password');
+        const STRENGTH_OUT = document.getElementById('strength-result');
+        const PWNED_OUT = document.getElementById('pwned-result');
+        const COND_12 = document.getElementById('cond-12');
+        const COND_16 = document.getElementById('cond-16');
+
+        // --- Regex Definitions ---
+        const hasSmall = /[a-z]/;
+        const hasCaps = /[A-Z]/;
+        const hasNumbers = /[0-9]/;
+        const hasSymbols = /[^a-zA-Z0-9\s]/;
+
+        // Helper function for updating the condition list
+        function updateCondition(el, passed, baseMsg, length) {
+            el.classList.remove('li-pass', 'li-fail', 'li-pending');
+            el.classList.add(passed ? 'li-pass' : 'li-fail');
+            el.querySelector('.icon').textContent = passed ? '✅' : '❌';
+            el.innerHTML = `<span class="icon">${passed ? '✅' : '❌'}</span>${baseMsg} (Length: ${length})`;
+        }
+
+        // --- 1. Password Strength Check ---
+        function checkStrength(pwd) {
+            const length = pwd.length;
+            const meetsSmall = hasSmall.test(pwd);
+            const meetsCaps = hasCaps.test(pwd);
+            const meetsNumbers = hasNumbers.test(pwd);
+            const meetsSymbols = hasSymbols.test(pwd);
+
+            let statusClass = 'status-weak';
+
+            // Rule 1: Min 12 chars + ALL FOUR types
+            const condition12Met = (length >= 12 && meetsSmall && meetsCaps && meetsNumbers && meetsSymbols);
+            updateCondition(COND_12, condition12Met, 'Min 12 chars (Small + Caps + Numbers + Symbols)', length);
+
+            // Rule 2: Min 16 chars + Letters/Numbers ONLY
+            const condition16Met = (length >= 16 && meetsSmall && meetsCaps && meetsNumbers && !meetsSymbols);
+            updateCondition(COND_16, condition16Met, 'Min 16 chars (Small + Caps + Numbers only)', length);
+
+            // Determine Overall Strength
+            if (condition12Met || condition16Met) {
+                STRENGTH_OUT.textContent = '🟢 Very Strong! (Meets an advanced rule)';
+                statusClass = 'status-strong';
+            } else if (length >= 8) {
+                 STRENGTH_OUT.textContent = '🟡 Moderate Strength. Check requirements list.';
+                 statusClass = 'status-moderate';
+            } else {
+                STRENGTH_OUT.textContent = '🔴 Weak Strength.';
+                statusClass = 'status-weak';
+            }
+
+            STRENGTH_OUT.className = `result-box ${statusClass}`;
+        }
+
+        // --- 2. HIBP Pwned Check (Direct Fetch) ---
+        async function checkPwned(pwd) {
+            // Defensive check for Web Crypto API (This should now pass on HTTPS)
+            if (typeof crypto === 'undefined' || typeof crypto.subtle === 'undefined') {
+                 PWNED_OUT.className = 'result-box pwned-fail';
+                 PWNED_OUT.textContent = '❌ Web Crypto API unavailable. Environment is insecure.';
+                 return;
+            }
+
+            PWNED_OUT.className = 'result-box pwned-info';
+            PWNED_OUT.textContent = '🔵 Checking pwned leaks directly against HIBP...';
+
+            try {
+                // Hashing using the native Web Crypto API
+                const hashBuffer = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(pwd));
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+
+                const prefix = hashHex.slice(0, 5);
+                const suffix = hashHex.slice(5);
+
+                const url = `https://api.pwnedpasswords.com/range/${prefix}`;
+
+                // DIRECT FETCH CALL - This is the line likely to be blocked by CORS
+                const resp = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Accept': 'text/plain' },
+                    // 10s timeout can be implemented using AbortController if needed
+                });
+
+                // This code block requires the CORS headers from HIBP to execute
+                if (!resp.ok) {
+                    throw new Error(`HTTP ${resp.status} ${resp.statusText}. Response might be blocked by CORS.`);
+                }
+
+                const text = await resp.text();
+                const counts = {};
+
+                text.split(/\r?\n/).forEach(line => {
+                    if (!line) return;
+                    const parts = line.split(':');
+                    if(parts.length === 2) {
+                        counts[parts[0].trim().toUpperCase()] = parseInt(parts[1].trim(), 10);
+                    }
+                });
+
+                const foundCount = counts[suffix];
+
+                if (foundCount) {
+                    PWNED_OUT.className = 'result-box pwned-fail';
+                    PWNED_OUT.textContent = `🔴 Pwned! Found in ${foundCount.toLocaleString()} known breaches. DO NOT USE.`;
+                } else {
+                    PWNED_OUT.className = 'result-box status-strong';
+                    PWNED_OUT.textContent = '✅ Pwned Check: Password is safe.';
+                }
+
+            } catch (err) {
+                console.error('Pwned Check Failed:', err);
+                PWNED_OUT.className = 'result-box pwned-fail';
+                // Provide a specific message about the expected CORS/Network error
+                let message = err.message;
+                if (err.name === 'TypeError' || message.includes('Failed to fetch')) {
+                    message = 'Network error (CORS likely). The browser blocked the direct request.';
+                }
+                PWNED_OUT.textContent = `❌ Pwned Check Error: ${message}`;
+            }
+        }
+
+        // --- Main Controller and Debounce ---
+        let debounceTimer;
+
+        function checkPassword() {
+            const pwd = PWD_INPUT.value;
+
+            if (!pwd) {
+                // Reset state
+                STRENGTH_OUT.textContent = 'Type a password to begin analysis.';
+                STRENGTH_OUT.className = 'result-box status-default';
+                PWNED_OUT.textContent = 'Pwned Check Status: Waiting for input.';
+                PWNED_OUT.className = 'result-box pwned-info';
+                [COND_12, COND_16].forEach(el => {
+                    el.classList.remove('li-pass', 'li-fail');
+                    el.classList.add('li-pending');
+                    el.querySelector('.icon').textContent = '⚫';
+                    // Reset text messages
+                    if(el.id === 'cond-12') el.innerHTML = '<span class="icon">⚫</span> Min 12 chars (Small + Caps + Numbers + Symbols)';
+                    if(el.id === 'cond-16') el.innerHTML = '<span class="icon">⚫</span> Min 16 chars (Small + Caps + Numbers only)';
+                });
+                return;
+            }
+
+            // 1. Run strength check immediately
+            checkStrength(pwd);
+
+            // 2. Run pwned check with a delay (debounced)
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                checkPwned(pwd);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
