@@ -44,7 +44,7 @@
         "alternateName": "SudoHopeX",
         "url": "https://hope.is-a.dev/Link-tree",
         "image": "https://placehold.co/100x100/00FF7F/0A0A0A?text=K",
-        "jobTitle": "Developer | Cybersecurity Enthusiast",
+        "jobTitle": "Developer | Cybersecurity Enthusiast | Penetration Tester",
         "sameAs": [
           "https://github.com/SudoHopeX",
           "https://www.linkedin.com/in/dkrishna0124",
@@ -210,7 +210,7 @@
     </div>
 
     <footer class="absolute bottom-4 text-xs text-green-700 z-20">
-        <p>HackTree V0.2 | &copy; SudoHopeX</p>
+        <p>HackTree V0.2 | &copy; SudoHopeX | Krishna Dwivedi</p>
     </footer>
 
     <script>
@@ -229,7 +229,9 @@
             { id: 'link-quiz', name: "ISC2 CC Practice Quiz", url: "https://sudohopex.github.io/cc-practice-quiz/", icon: "fa fa-puzzle-piece" },
             { id: 'link-credly', name: "Certifications | Credly", url: "https://www.credly.com/users/krishna-dwivedi.a2ae4587", icon: "fas fa-certificate" },
             { id: 'link-linkedin', name: "Connect on LinkedIn", url: "https://www.linkedin.com/in/dkrishna0124", icon: "fab fa-linkedin" },
-            { id: 'link-email', name: "Send Encrypted Email", onClick: sendE, icon: "fas fa-envelope-square" }
+            { id: 'link-email', name: "Send PGP Encrypted Email", url: "/send-encrypted-mail/", icon: "fas fa-envelope-square" },
+            { id: 'link-youtube', name: "Subscibe YT Channel", url: "https://youtube.com/@SudoHopeX", icon: "fab fa-youtube" },
+            { id: 'link-tryhackme', name: "Follow on TryHackMe", url: "https://tryhackme.com/p/KrishnaDwivedi?from=https://hope.is-a.dev", icon: "fab fa-tryhackme" },
         ];
 
         let nodes = [];
@@ -240,10 +242,10 @@
         let activeLinkId = null;
         let centralHubY = 0;
 
-        // Utility function for email (unchanged from original)
-        function sendE(){
-           window.location.href="/send-encrypted-email/";
-        }
+        // // Utility function for email (unchanged from original)
+        // function sendE(){
+        //    window.location.href="/send-encrypted-mail/";
+        // }
 
         // --- Particle Class for Background Data Flow ---
         class Particle {
