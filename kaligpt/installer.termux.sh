@@ -91,7 +91,7 @@ stop_spinner "pip Requirements Installation"
 # ----- API KEY configuration setup -----  ( if N skip, else start setup )
 read -p "Do you want to set up API keys now? (Y/n): " setup_api
 if [[ "$setup_api" == "n" || "$setup_api" == "N" ]]; then
-    echo -e "\e[33mAPI key setup skipped by user. You can set up API keys later using `kaligpt --setup-keys`.\e[0m"
+    echo -e "\e[33mAPI key setup skipped by user. You can set up API keys later using \"kaligpt --setup-keys\".\e[0m"
 else
     echo -e "\e[1;32mProceeding with API key setup...\e[0m"
     python3 "$INSTALL_DIR/main.py" --setup-keys
