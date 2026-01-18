@@ -121,7 +121,7 @@ source /opt/KaliGPT/kaligpt_venv/bin/activate
 cd /opt/KaliGPT/
 
 start_spinner "pip requirements Installing"
-pip3 install -r requirements/pip-requirements.txt > /dev/null 2>&1
+pip3 install openai ollama google rich requests newspaper3k lxml_html_clean /dev/null 2>&1
 stop_spinner "pip Requirements Installation"
 
 
