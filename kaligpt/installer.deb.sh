@@ -117,9 +117,11 @@ start_spinner "pip requirements Installing"
 pip3 install -r /opt/KaliGPT/requirements/pip-requirements.txt > /dev/null 2>&1
 stop_spinner "pip Requirements Installation"
 
+
 # ----- API KEY configuration setup -----  ( if N skip, else start setup )
+echo "" # clear the line
 read -p "Do you want to set up API keys now? (Y/n): " setup_api
-if [[ "$setup_api" == "n" || "$setup_api" == "N" ]]; then
+if [[ "$setup_api" =~ ^[Nn]$ ]]; then
     echo -e "\e[33mAPI key setup skipped by user. You can set up API keys later using 'kaligpt --setup-keys'.\e[0m"
 else
     echo -e "\e[1;32mProceeding with API key setup...\e[0m"
@@ -155,15 +157,15 @@ case "$MODE" in
                 ;;
 
         -o|--ollama)
-    python3 -m agents.ollama "$@"
-    ;;
+                python3 -m agents.ollama "$@"
+                ;;
 
-  -or|--openrouter)
-    python3 -m agents.openrouter "$@"
-    ;;
+        -or|--openrouter)
+                python3 -m agents.openrouter "$@"
+                ;;
 
         --web)
-          python3 -m agents.web_launcher "$@"
+                python3 -m agents.web_launcher "$@"
                 ;;
 
         -h|--help)
@@ -177,9 +179,9 @@ case "$MODE" in
                 echo -e "\e[1;33mMODES: \e[0m"
                 echo ""
                 echo "    -g  [--gemini]            =  use Gemini Models (Online, text & code)"
-            echo "    -o  [--ollama]            =  use Ollama Models (Offline, text & code)"
-            echo "    -or [--openrouter]        =  use OpenRouter Models (Online, text & code)"
-                   echo "    --web                     =  AIs official Web-Chat Opener (Online)"
+                echo "    -o  [--ollama]            =  use Ollama Models (Offline, text & code)"
+                echo "    -or [--openrouter]        =  use OpenRouter Models (Online, text & code)"
+                echo "    --web                     =  AIs official Web-Chat Opener (Online)"
                 echo "    -lr [--list-providers]    = list KaliGPT available models"
                 echo "    --setup-keys              =  setup API keys for online models"
                 echo "    -u [--update]             =  update KaliGPT to latest version"
@@ -194,39 +196,40 @@ case "$MODE" in
                 echo -e "\e[33m       Read README.md or Docs at https://hope.is-a.dev?path=kaligpt for more info.\e[0m"
                 ;;
 
- -u|--update)
-  # Check for updated
-      echo -e "\e[1;33mChecking for updates...\e[0m"
-      cd "/opt/KaliGPT"
-      git fetch origin hackerx
-      LOCAL=$(git rev-parse HEAD)
-      REMOTE=$(git rev-parse origin/hackerx)
-      if [ $LOCAL != $REMOTE ]; then
-          echo -e "\e[1;32mNew version found! Updating KaliGPT...\e[0m"
-          git pull origin hackerx > /dev/null 2>&1
-          pip3 install -r "/opt/KaliGPT/requirements/pip-requirements.txt"
-          echo -e "\e[1;32mKaliGPT has been updated to the latest version!\e[0m"
-      else
-          echo -e "\e[1;32mKaliGPT is already up-to-date.\e[0m"
-      fi
-      ;;
-
-  -lr|--list-providers)
-    echo -e "\e[1;33mKaliGPT Provides:\e[0m
-    1) Google Gemini Models  ( Free/Paid, Online) [ Requires API Key ]
-    2) OpenRouter Models (Various, Free/Paid, Online) [ Requires API Key ]
-    3) Ollama            (Free, Offline) [ Local AI Models ]
-    "
-    ;;
-
-  -v|--version)
-      # printing version info from git tags
-      git -C /opt/KaliGPT describe --tags
-    ;;
-
-        --setup-keys|*)
-                python3 main.py "$@"
+       -u|--update)
+                # Check for updated
+                echo -e "\e[1;33mChecking for updates...\e[0m"
+                git fetch origin hackerx
+                LOCAL=$(git rev-parse HEAD)
+                REMOTE=$(git rev-parse origin/hackerx)
+                if [ $LOCAL != $REMOTE ]; then
+                    echo -e "\e[1;32mNew version found! Updating KaliGPT...\e[0m"
+                    git pull origin hackerx > /dev/null 2>&1
+                    pip3 install -r "/opt/KaliGPT/requirements/pip-requirements.txt"
+                    echo -e "\e[1;32mKaliGPT has been updated to the latest version!\e[0m"
+                else
+                    echo -e "\e[1;32mKaliGPT is already up-to-date.\e[0m"
+                fi
                 ;;
+      
+        -lr|--list-providers)
+                echo -e "\e[1;33mKaliGPT Provides:\e[0m
+                1) Google Gemini Models  ( Free/Paid, Online) [ Requires API Key ]
+                2) OpenRouter Models (Various, Free/Paid, Online) [ Requires API Key ]
+                3) Ollama            (Free, Offline) [ Local AI Models ]
+                "
+                ;;
+
+        -v|--version)
+                # printing version info from git tags
+                git describe --tags
+                ;;
+       
+        --setup-keys | *)
+                  # ----- Handled by main.py -----
+                  # This catches --setup-keys, empty inputs, and direct prompts
+                  # Passing "$MODE" first ensures the first word isn't lost if it was a prompt
+                  python3 main.py "$MODE" "$@"
 
 esac
 deactivate
@@ -236,6 +239,9 @@ EOF
 sudo chmod +x "$LAUNCHER_BIN_PATH"
 stop_spinner "KaliGPT launcher creation"
 
+# Change ownership from root to the actual user who ran sudo
+ACTUAL_USER=${SUDO_USER:-$USER}
+chown -R $ACTUAL_USER:$ACTUAL_USER /opt/KaliGPT/
 
 # Final Message
 echo -e "\e[1;32mKaliGPT v1.3 (HackerX) installed Successfully!\e[0m"
