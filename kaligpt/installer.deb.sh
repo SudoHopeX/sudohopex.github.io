@@ -52,31 +52,37 @@ install_if_missing() {
                 stop_spinner "$pkg Installation"
 
         else
-                echo  -e "\e[33m$pkg Installation found...\e[0m"
+                echo  -e "\r\e[1;32m[✓] $pkg already installed..."
         fi
 }
 
 
+# ---- performing system update ----
+echo ""
 start_spinner "System Updating"
 sudo apt update > /dev/null 2>&1
 stop_spinner "System Update"
 
-# checking and installing missing pkgs
+
+# ---- checking and installing missing pkgs  -----
+echo "" 
 install_if_missing python3
 install_if_missing python3-pip
 install_if_missing python3-venv
 install_if_missing curl
 install_if_missing golang-go
 
-# creating KaliGPT installation directory
+
+# ---- creating KaliGPT installation directory  ----
 mkdir -p /opt/KaliGPT/
 
 # ----- KaliGPT v1.3 (HackerX) Source Cloning -----
+echo ""
 start_spinner "Cloning KaliGPT repository"
 git clone --branch hackerx --single-branch https://github.com/SudoHopeX/KaliGPT.git /opt/KaliGPT/ > /dev/null 2>&1
-stop_spinner "KaliGPT repository clone"
+stop_spinner "KaliGPT Repository Clone"
 
-# ----- Cloning and setting up OpenSerp -----
+# ----- Cloning and building OpenSerp binary -----
 start_spinner "Cloning OpenSerp repository"
 git clone https://github.com/karust/openserp.git /opt/KaliGPT/openserp/ > /dev/null 2>&1
 stop_spinner "OpenSerp repository clone"
@@ -87,7 +93,7 @@ cd /opt/KaliGPT/openserp/ && go build -o openserp . > /dev/null 2>&1
 cd - > /dev/null # Go back to previous directory
 stop_spinner "OpenSerp binary build"
 
-# ----- Installing Ollama and pulling model -----
+# ----- Installing Ollama and pulling model (if user wants) -----
 echo "" # Clean line
 read -p "Wanna install Ollama (to use local AI models) ? (y/N): " install_ollama
 if [[ "$install_ollama" =~ ^[Yy]$ ]]; then
@@ -112,9 +118,10 @@ fi
 # ----- Setting up KaliGPT Virtual Environment & installing python requirements -----
 sudo python3 -m venv /opt/KaliGPT/kaligpt_venv
 source /opt/KaliGPT/kaligpt_venv/bin/activate
+cd /opt/KaliGPT/
 
 start_spinner "pip requirements Installing"
-pip3 install -r /opt/KaliGPT/requirements/pip-requirements.txt > /dev/null 2>&1
+pip3 install -r requirements/pip-requirements.txt > /dev/null 2>&1
 stop_spinner "pip Requirements Installation"
 
 
@@ -125,7 +132,7 @@ if [[ "$setup_api" =~ ^[Nn]$ ]]; then
     echo -e "\e[33mAPI key setup skipped by user. You can set up API keys later using 'kaligpt --setup-keys'.\e[0m"
 else
     echo -e "\e[1;32mProceeding with API key setup...\e[0m"
-    python3 /opt/KaliGPT/main.py --setup-keys
+    python3 main.py --setup-keys
 fi
 
 deactivate  # deactivate venv
@@ -142,7 +149,6 @@ sudo tee "$LAUNCHER_BIN_PATH" > /dev/null <<'EOF'
 
 # KaliGPT v1.3 Launcher Script
 # by SudoHopeX ( https://github.com/SudoHopeX )
-
 
 source /opt/KaliGPT/kaligpt_venv/bin/activate
 cd /opt/KaliGPT
@@ -228,7 +234,7 @@ case "$MODE" in
         --setup-keys | *)
                   # ----- Handled by main.py -----
                   # This catches --setup-keys, empty inputs, and direct prompts
-                  # Passing "$MODE" first ensures the first word isn't lost if it was a prompt
+                  # Passing "$MODE" first ensures the first word isn\'t lost if it was a prompt
                   python3 main.py "$MODE" "$@"
 
 esac
