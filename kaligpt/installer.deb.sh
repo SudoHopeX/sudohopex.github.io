@@ -5,7 +5,7 @@ trap "kill $SPIN_PID 2>/dev/null" EXIT
 # /install.sh for Debian-based Systems
 # KaliGPT v1.3 Setup (check & install dependencies, create launcher) Script
 # by SudoHopeX ( https://github.com/SudoHopeX )
-# Last Modified: 16 Jan 2026
+# Last Modified: 18 Jan 2026
 
 
 # Check for root privileges
@@ -82,13 +82,15 @@ git clone https://github.com/karust/openserp.git /opt/KaliGPT/openserp/ > /dev/n
 stop_spinner "OpenSerp repository clone"
 
 start_spinner "Building OpenSerp binary"
-go build -o /opt/KaliGPT/openserp/openserp . > /dev/null 2>&1
+# FIX: Change directory to build the actual source
+cd /opt/KaliGPT/openserp/ && go build -o openserp . > /dev/null 2>&1
+cd - > /dev/null # Go back to previous directory
 stop_spinner "OpenSerp binary build"
 
 # ----- Installing Ollama and pulling model -----
+echo "" # Clean line
 read -p "Wanna install Ollama (to use local AI models) ? (y/N): " install_ollama
-if [[ "$install_ollama" == "y" || "$install_ollama" == "Y" ]]; then
-
+if [[ "$install_ollama" =~ ^[Yy]$ ]]; then
     echo -e "\e[1;32mProceeding with Ollama installation...\e[0m"
 
     start_spinner "Installing Ollama"
@@ -97,10 +99,11 @@ if [[ "$install_ollama" == "y" || "$install_ollama" == "Y" ]]; then
 
     read -p "Enter Ollama model to install (default: llama3): " ollama_model
     ollama_model=${ollama_model:-llama3} # default to llama3 if no input
-    start_spinner "Pulling Ollama model: $ollama_model"
-
+    
+    # FIX: Don't use start_spinner here so we can see Ollama's progress bar
+    echo -e "\e[1;32m[+] Pulling Ollama model: $ollama_model (this may take a while)...\e[0m"
     ollama pull "$ollama_model"
-    stop_spinner "Ollama model $ollama_model pull"
+    echo -e "\e[1;32m[✓] Ollama model $ollama_model pull complete!\e[0m"
     
 else
     echo -e "\e[33mOllama AI models installation skipped by user.\e[0m"
