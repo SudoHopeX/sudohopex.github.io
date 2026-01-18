@@ -86,8 +86,8 @@ go build -o /opt/KaliGPT/openserp/openserp . > /dev/null 2>&1
 stop_spinner "OpenSerp binary build"
 
 # ----- Installing Ollama and pulling model -----
-read -p "Wanna install Ollama (for using AI models locally) ? (y/N): " install_ollama
-if [[ "$install_ollama" == "y" && "$install_ollama" == "Y" ]]; then
+read -p "Wanna install Ollama (to use local AI models) ? (y/N): " install_ollama
+if [[ "$install_ollama" == "y" || "$install_ollama" == "Y" ]]; then
 
     echo -e "\e[1;32mProceeding with Ollama installation...\e[0m"
 
@@ -101,6 +101,7 @@ if [[ "$install_ollama" == "y" && "$install_ollama" == "Y" ]]; then
 
     ollama pull "$ollama_model"
     stop_spinner "Ollama model $ollama_model pull"
+    
 else
     echo -e "\e[33mOllama AI models installation skipped by user.\e[0m"
 fi
