@@ -2,8 +2,7 @@
 trap "kill $SPIN_PID 2>/dev/null" EXIT
 
 
-# /install.sh for Debian-based Systems
-# KaliGPT v1.3 Setup (check & install dependencies, create launcher) Script
+# KaliGPT v1.3 Setup (check & install dependencies, create launcher) Script for Debian-based Systems
 # by SudoHopeX ( https://github.com/SudoHopeX )
 # Last Modified: 18 Jan 2026
 
