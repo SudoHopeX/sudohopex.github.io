@@ -256,11 +256,8 @@ window.addEventListener('load', () => {
 
 
 function sendE() {
-    const u = "sud0hope";
-    const v = "techie";
-    const d = "gmail.com"; 
-    const e = `${u}.${v}@${d}`;
+    const u = "WhoAmI0100";
+    const d = "proton"; 
+    const e = `${u}@${d}.me`;
     window.location.href = `mailto:${e}`;
 }
-
-
