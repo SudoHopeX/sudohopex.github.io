@@ -60,6 +60,7 @@
     xss_dumps: "https://github.com/SudoHopeX/XSS-Dumps",
     openpuffi: "https://github.com/SudoHopeX/OpenPuffi",
     smrti_log: "https://github.com/SudoHopeX/SmrtiLog",
+    opensearchapi: "https://github.com/SudoHopeX/OpenSearchAPI",
 
     // Vercel Projects path
     smrti_log_server: ""
