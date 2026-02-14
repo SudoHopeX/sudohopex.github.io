@@ -3,10 +3,10 @@
   const allowedDomain = "hope.is-a.dev";
 
   function getE() {
-      const a = "sud0hope";
-      const h = "techie";
+      const a = "whoami";
+      const h = "0100";
       const at = "@";
-      const m = "gmail.com";
+      const m = "proton.me";
 
       return `mailto:${a}.${h}${at}${m}`;
   }
@@ -23,7 +23,7 @@
     sqli_research_paper: "/pages/articles/sql.kdhahiduahdnfkdjiaudfn.html",
     writeup_doc_gen: "/pages/catalogue/document-writeups.html",
     payload_encoding_guide: "/pages/catalogue/xss-payload-encodings.html",
-
+    
     // directories
     isc2_cc_quiz: "/cc-practice-quiz/",
     cli: "/cli-mode/",
@@ -34,6 +34,7 @@
     project_docs: "/pages/project-docs/",
     writeups: "/pages/writeups/",
     link_tree: "/Link-tree/",
+    opensearchapi: "/OpenSearchAPI/",
 
     // coming soon
     smrtilog_doc: "/pages/comingsoon.html"
