@@ -40,12 +40,6 @@ function getAsciiArt() {
               [[ SudoHopeX Terminal Interface Website ]]\n`;
 }
 
-const welcomeMessage = `
-Welcome to the Terminal mode Portfolio of <span class="cli-prompt-user">${hostName}</span> (<span class="cli-prompt-host">SudoHopeX</span>)!.
-
-For a list of available Commands, type '<span class="cli-success">help</span>'
-\n`;
-
 function getDateTime() {
     const date = new Date();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -108,9 +102,14 @@ function initializeTerminal() {
     activePromptText.innerHTML = generatePrompt();
 
     // 4. Insert the ASCII art *before* the active input line
-    const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:16px; margin-bottom:4px;">${getAsciiArt()}</div>`;
+    const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:10px; margin-bottom:4px;">${getAsciiArt()}</div>`;
     terminalOutput.insertAdjacentHTML('afterbegin', asciiHtml);
 
+    const welcomeMessage = `
+Welcome to the Terminal mode Portfolio of <span class="cli-prompt-user">${hostName}</span>!.
+
+For a list of available Commands, type '<span class="cli-success">help</span>'
+\n`;
     // 5. Start typing the welcome message
     typeText(welcomeMessage, () => {
         terminalInput.focus();
@@ -149,7 +148,7 @@ function typeText(text, callback = () => {}) {
 // Function to print a static line of output
 function printStaticOutput(text) {
      // Insert the new output just before the active input line
-     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; line-height: 1.5; margin-top: 11px;">${text}</div>   \n`);
+     activeInputLine.insertAdjacentHTML('beforebegin', `<div style="white-space: pre-wrap; line-height: 1.5;">${text}</div>   \n`);
      terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
 
@@ -197,7 +196,7 @@ const commandsList = [
     'whoishe', 'email', 'linkedin', 'github', 'cc-course', 'location', 'hobby', 'quote',
     'status', 'theme', 'i love you', 'hello', 'joke', 'game', 'resume', 'pwd',
     'whoami', 'autocomplete-d', 'autocomplete-e', 'home', 'experience', 'openpuffi',
-    'hashstorm', 'keylogger'
+    'hashstorm', 'keylogger', 'kaligpt', 'opensearchapi'
 ];
 
 // autocompletion fn
@@ -395,19 +394,21 @@ function fetchDetails(command) {
 
     const getLinkResponse = (cmd) => {
         switch (cmd) {
-            case 'linkedin': return `Redirected to <span class="cli-link">LinkedIn</span> in a new tab... [URL: https://www.linkedin.com/in/dkrishna0124]`;
-            case 'github': return `Redirected to <span class="cli-link">GitHub</span> in a new tab... [URL: https://github.com/sudohopex]`;
-            case 'credly': return `Redirected to <span class="cli-link">Credly</span> in a new tab... [URL: https://www.credly.com/users/krishna-dwivedi.a2ae4587]`;
+            case 'linkedin': return `Redirected to <span class="cli-link">LinkedIn</span> Profile in a new tab... [URL: https://www.linkedin.com/in/dkrishna0124]`;
+            case 'github': return `Redirected to <span class="cli-link">GitHub</span> Profile in a new tab... [URL: https://github.com/sudohopex]`;
+            case 'credly': return `Redirected to <span class="cli-link">Credly</span> Profile in a new tab... [URL: https://www.credly.com/users/krishna-dwivedi.a2ae4587]`;
+            case 'tryhackme': return `Redirected to <span class="cli-link">TryHackMe</span> Profile in a new tab... [URL: https://tryhackme.com/p/KrishnaDwivedi]`;
             case 'cc-course': return `Exploring <span class="cli-link">ISC2 CC Practice Quiz</span>... [URL: https://sudohopex.github.io/cc-practice-quiz/]`;
             case 'kaligpt': return `Opening <span class="cli-link">KaliGPT Documentation</span>... [URL: https://sudohopex.github.io/pages/project-docs/kaligpt.kjiodjfianjfkjnsifoifsidfh.html]`;
             case 'hashstorm': return `Opening <span class="cli-link">HashStorm Documentation</span>... [URL: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html]`;
             case 'openpuffi': return `Opening <span class="cli-link">OpenPuffi Documentation</span>... [URL: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html]`;
             case 'keylogger': return `Opening <span class="cli-link">Keylogger Writeup</span>... [URL: https://sudohopex.github.io/pages/comingsoon.html]`;
+            case 'opensearchapi': return `Opening <span class="cli-link">OpenSearchAPI Documentation</span>... [URL: https://sudohopex.github.io/OpenSearchAPI/]`;
             default: return '';
         }
     };
 
-    if (['linkedin', 'github', 'cc-course', 'hashstorm', 'openpuffi', 'keylogger', 'credly', 'kaligpt'].includes(command)) {
+    if (['linkedin', 'github', 'cc-course', 'hashstorm', 'openpuffi', 'keylogger', 'credly', 'kaligpt', 'opensearchapi', 'tryhackme'].includes(command)) {
         response = getLinkResponse(command);
         const urlMatch = response.match(/https?:\/\/[^\s\[\]]+/);
         if (urlMatch) {
@@ -480,8 +481,9 @@ function fetchDetails(command) {
              break;
 
        case 'sudo hope':
-             const asciiHtml = `<div id="asciiArt" style="white-space:pre-wrap; color:#00ff00; font-size:16px; margin-bottom:4px;">${getAsciiArt()}</div>`;
-             response = asciiHtml + "\n\n" + welcomeMessage;
+             response = getAsciiArt() + "\n" +
+                        "Welcome to the Terminal mode Portfolio of <span class=\"cli-host-host\">Krishna (SudoHopeX)</span>!\n\n" +
+                        "For a list of available Commands, type '<span class=\"cli-success\">help</span>'";
              break;
 
        case 'autocomplete-d':
@@ -499,10 +501,11 @@ function fetchDetails(command) {
          break;
 
        case 'contact':
-         response = `[+] Email: <span class="cli-link">sud0hope[dot]techie[at]gmail[dot]com</span> (type 'email' to send me an email)\n`
+         response = `[+] Email: <span class="cli-link">whoami0100[at]proton[dot]me</span> (type 'email' to send me an email)\n`
                   + `[+] LinkedIn: <span class="cli-link">in/dkrishna0124</span> (type 'linkedin' to see profile)\n`
                   + `[+] GitHub: <span class="cli-link">github.com/SudoHopeX</span> (type 'github' to see profile)\n`
-                  + `[+] Credly: <span class="cli-link">users/krishna-dwivedi.a2ae4587</span> (type 'credly' to see profile)`;
+                  + `[+] Credly: <span class="cli-link">users/krishna-dwivedi.a2ae4587</span> (type 'credly' to see profile)\n`
+                  + `[+] TrHackMe: <span class="cli-link">p/KrishnaDwivedi</span> (type 'tryhackme' to see profile)`;
          break;
 
        case 'experience':
@@ -517,11 +520,12 @@ function fetchDetails(command) {
          break;
 
        case 'email':
+         const nums = '0100';
          const dot = '.';
          const at = "@";
-         const e = `mailto:sud0hope${dot}techie${at}gmail.com`;
+         const e = `mailto:whoami${nums}${at}proton${dot}me`;
          window.open(e, '_blank');
-         response = 'Opened email client in a new tab... or mail at: <span class="cli-link">sud0hope[dot]techie[at]gmail[dot]com</span>';
+         response = 'Opened email client in a new tab... or mail at: <span class="cli-link">whoami0100[at]proton[dot]me</span>';
          break;
 
        case 'home':
@@ -533,6 +537,7 @@ function fetchDetails(command) {
        case 'projects':
          response = `[+] <span class="cli-data">Website: for blogs, writeups, tool docs etc. </span> (type <span class="cli-warning">home</span>) [URL: https://sudohopex.github.io/]\n\n`
                 + `[+] <span class="cli-data">KaliGPT: An AI assistance built next into your Linux terminal</span> (type <span class="cli-warning">kaligpt</span>) [URL: https://sudohopex.github.io/pages/project-docs/kaligpt.kjiodjfianjfkjnsifoifsidfh.html]\n\n`
+                + `[+] <span class="cli-data">OpenSearchAPI: python api for getting search results from top search engines (google, bing, duckduckgo)</span> (type <span class="cli-warning">opensearchapi</span>) [URL: https://sudohopex.github.io/OpenSearchAPI/]\n\n`
                 + `[+] <span class="cli-data">HashStorm: An Hash Identifier & Cracker</span> (type <span class="cli-warning">hashstorm</span>) [URL: https://sudohopex.github.io/pages/project-docs/hs.nksdnifadnifad.html]\n\n`
                 + `[+] <span class="cli-data">OpenPuffi: Install OpenPuff an steganography tool</span> (type <span class="cli-warning">openpuffi</span>) [URL: https://sudohopex.github.io/pages/project-docs/openpuff.ioahdfaisdnfkandf.html]\n\n`
                 + `[+] <span class="cli-data">ISC2 CC Practive Quiz</span> (type <span class="cli-warning">cc-course</span>) [URL: https://sudohopex.github.io/cc-practice-quiz/]\n\n`
@@ -544,7 +549,7 @@ function fetchDetails(command) {
                   + `- <span class="cli-data">Penetration Testing</span>\n`
                   + `- <span class="cli-data">Ethical Hacking</span>\n`
                   + `- <span class="cli-data">Vulnerability Assessment</span>\n`
-                  + `- <span class="cli-data">Python Scripting</span>\n`
+                  + `- <span class="cli-data">Python & Bash Scripting</span>\n`
                   + `- <span class="cli-data">Cyber Awareness Advocacy</span>`;
          break;
 
@@ -713,5 +718,3 @@ function setupEventListeners() {
 
 // Run initialization when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeTerminal);
-
-
