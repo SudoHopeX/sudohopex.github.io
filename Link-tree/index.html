@@ -1,0 +1,512 @@
+<!-- LINK-TREE V0.3 - SudoHopeX -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SudoHopeX | Network Access Terminal</title>
+
+    <!-- Tailwind CSS & Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts for Developer Monospace look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Primary SEO Meta Tags -->
+    <meta name="description" content="SudoHopeX Network Access Terminal: A portfolio hub showcasing technical projects, cybersecurity certifications, and development skills of Krishna Dwivedi.">
+    <meta name="keywords" content="SudoHopeX, Krishna Dwivedi, portfolio, cybersecurity, developer, ISC2 CC, GitHub, network terminal, web development">
+    <meta name="author" content="Krishna Dwivedi (SudoHopeX)">
+
+    <!-- Open Graph / Social Media Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hope.is-a.dev/Link-tree">
+    <meta property="og:title" content="SudoHopeX | Network Access Terminal [Root Access]">
+    <meta property="og:description" content="A hacker-themed portfolio hub showcasing technical projects, development skills, and cybersecurity certifications.">
+    <meta property="og:image" content="https://placehold.co/1200x630/0A0A0A/00FF7F?text=SUDOHOPEX+NETWORK+ACCESS">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://hope.is-a.dev/Link-tree">
+    <meta name="twitter:title" content="SudoHopeX | Network Access Terminal [Root Access]">
+    <meta name="twitter:description" content="Explore a hacker-themed portfolio hub for Krishna Dwivedi, featuring a live network map and essential links for projects and certifications.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/0A0A0A/00FF7F?text=SUDOHOPEX+NETWORK+ACCESS">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="https://hope.is-a.dev/Link-tree">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Krishna Dwivedi",
+        "alternateName": "SudoHopeX",
+        "url": "https://hope.is-a.dev/Link-tree",
+        "image": "https://placehold.co/100x100/00FF7F/0A0A0A?text=K",
+        "jobTitle": "Developer | Cybersecurity Enthusiast | Penetration Tester",
+        "sameAs": [
+          "https://hope.is-a.dev/",
+          "https://github.com/SudoHopeX",
+          "https://www.linkedin.com/in/dkrishna0124",
+          "https://sudohopex.github.io/cc-practice-quiz/",
+          "https://www.credly.com/users/krishna-dwivedi.a2ae4587"
+        ]
+      },
+      "description": "A hacker-themed link-tree and portfolio hub for Krishna Dwivedi, showcasing technical projects and professional links."
+    }
+    </script>
+
+    <style>
+        :root {
+            --neon-green: #00FF7F;
+            --neon-green-glow: rgba(0, 255, 127, 0.4);
+            --dark-bg: #050505;
+        }
+
+        body {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(var(--neon-green-glow) 0.8px, transparent 0.8px),
+                linear-gradient(to bottom, rgba(10,10,10,0.8), rgba(0,0,0,0.95));
+            background-size: 30px 30px, 100% 100%;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="%2300FF7F" opacity="0.9"/><line x1="12" y1="2" x2="12" y2="22" stroke="%2300FF7F" stroke-width="1.5"/><line x1="2" y1="12" x2="22" y2="12" stroke="%2300FF7F" stroke-width="1.5"/></svg>') 12 12, crosshair;
+        }
+
+        /* Matrix Overlay Canvas */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* CRT Scanline Overlay Effect */
+        .scanline-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 6px 100%;
+            opacity: 0.6;
+        }
+
+        /* Cyberpunk UI Glass Card */
+        .terminal-container {
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            background: rgba(8, 12, 10, 0.85);
+            border: 1px solid rgba(0, 255, 127, 0.3);
+            box-shadow: 0 0 35px rgba(0, 255, 127, 0.15), inset 0 0 15px rgba(0, 255, 127, 0.05);
+        }
+
+        /* Terminal Bar Header Cut Corners */
+        .cyber-corner {
+            clip-path: polygon(
+                0 0,
+                calc(100% - 15px) 0, 100% 15px,
+                100% 100%,
+                15px 100%, 0 calc(100% - 15px)
+            );
+        }
+
+        /* Hover Link Nodes */
+        .link-node-ui {
+            background: rgba(0, 255, 127, 0.03);
+            border: 1px solid rgba(0, 255, 127, 0.25);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .link-node-ui:hover {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 127, 0.15);
+            box-shadow: 0 0 20px var(--neon-green-glow);
+            transform: translateX(4px);
+        }
+
+        .link-node-ui:hover .link-text {
+            animation: text-glitch 0.25s infinite alternate;
+        }
+
+        @keyframes text-glitch {
+            0% { transform: translate(1px, 0); text-shadow: -1px 0 #ff0055, 1px 0 #00ffff; }
+            50% { transform: translate(-1px, 0); text-shadow: 1px 0 #ff0055, -1px 0 #00ffff; }
+            100% { transform: translate(0, 0); text-shadow: none; }
+        }
+
+        /* Pulse Animations */
+        .pulse-border {
+            animation: pulseGlow 2.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 127, 0.2); }
+            100% { box-shadow: 0 0 25px rgba(0, 255, 127, 0.6); }
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #00FF7F; }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between items-center p-4 md:p-6 text-white relative overflow-x-hidden">
+
+    <!-- Overlays -->
+    <div class="scanline-overlay"></div>
+    <canvas id="network-canvas"></canvas>
+
+    <!-- Top Utility Status Bar -->
+    <header class="w-full max-w-xl flex justify-between items-center text-xs text-green-500/80 mb-4 z-20 font-mono">
+        <div class="flex items-center space-x-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+            <span>NODE_ID: 127.0.0.1</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="system-time">00:00:00 IND</span>
+            <button id="sound-toggle" onclick="toggleAudio()" class="hover:text-green-300 transition-colors cursor-pointer focus:outline-none" title="Toggle Sound FX">
+                <i class="fas fa-volume-up" id="sound-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Terminal Card -->
+    <main id="app-container" class="terminal-container cyber-corner w-full max-w-xl mx-auto p-5 md:p-8 rounded-lg border">
+
+        <!-- Header Controls (Window Buttons) -->
+        <div class="flex items-center justify-between pb-4 mb-6 border-b border-green-500/30 text-xs">
+            <div class="flex space-x-2">
+                <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+            </div>
+            <span class="text-green-500/70 font-semibold tracking-widest text-[10px] uppercase">
+                bash - bash@SudoHopeX:~
+            </span>
+        </div>
+
+        <!-- Profile Avatar & Identity -->
+        <div id="profile-node" class="flex flex-col items-center mb-6 text-center">
+            <div class="relative">
+                <img id="profile-img"
+                     src="https://placehold.co/100x100/00FF7F/0A0A0A?text=K"
+                     alt="Krishna Dwivedi Profile"
+                     class="w-24 h-24 rounded-full border-2 border-green-400 pulse-border object-cover">
+                <span class="absolute bottom-1 right-1 bg-green-500 text-black text-[9px] font-bold px-1.5 py-0.5 rounded border border-black">
+                    ROOT
+                </span>
+            </div>
+
+            <h1 class="text-xl md:text-2xl mt-4 font-bold text-green-400 tracking-wider">
+                SUDOHOPEX
+            </h1>
+            <p class="text-xs text-green-500/80 mt-1 max-w-xs">
+                Krishna Dwivedi | Cybersecurity Enthusiast & Developer
+            </p>
+        </div>
+
+        <!-- Dynamic Console Terminal Output -->
+        <div class="mb-6 p-3 bg-black/80 rounded border border-green-500/30 font-mono text-xs md:text-sm">
+            <div id="console-output" class="text-green-400 min-h-[42px] leading-relaxed break-words">
+                > Initializing system protocols...
+            </div>
+
+            <!-- Interactive Command Line -->
+            <div class="mt-2 pt-2 border-t border-green-500/20 flex items-center text-green-500 text-xs">
+                <span class="mr-2 select-none">$</span>
+                <input type="text" id="cli-input" placeholder="type 'help' or command..."
+                       class="bg-transparent border-none outline-none text-green-300 w-full font-mono focus:ring-0 placeholder-green-700">
+            </div>
+        </div>
+
+        <!-- Link Nodes Container -->
+        <div id="link-container" class="space-y-3">
+            <!-- Dynamically Populated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-xl text-center mt-6 text-[11px] text-green-600/80 z-20 font-mono">
+        <p>HackTree V0.3 &copy; SudoHopeX | Krishna Dwivedi</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Store
+        const LINK_DATA = [
+            { id: 'link-website-gui', name: "Portfolio Website | GUI", url: "https://hope.is-a.dev/", icon: "fas fa-globe", cmd: "gui" },
+            { id: 'link-website-cli', name: "Portfolio Website | CLI", url: "https://hope.is-a.dev/cli-mode/", icon: "fas fa-terminal", cmd: "cli" },
+            { id: 'link-github', name: "GitHub Repositories", url: "https://github.com/SudoHopeX", icon: "fab fa-github", cmd: "github" },
+            { id: 'link-quiz', name: "ISC2 CC Practice Quiz", url: "https://sudohopex.github.io/cc-practice-quiz/", icon: "fas fa-brain", cmd: "quiz" },
+            { id: 'link-credly', name: "Certifications | Credly", url: "https://www.credly.com/users/krishna-dwivedi.a2ae4587", icon: "fas fa-certificate", cmd: "credly" },
+            { id: 'link-gdrive', name: "Certifications | Google Drive", url: "https://tinyurl.com/hopexgdrive", icon: "fab fa-google-drive", cmd: "drive" },
+            { id: 'link-linkedin', name: "Connect on LinkedIn", url: "https://www.linkedin.com/in/dkrishna0124", icon: "fab fa-linkedin", cmd: "linkedin" },
+            { id: 'link-email', name: "Send Encrypted Email", url: "/send-encrypted-mail/", icon: "fas fa-envelope-shield", cmd: "email" },
+            { id: 'link-youtube', name: "Subscribe YouTube Channel", url: "https://youtube.com/@SudoHopeX", icon: "fab fa-youtube", cmd: "youtube" },
+            { id: 'link-tryhackme', name: "TryHackMe Profile", url: "https://tryhackme.com/p/KrishnaDwivedi?from=https://hope.is-a.dev", icon: "fas fa-shield-halved", cmd: "thm" }
+        ];
+
+        // Synthesized Audio Engine (Web Audio API)
+        let soundEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(freq = 440, type = 'sine', duration = 0.05) {
+            if (!soundEnabled || audioCtx.state === 'suspended') return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { console.error(e); }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            document.getElementById('sound-icon').className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute text-red-500';
+            writeConsole(`> Audio system: ${soundEnabled ? 'ENABLED' : 'DISABLED'}`);
+        }
+
+        // DOM Elements
+        const CANVAS = document.getElementById('network-canvas');
+        const CTX = CANVAS.getContext('2d');
+        const CONSOLE_OUTPUT = document.getElementById('console-output');
+        const LINK_CONTAINER = document.getElementById('link-container');
+        const CLI_INPUT = document.getElementById('cli-input');
+
+        let nodes = [];
+        let activeLinkId = null;
+        let typingTimeout;
+
+        // Typewriter Effect for Console Output
+        function writeConsole(text, speed = 15) {
+            clearTimeout(typingTimeout);
+            CONSOLE_OUTPUT.innerHTML = '>';
+            let index = 0;
+
+            function typeNext() {
+                if (index < text.length) {
+                    CONSOLE_OUTPUT.innerHTML = `> ${text.substring(0, index + 1)}<span class="animate-pulse">█</span>`;
+                    index++;
+                    if(index % 3 === 0) playSound(600, 'square', 0.01);
+                    typingTimeout = setTimeout(typeNext, speed);
+                } else {
+                    CONSOLE_OUTPUT.innerHTML = `> ${text}`;
+                }
+            }
+            typeNext();
+        }
+
+        // Render Link Buttons
+        function initializeUI() {
+            LINK_CONTAINER.innerHTML = '';
+            LINK_DATA.forEach(link => {
+                const a = document.createElement('a');
+                a.id = link.id;
+                a.className = 'link-node-ui flex items-center justify-between p-3 rounded cursor-pointer text-xs md:text-sm text-green-300 font-mono select-none';
+                a.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <i class="${link.icon} w-5 text-center text-green-400"></i>
+                        <span class="link-text font-semibold">${link.name}</span>
+                    </div>
+                    <span class="text-[10px] text-green-600/60 uppercase border border-green-500/20 px-1.5 py-0.5 rounded">
+                        :${link.cmd}
+                    </span>
+                `;
+
+                a.onmouseenter = () => {
+                    activeLinkId = link.id;
+                    playSound(800, 'sine', 0.03);
+                    writeConsole(`TARGET: ${link.name}\n> ROUTE: ${link.url}`);
+                };
+
+                a.onmouseleave = () => {
+                    activeLinkId = null;
+                    writeConsole('Status: Active | Awaiting user routing command...');
+                };
+
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    playSound(1200, 'square', 0.08);
+                    writeConsole(`[TRANSFER] Routing connection to -> ${link.url}...`);
+                    setTimeout(() => window.open(link.url, '_blank'), 400);
+                };
+
+                LINK_CONTAINER.appendChild(a);
+            });
+
+            writeConsole('SudoHopeX System Loaded. Ready for input.');
+            setupCanvasNodes();
+        }
+
+        // CLI Input Commands Engine
+        CLI_INPUT.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = CLI_INPUT.value.trim().toLowerCase();
+                CLI_INPUT.value = '';
+                playSound(1000, 'triangle', 0.05);
+
+                if (!cmd) return;
+
+                if (cmd === 'help') {
+                    writeConsole('Available Commands: help, clear, whoami, links, or type any node command (e.g., github, thm, gui)');
+                    return;
+                }
+                if (cmd === 'clear') {
+                    writeConsole('Console cleared.');
+                    return;
+                }
+                if (cmd === 'whoami') {
+                    writeConsole('User: Krishna Dwivedi | Alias: SudoHopeX | Access: Root User');
+                    return;
+                }
+                if (cmd === 'links') {
+                    writeConsole('Node Shortcodes: ' + LINK_DATA.map(l => l.cmd).join(', '));
+                    return;
+                }
+
+                // Match command with link shortcuts
+                const matchedLink = LINK_DATA.find(l => l.cmd === cmd);
+                if (matchedLink) {
+                    writeConsole(`Executing command. Routing to ${matchedLink.name}...`);
+                    setTimeout(() => window.open(matchedLink.url, '_blank'), 500);
+                } else {
+                    writeConsole(`Command not recognized: '${cmd}'. Type 'help' for commands.`);
+                }
+            }
+        });
+
+        // Background Canvas Animation (Matrix Rain + Node Connections)
+        let matrixChars = "011001010101010101SUDOHOPEXKRISHNA";
+        let drops = [];
+        const fontSize = 12;
+
+        function setupCanvas() {
+            CANVAS.width = window.innerWidth;
+            CANVAS.height = window.innerHeight;
+            const columns = Math.floor(CANVAS.width / fontSize);
+            drops = Array(columns).fill(1);
+        }
+
+        class Node {
+            constructor(element, isCentral = false) {
+                this.element = element;
+                this.isCentral = isCentral;
+                this.x = 0;
+                this.y = 0;
+                this.updatePosition();
+            }
+
+            updatePosition() {
+                const rect = this.element.getBoundingClientRect();
+                this.x = rect.left + rect.width / 2;
+                this.y = rect.top + rect.height / 2;
+            }
+        }
+
+        function setupCanvasNodes() {
+            nodes = [];
+            const profileImg = document.getElementById('profile-img');
+            if (profileImg) nodes.push(new Node(profileImg, true));
+
+            LINK_DATA.forEach(link => {
+                const el = document.getElementById(link.id);
+                if (el) nodes.push(new Node(el));
+            });
+        }
+
+        function drawCanvas() {
+            // Semi-transparent background clear for matrix trailing effect
+            CTX.fillStyle = 'rgba(5, 5, 5, 0.2)';
+            CTX.fillRect(0, 0, CANVAS.width, CANVAS.height);
+
+            // 1. Matrix Digital Rain Effect
+            CTX.fillStyle = 'rgba(0, 255, 127, 0.15)';
+            CTX.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                CTX.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > CANVAS.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+
+            // 2. Draw Circuit Lines connecting nodes
+            if (nodes.length > 1) {
+                const rootNode = nodes[0];
+                rootNode.updatePosition();
+
+                nodes.slice(1).forEach((node) => {
+                    node.updatePosition();
+                    const isHovered = (activeLinkId === node.element.id);
+
+                    CTX.beginPath();
+                    CTX.moveTo(rootNode.x, rootNode.y);
+                    CTX.lineTo(node.x, node.y);
+
+                    CTX.strokeStyle = isHovered ? '#00FF7F' : 'rgba(0, 255, 127, 0.08)';
+                    CTX.lineWidth = isHovered ? 2 : 1;
+                    CTX.shadowBlur = isHovered ? 12 : 0;
+                    CTX.shadowColor = '#00FF7F';
+                    CTX.stroke();
+                    CTX.shadowBlur = 0;
+                });
+            }
+
+            requestAnimationFrame(drawCanvas);
+        }
+
+        // Live Clock Updates
+        function updateClock() {
+            const now = new Date();
+            const options = {
+                timeZone: 'Asia/Kolkata',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            document.getElementById('system-time').innerText = now.toLocaleTimeString('en-IN', options) + ' IST';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Window Resizing Handlers
+        window.addEventListener('resize', () => {
+            setupCanvas();
+            setupCanvasNodes();
+        });
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            setupCanvas();
+            initializeUI();
+            drawCanvas();
+        });
+    </script>
+</body>
+</html>
