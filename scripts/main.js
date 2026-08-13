@@ -220,19 +220,19 @@ window.addEventListener('load', () => {
         console.log("Autoplay prevented:", error);
     });
 
-    document.body.addEventListener('click', () => {
-        if (!isPlaying) {
-            audio.play().then(() => {
-                isPlaying = true;
-            }).catch(err => {
-                console.log("Song play blocked, error:", err);
-            });
-        } else {
-            audio.pause();
-            audio.currentTime = 0;
-            isPlaying = false;
-        }
-    });
+    // document.body.addEventListener('click', () => {
+    //     if (!isPlaying) {
+    //         audio.play().then(() => {
+    //             isPlaying = true;
+    //         }).catch(err => {
+    //             console.log("Song play blocked, error:", err);
+    //         });
+    //     } else {
+    //         audio.pause();
+    //         audio.currentTime = 0;
+    //         isPlaying = false;
+    //     }
+    // });
 
     // Glitch image switch
     const images = ['/img/hope.jpg', '/img/SudoHopeX.jpg'];
