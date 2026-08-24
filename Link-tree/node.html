@@ -1,0 +1,621 @@
+<!-- SudoHopeX Link tree Node Matrix Module -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SUDOHOPEX // NODE MATRIX TERMINAL</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020a05;
+      --panel: rgba(4, 20, 10, 0.85);
+      --border: rgba(0, 255, 65, 0.25);
+      --border-glow: rgba(0, 255, 65, 0.6);
+      --text: #00ff41;
+      --muted: #008f11;
+      --accent: #00ff66;
+      --accent-sec: #39ff14;
+      --text-bright: #e0ffe8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+    }
+
+    /* CRT Scanline Effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 100;
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+    }
+
+    /* Framing Reticles */
+    .corner-reticle {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--accent);
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0.7;
+      /*box-shadow: 0 0 8px var(--accent);*/
+    }
+    .top-left { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+    .top-right { top: 16px; right: 16px; border-left: none; border-bottom: none; }
+    .bottom-left { bottom: 16px; left: 16px; border-right: none; border-top: none; }
+    .bottom-right { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+
+    /* Top HUD */
+    #hud-top {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      pointer-events: none;
+      max-width: calc(100vw - 48px);
+    }
+
+    .system-status {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 0 5px var(--accent);
+    }
+
+    .status-pulse {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse 1.5s infinite alternate;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .title-main {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-bright);
+      text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Category Filter Controls */
+    #filter-bar {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 10;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 100%;
+    }
+
+    .filter-btn {
+      background: var(--panel);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      color: var(--text-bright);
+      border-color: var(--accent);
+      background: rgba(0, 255, 65, 0.15);
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+      text-shadow: 0 0 5px var(--accent);
+    }
+
+    /* Floating Detailed HUD Card */
+    #node-card {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 10;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      width: calc(100% - 48px);
+      max-width: 480px;
+    }
+
+    #node-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 25px rgba(0, 255, 65, 0.25), inset 0 0 10px rgba(0, 255, 65, 0.1);
+    }
+
+    .card-indicator {
+      width: 8px;
+      height: 8px;
+      background: var(--muted);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .card-meta { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      text-shadow: 0 0 5px var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Diagnostics Corner */
+    #diag-panel {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    canvas { display: block; width: 100vw; height: 100vh; cursor: grab; touch-action: none; }
+    canvas:active { cursor: grabbing; }
+
+    /* Media Queries for Mobile & Tablet Responsiveness */
+    @media (max-width: 768px) {
+      #hud-top {
+        top: 16px;
+        left: 16px;
+      }
+      #filter-bar {
+        top: calc(16px + 52px);
+        left: 16px;
+        right: auto;
+        justify-content: flex-start;
+      }
+      .filter-btn {
+        padding: 5px 8px;
+        font-size: 0.65rem;
+      }
+      #diag-panel {
+        display: none;
+      }
+      .corner-reticle {
+        display: none;
+      }
+      #node-card {
+        bottom: 16px;
+        width: calc(100% - 32px);
+        padding: 10px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="corner-reticle top-left"></div>
+  <div class="corner-reticle top-right"></div>
+  <div class="corner-reticle bottom-left"></div>
+  <div class="corner-reticle bottom-right"></div>
+
+  <div id="hud-top">
+    <div class="title-main">SUDOHOPEX | KRISHNA DWIVEDI</div>
+    <div class="system-status"><span class="status-pulse"></span> [ONLINE] CyberSec & DEV Enthusiast</div>
+  </div>
+
+  <div id="filter-bar">
+    <button class="filter-btn active" data-cat="ALL">[ALL]</button>
+    <button class="filter-btn" data-cat="DEV">[DEV_PROJECTS]</button>
+    <button class="filter-btn" data-cat="SEC">[SECURITY]</button>
+    <button class="filter-btn" data-cat="SOCIAL">[SOCIAL]</button>
+  </div>
+
+  <div id="node-card">
+    <div class="card-indicator" id="card-dot"></div>
+    <div class="card-meta">
+      <div class="card-title" id="card-title">SYSTEM MATRIX INTERFACE</div>
+      <div class="card-sub" id="card-sub">DRAG TO ROTATE // TAP NODE TO EXECUTE LINK</div>
+    </div>
+  </div>
+
+  <div id="diag-panel">
+    <div>SYS_FPS: <span id="fps-counter" style="color: var(--accent);">60</span></div>
+    <div>LATENCY: 12ms</div>
+    <div>ENCRYPTION: AES-256</div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    // Hacker Terminal Web Audio Synthesizer
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      },
+      playHover() {
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.03);
+          gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.03);
+        } catch(e) {}
+      }
+    };
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const nodeCard = document.getElementById('node-card');
+    const cardDot = document.getElementById('card-dot');
+    const cardTitle = document.getElementById('card-title');
+    const cardSub = document.getElementById('card-sub');
+    const fpsCounter = document.getElementById('fps-counter');
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Comprehensive Node Dataset (Hacker Green Palette)
+    const nodes = [
+      { name: "Portfolio Website (GUI)", cat: "DEV", tag: "GUI_PORTAL", url: "https://hope.is-a.dev/", color: "#00ff66" },
+      { name: "Portfolio Website (CLI)", cat: "DEV", tag: "TERMINAL_CLI", url: "https://hope.is-a.dev/cli-mode", color: "#39ff14" },
+      { name: "GitHub Repository", cat: "DEV", tag: "SOURCE_REPO", url: "https://github.com/SudoHopeX", color: "#00ffaa" },
+      { name: "ISC2 CC Practice Quiz", cat: "SEC", tag: "CERT_EXAM_PREP", url: "https://hope.is-a.dev/cc-practice-quiz/", color: "#00e5ff" },
+      { name: "Credly Credentials", cat: "SEC", tag: "VERIFIED_BADGES", url: "https://www.credly.com/users/krishna-dwivedi.a2ae4587", color: "#00e5ff" },
+      { name: "GDrive Credentials", cat: "SEC", tag: "CERTIFICATES", url: "https://tinyurl.com/hopexgdrive", color: "#00e5ff" },
+      { name: "TryHackMe Profile", cat: "SEC", tag: "CYBER_LABS", url: "https://tryhackme.com/p/KrishnaDwivedi", color: "#ff2a6d" },
+      { name: "LinkedIn Network", cat: "SOCIAL", tag: "SEC_NETWORK", url: "https://www.linkedin.com/in/dkrishna0124", color: "#00ff66" },
+      { name: "PGP Public Key", cat: "SEC", tag: "ENCRYPTED_MAIL", url: "https://hope.is-a.dev/send-encrypted-mail/", color: "#39ff14" },
+      { name: "YouTube Terminal", cat: "SOCIAL", tag: "MEDIA_STREAM", url: "https://youtube.com/@sudohopex", color: "#ff0055" },
+      { name: "Link-Tree Node", cat: "DEV", tag: "ROOT_ROUTER", url: "https://hope.is-a.dev/Link-tree/", color: "#00ffaa" },
+      { name: "KaliGPT (HackerX) Agent", cat: "DEV", tag: "OFFENSIVE_AI", url: "https://github.com/SudoHopeX/KaliGPT", color: "#00ff66" }
+    ];
+
+    let activeCategory = "ALL";
+
+    // Filtering interaction
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      const handler = (e) => {
+        AudioEngine.init();
+        AudioEngine.playHover();
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        activeCategory = e.target.getAttribute('data-cat');
+      };
+      btn.addEventListener('click', handler);
+      btn.addEventListener('touchstart', handler, { passive: true });
+    });
+
+    // Geometric Setup (Icosahedron + Ambient Matrix Binary Grid)
+    const phi = (1 + Math.sqrt(5)) / 2;
+    let baseVertices = [
+      [-1,  phi, 0], [ 1,  phi, 0], [-1, -phi, 0], [ 1, -phi, 0],
+      [0, -1,  phi], [0,  1,  phi], [0, -1, -phi], [0,  1, -phi],
+      [ phi, 0, -1], [ phi, 0,  1], [-phi, 0, -1], [-phi, 0,  1]
+    ].map(v => {
+      const len = Math.hypot(...v);
+      return [v[0]/len, v[1]/len, v[2]/len];
+    });
+
+    const edges = [];
+    for(let i = 0; i < baseVertices.length; i++) {
+      for(let j = i + 1; j < baseVertices.length; j++) {
+        const d = Math.hypot(
+          baseVertices[i][0] - baseVertices[j][0],
+          baseVertices[i][1] - baseVertices[j][1],
+          baseVertices[i][2] - baseVertices[j][2]
+        );
+        if(Math.abs(d - 1.0515) < 0.1) edges.push([i, j]);
+      }
+    }
+
+    // Ambient background binary digits
+    const backgroundDigits = Array.from({ length: 60 }, () => ({
+      x: (Math.random() - 0.5) * 2.2,
+      y: (Math.random() - 0.5) * 2.2,
+      z: (Math.random() - 0.5) * 2.2,
+      char: Math.random() > 0.5 ? '1' : '0'
+    }));
+
+    // Inertia & Physics Variables
+    let rotX = 0, rotY = 0;
+    let velX = 0, velY = 0.0015;
+    let isDragging = false;
+    let lastInputX = 0, lastInputY = 0;
+    let hoveredNode = null;
+
+    // Diagnostic Frame Metrics
+    let lastFrameTime = performance.now();
+    let frameCount = 0;
+
+    // Event Listeners for Mouse and Touch Devices
+    function startDrag(x, y) {
+      AudioEngine.init();
+      isDragging = true;
+      lastInputX = x;
+      lastInputY = y;
+    }
+
+    function moveDrag(x, y) {
+      if(isDragging) {
+        const dx = x - lastInputX;
+        const dy = y - lastInputY;
+        velY = dx * 0.003;
+        velX = dy * 0.003;
+        rotY += velY;
+        rotX += velX;
+        lastInputX = x;
+        lastInputY = y;
+      } else {
+        lastInputX = x;
+        lastInputY = y;
+      }
+    }
+
+    function endDrag() {
+      isDragging = false;
+    }
+
+    // Mouse events
+    window.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+    window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+    window.addEventListener('mouseup', endDrag);
+
+    // Touch events for Smartphones & Tablets
+    window.addEventListener('touchstart', e => {
+      if(e.touches.length === 1) {
+        startDrag(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', e => {
+      if(e.touches.length === 1) {
+        moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', endDrag);
+
+    // Click / Tap Action
+    const handleNodeSelect = () => {
+      if(hoveredNode && hoveredNode.info.url && hoveredNode.info.url !== '#') {
+        window.open(hoveredNode.info.url, '_blank');
+      }
+    };
+
+    canvas.addEventListener('click', handleNodeSelect);
+
+    function render(now) {
+      frameCount++;
+      if (now - lastFrameTime >= 1000) {
+        if(fpsCounter) fpsCounter.innerText = frameCount;
+        frameCount = 0;
+        lastFrameTime = now;
+      }
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Deep Terminal Radial Background
+      const bgGrad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height) * 0.7);
+      bgGrad.addColorStop(0, '#04180c');
+      bgGrad.addColorStop(1, '#020a05');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      if(!isDragging) {
+        velX *= 0.96;
+        velY = velY * 0.96 + 0.0003;
+        rotX += velX;
+        rotY += velY;
+      }
+
+      const isMobile = width < 640;
+      const scale = Math.min(width, height) * (isMobile ? 0.28 : 0.22);
+      const cx = width / 2;
+      const cy = height / 2;
+
+      // Project Background Binary Code Elements
+      backgroundDigits.forEach(d => {
+        let x1 = d.x * Math.cos(rotY * 0.3) + d.z * Math.sin(rotY * 0.3);
+        let y1 = d.y;
+        let z1 = -d.x * Math.sin(rotY * 0.3) + d.z * Math.cos(rotY * 0.3);
+        const pScale = 3 / (3 + z1);
+        const px = cx + x1 * scale * 1.8 * pScale;
+        const py = cy + y1 * scale * 1.8 * pScale;
+
+        ctx.fillStyle = 'rgba(0, 255, 65, 0.15)';
+        ctx.font = `${Math.floor(10 * pScale)}px 'Share Tech Mono'`;
+        ctx.fillText(d.char, px, py);
+      });
+
+      // Project Main Geometric Vertices
+      const projected = baseVertices.map((v, i) => {
+        let x1 = v[0] * Math.cos(rotY) + v[2] * Math.sin(rotY);
+        let y1 = v[1];
+        let z1 = -v[0] * Math.sin(rotY) + v[2] * Math.cos(rotY);
+
+        let x2 = x1;
+        let y2 = y1 * Math.cos(rotX) - z1 * Math.sin(rotX);
+        let z2 = y1 * Math.sin(rotX) + z1 * Math.cos(rotX);
+
+        const fov = 3.5;
+        const pScale = fov / (fov + z2);
+
+        return {
+          x: cx + x2 * scale * pScale,
+          y: cy + y2 * scale * pScale,
+          z: z2,
+          pScale,
+          info: nodes[i % nodes.length]
+        };
+      });
+
+      // Render Wireframe Edges (Matrix Green Vectors)
+      edges.forEach(([i, j]) => {
+        const p1 = projected[i];
+        const p2 = projected[j];
+        const avgDepth = (p1.z + p2.z) / 2;
+        const alpha = Math.max(0.05, 0.22 - avgDepth * 0.1);
+
+        ctx.strokeStyle = `rgba(0, 255, 65, ${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      });
+
+      projected.sort((a, b) => a.z - b.z);
+
+      let currentHover = null;
+      const touchRadiusThreshold = isMobile ? 28 : 20;
+
+      // Render Matrix Nodes & Hacker Labels
+      projected.forEach(p => {
+        const matchesCategory = activeCategory === "ALL" || p.info.cat === activeCategory;
+        const isHovered = hoveredNode && hoveredNode.info === p.info;
+        const nodeRadius = isHovered ? 6 : Math.max(2.5, 4.5 * p.pScale);
+        const depthAlpha = matchesCategory ? Math.max(0.25, (p.pScale - 0.4) * 1.4) : 0.08;
+
+        // Node Glow Ring
+        if(isHovered || matchesCategory) {
+          const glowGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, isHovered ? 20 : 8);
+          glowGrad.addColorStop(0, p.info.color);
+          glowGrad.addColorStop(1, 'transparent');
+          ctx.fillStyle = glowGrad;
+          ctx.globalAlpha = isHovered ? 0.9 : depthAlpha * 0.35;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, isHovered ? 20 : 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Core Node Pixel
+        ctx.fillStyle = isHovered ? '#ffffff' : p.info.color;
+        ctx.globalAlpha = isHovered ? 1 : depthAlpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, nodeRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Terminal Label Formatting
+        const fontSize = Math.max(9, Math.min(13, 11 * p.pScale));
+        if((p.pScale > 0.82 && matchesCategory) || isHovered) {
+          ctx.fillStyle = isHovered ? '#ffffff' : `rgba(0, 255, 65, ${depthAlpha * 0.9})`;
+          ctx.font = `${isHovered ? 700 : 400} ${fontSize}px 'JetBrains Mono'`;
+          ctx.fillText(` ${p.info.name}`, p.x + 10, p.y + 4);
+        }
+
+        // Raycast Collision Detection
+        if(lastInputX && lastInputY) {
+          const dist = Math.hypot(p.x - lastInputX, p.y - lastInputY);
+          if(dist < touchRadiusThreshold) {
+            currentHover = p;
+          }
+        }
+      });
+
+      // Update Terminal HUD Card
+      if(currentHover) {
+        if (hoveredNode !== currentHover) AudioEngine.playHover();
+        hoveredNode = currentHover;
+        nodeCard.classList.add('active');
+        cardDot.style.background = currentHover.info.color;
+        cardDot.style.boxShadow = `0 0 12px ${currentHover.info.color}`;
+        cardTitle.innerText = currentHover.info.name;
+        cardSub.innerText = `[${currentHover.info.tag}] // EXECUTE COMMAND`;
+      } else if(!isDragging) {
+        hoveredNode = null;
+        nodeCard.classList.remove('active');
+        cardDot.style.background = "var(--muted)";
+        cardDot.style.boxShadow = "none";
+        cardTitle.innerText = "SYSTEM HOPE";
+        cardSub.innerText = isMobile ? "DRAG TO ROTATE // TAP NODE TO EXECUTE LINK" : "DRAG TO ROTATE // CLICK NODE TO EXECUTE LINK";
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
